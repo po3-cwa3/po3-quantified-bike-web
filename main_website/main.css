@@ -1,0 +1,219 @@
+@import url("reset.css");
+
+
+/* General Tags */
+
+html, body {
+	height: 100%;
+	color: #494949;
+}
+
+body {
+	font-family: 'Heiti SC', 'Heiti TC', 'Futura', 'Gill Sans';
+	background-color: #f6f6f6;
+}
+
+h1 {
+	font-size: 26pt;
+	text-transform: uppercase;
+	letter-spacing: 2pt;
+}
+
+
+/* General Technologies */
+
+/* Loading Spinner */
+
+.loadingSpinner {
+	width: 40px;
+	height: 40px;
+	margin: 30px auto 30px auto;
+	background-color: #ef6d00;
+	animation: spinnerAnimation 0.8s infinite ease-in-out;
+	-webkit-animation: spinnerAnimation 0.8s infinite ease-in-out;
+}
+
+@keyframes spinnerAnimation {
+	0% {
+		transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+@-webkit-keyframes spinnerAnimation {
+	0% {
+		-webkit-transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+
+/* Header */
+
+#headerWrapper {
+	background-color: #ef6d00;
+	height: 70px;
+	width: 100%;
+	float: left;
+	color: white;
+	box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+}
+
+#headerWrapper h1 {
+	margin-top: 19px;
+}
+
+#headerWrapper .mainTitle {
+	float: left;
+	height: 100%;
+	margin-left: 20px;
+}
+
+#headerWrapper .accountName {
+	float: right;
+	height: 100%;
+	margin-right: 20px;
+	text-align: right;
+}
+
+
+/* Content */
+
+#content {
+	position: absolute;
+	top: 70px;
+	bottom: 0px;
+	width: 100%;
+	padding-top: 20px;
+	overflow: scroll;
+}
+
+#contentWrapper {
+	margin-left: 50px;
+	margin-right: 50px;
+}
+
+#contentWrapper > div {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	border-radius: 3px;
+	border: 1px solid #ef6d00;
+	background-color: white;
+}
+
+#contentWrapper h1 {
+	font-size: 24px;
+	text-align: left;
+}
+
+.containerHeader {
+	position: relative;
+	width: 100%;
+	height: 50px;
+	background-color: #ef6d00;
+	color: white;
+}
+
+.containerHeader > h1 {
+	position: absolute;
+	top: 15px;
+	left: 15px;
+}
+
+.containerHeader .month {
+	right: 15px;
+	left: auto;
+	text-align: right;
+}
+
+/* Calendar */
+
+#calendarTable_wrapper {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#calendarTable {
+	border-collapse: collapse;
+}
+
+#calendarTable thead th {
+	color: gray;
+	border-bottom: 1px solid #ef6d00;
+}
+
+#calendarTable td {
+	position: relative;
+	height: 110px;
+	width: 14.2857%;
+}
+
+#calendarTable td.containsContent {
+	border: 1px solid #ef6d00;
+}
+
+#calendarTable td.containsContent:hover {
+	background-color: #ededed;
+}
+
+#calendarTable .dayNumber {
+	position: relative;
+	top: 0px;
+	right: 0px;
+	text-align: right;
+	font-size: 18pt;
+}
+
+#calendarTable .avSpeed {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	font-size: 34pt;
+	text-align: center;
+	background-color: #ef6d00;
+}
+
+
+/* Detail Section */
+
+#detailSection {
+	position: relative;
+	margin-top: 50px !important;
+}
+
+#detailSection:after {
+	content: "";
+	position: absolute;
+	top: -25px;
+	left: 50%;
+	margin-left: -25px;
+	border-style: solid;
+	border-width: 0 25px 25px;
+	border-color: #ef6d00 transparent;
+	display: block;
+	width: 0;
+}
+
+#detailCloseButton {
+    position: relative;
+}
+
+
+/* Footer */
+
+#footerWrapper {
+	position: absolute;
+	height: 70px;
+	width: 100%;
+	bottom: 0;
+	background-color: #ef6d00;
+	color: white;
+	box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+}
