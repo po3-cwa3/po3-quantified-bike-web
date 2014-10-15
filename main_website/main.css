@@ -127,9 +127,26 @@ h1 {
 }
 
 .containerHeader .month {
-	right: 15px;
+	right: 45px;
 	left: auto;
 	text-align: right;
+}
+
+.containerHeader .month img {
+    position: absolute;
+    cursor: pointer;
+}
+
+.containerHeader .month #prev_month {
+    left: -30px;
+    right: auto;
+    -webkit-transform: rotateZ(180deg);
+    transform: rotateZ(180deg);
+}
+
+.containerHeader .month #next_month {
+    right: -30px;
+    left: auto;
 }
 
 /* Calendar */
@@ -202,7 +219,12 @@ h1 {
 }
 
 #detailCloseButton {
-    position: relative;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    left: auto;
+    font-size: 26pt;
+    cursor: pointer;
 }
 
 
