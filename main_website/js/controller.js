@@ -3,7 +3,13 @@ var bol = bol || {};
 var month = new Date();
 var monthData = new Array();
 
+var detailsMap;
+
 var monthArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+var propertiesInDetailsView = [
+    {prop: "averageTemperature", title: "Average Temperature", postfix: " °C"},
+    {prop: "averageHumidity", title: "Average Humidity", postfix: " %"}
+];
 
 /**
  * This file serves as the controller and depends on everything in the js folder
@@ -15,6 +21,7 @@ bol.controller = (function() {
 
     function init() {
 
+        bol.controller.changeMonth(month);
 
         $("#detailCloseButton").click(function() {
 
@@ -80,7 +87,7 @@ bol.controller = (function() {
 
                 monthData = bol.controller.filterDataForMonth(json, date);
 
-                var data = bol.controller.convertDataToCalendarCells(monthData, date);
+                data = bol.controller.convertDataToCalendarCells(monthData, date);
 
                 callback(data);
             }
@@ -176,42 +183,7 @@ bol.controller = (function() {
 
         $.each(data, function (day, trips) {
 
-            var avTemp = 0;
-            var avTempCount = 0;
-
-            $.each(trips, function(index, trip) {
-
-                if (trip.hasOwnProperty("sensorData")) {
-
-                    $.each(trip.sensorData, function(index, sensorValue) {
-
-                        switch(sensorValue.sensorID) {
-
-                            // Temperature
-                            case 3:
-
-                                var temp = parseInt(sensorValue.data[0].value);
-
-                                if (!isNaN(temp)) {
-
-                                    avTemp += temp;
-                                    avTempCount += 1;
-                                }
-
-                                break;
-
-                            default:
-                        }
-                    });
-                }
-            });
-
-            if (avTempCount > 0) {
-                avTemp /= avTempCount;
-            }
-
-            var average = new Object();
-            average.averageTemperature = avTemp;
+            var average = bol.controller.getAveragesFromDay(trips);
 
             averages.push(average);
         });
@@ -220,24 +192,108 @@ bol.controller = (function() {
     }
 
 
-    function changeMonth(diff) {
+    function getAveragesFromDay(trips) {
 
-        var current_year = month.getFullYear();
-        var current_month = month.getMonth();
+        var avTemp = 0;
+        var avTempCount = 0;
 
-        current_month += diff;
+        var avHum = 0;
+        var avHumCount = 0;
 
-        if (current_month < 0) {
-            current_month = 11;
-            current_year -= 1;
-        } else if (current_month > 11) {
-            current_month = 0;
-            current_year += 1;
+        $.each(trips, function(index, trip) {
+
+            if (trip.hasOwnProperty("sensorData")) {
+
+                $.each(trip.sensorData, function(index, sensorValue) {
+
+                    switch(sensorValue.sensorID) {
+
+                        // Temperature
+                        case 3:
+
+                            var temp = parseInt(sensorValue.data[0].value);
+
+                            if (!isNaN(temp)) {
+
+                                avTemp += temp;
+                                avTempCount += 1;
+                            }
+
+                            break;
+
+
+                        // Humidity
+                        case 4:
+
+                            var hum = parseInt(sensorValue.data[0].value);
+
+                            if (!isNaN(hum)) {
+
+                                avHum += hum;
+                                avHumCount += 1;
+                            }
+
+                            break;
+
+                        default:
+                    }
+                });
+            }
+        });
+
+        if (avTempCount > 0) {
+            avTemp /= avTempCount;
+            avTemp = Math.round(avTemp *100)/100;
+        } else {
+            avTemp = "No Readings";
         }
 
-        month = new Date(current_year, current_month, 1);
+        if (avHumCount > 0) {
+            avHum /= avHumCount;
+            avHum = Math.round(avHum *100)/100;
+        } else {
+            avHum = "No Readings";
+        }
 
-        var calendarMonthTitle = monthArray[current_month] + ", " + current_year;
+        var average = new Object();
+        average.averageTemperature = avTemp;
+        average.averageHumidity = avHum;
+
+        return average;
+    }
+
+
+    function changeMonth(diff) {
+
+        var calendarMonthTitle = "";
+
+        console.log(typeof new Date());
+
+        if (typeof diff == "number") {
+
+            var current_year = month.getFullYear();
+            var current_month = month.getMonth();
+
+            current_month += diff;
+
+            if (current_month < 0) {
+                current_month = 11;
+                current_year -= 1;
+            } else if (current_month > 11) {
+                current_month = 0;
+                current_year += 1;
+            }
+
+            month = new Date(current_year, current_month, 1);
+
+            calendarMonthTitle = monthArray[current_month] + ", " + current_year;
+
+        } else if (typeof diff == "object") {
+
+            month = diff;
+
+            calendarMonthTitle = monthArray[month.getMonth()] + ", " + month.getFullYear();
+        }
 
         $("#monthTitleSpan").text(calendarMonthTitle);
 
@@ -271,8 +327,58 @@ bol.controller = (function() {
 
     function tableCellHasBeenClicked(cell) {
 
+        var dayIndex = parseInt($(cell).find(".dayNumber").text()) - 1;
+
+        console.log("Loading details for day with index: " + dayIndex);
+
         $('#detailSection').css("display","block").ScrollTo();
 
+        $("#detailSection .loadingSpinner").css("display", "block");
+
+        bol.controller.queryDetailsForDay(dayIndex);
+    }
+
+
+    function queryDetailsForDay(dayIndex) {
+
+        var trips = monthData[dayIndex];
+
+        console.log("Day " + dayIndex + " contains " + trips.length + " entries.");
+
+        var average = bol.controller.getAveragesFromDay(trips);
+
+        var averagesHTML = "";
+
+        $.each(propertiesInDetailsView, function(index, property) {
+
+            var divHTML = '<div class="averageDiv">';
+
+            divHTML += '<span class="averageDivTitle">' + property.title + '</span>';
+            divHTML += '<span class="averageDivValue">' + average[property.prop] + property.postfix + '</span>';
+
+            divHTML += '</div>';
+
+            averagesHTML += divHTML;
+        });
+
+        $("#detailsAveragesViewContainer").html(averagesHTML);
+
+        bol.controller.initDetailsMap();
+
+        $("#detailSection .loadingSpinner").css("display", "none");
+    }
+
+
+    function initDetailsMap() {
+
+        var detailsMapOptions = {
+            zoom: 18,
+            center: {lat: 50.864, lng: 4.679},
+            mapTypeId: google.maps.MapTypeId.TERRAIN
+        };
+
+        detailsMap = new google.maps.Map(document.getElementById("detailsMapCanvas"),
+            detailsMapOptions);
     }
 
 
@@ -282,9 +388,12 @@ bol.controller = (function() {
         filterDataForMonth: filterDataForMonth,
         convertDataToCalendarCells: convertDataToCalendarCells,
         getAveragesFromData: getAveragesFromData,
+        getAveragesFromDay: getAveragesFromDay,
         changeMonth: changeMonth,
         tableHasBeenRedrawn: tableHasBeenRedrawn,
-        tableCellHasBeenClicked: tableCellHasBeenClicked
+        tableCellHasBeenClicked: tableCellHasBeenClicked,
+        queryDetailsForDay: queryDetailsForDay,
+        initDetailsMap: initDetailsMap
     };
 
 })();

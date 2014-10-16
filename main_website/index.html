@@ -22,6 +22,11 @@
 		<!-- jQuery ScrollTo -->
 		<script src="ScrollTo plugin/jquery-scrollto.js"></script>
 
+        <!-- Google Maps -->
+        <script type="text/javascript"
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4SUA1W38uRk2aigX5gHDug9SNgndHnNw">
+        </script>
+
         <!--Controller Class-->
         <script src="js/controller.js"></script>
 
@@ -81,6 +86,43 @@
                         <div id="detailCloseButton">×</div>
 						
 					</div>
+
+                    <div id="detailsContainer">
+
+                        <table id="detailsContainerTable">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Averages</th>
+                                    <th>Map</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            <tr>
+
+                                <td id="detailsAveragesViewContainer"></td>
+
+                                <td id="detailsMapViewContainer">
+
+                                    <div id="detailsMapCanvas"></div>
+
+                                </td>
+
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <div class="loadingSpinner" style="display: none"></div>
 					
 				</div>
 				
