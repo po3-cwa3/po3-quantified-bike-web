@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Map API tests for CWA3</title>
+
+    <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+
+    <!-- jQuery -->
+    <script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+
+    <style>
+        h1 {
+        color: navy;
+    }
+
+    html { height: 100% }
+    body { height: 100%; margin: 0; padding: 0 }
+    #map-canvas { height: 100% }
+    </style>
+
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4SUA1W38uRk2aigX5gHDug9SNgndHnNw">
+    </script>
+
+
+ <!--   <script>
+        function initialize() {
+            var mapOptions = {
+                zoom: 18,
+                center: {lat:50.864, lng: 4.679},
+                mapTypeId: google.maps.MapTypeId.HYBRID
+            };
+
+            var map = new google.maps.Map(document.getElementById('map-canvas'),
+                    mapOptions);
+        }
+
+        function loadScript() {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&' +
+                    'callback=initialize';
+            document.body.appendChild(script);
+        }
+
+        window.onload = loadScript;
+
+    </script>-->
+
+    <!--<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>-->
+    <script>
+        // This example creates a 2-pixel-wide red polyline showing
+        // the path of William Kingsford Smith's first trans-Pacific flight between
+        // Oakland, CA, and Brisbane, Australia.
+
+        //flightpath becomes route. One route of a certain day
+        //map is 1 google maps map
+        //trips is the array of all routes in one day
+
+        var flightPath;
+        var map;
+        var trips = new Array();
+
+
+        function initialize() {
+            var mapOptions = {
+                zoom: 3, //create some default, possibly dependant on distance between start and stop
+                center: {lat:0, lng:-180},  //either: user given coordinates or start of the first trip of the day or...?
+                mapTypeId: google.maps.MapTypeId.TERRAIN
+                // more map options? see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
+            };
+
+            map = new google.maps.Map(document.getElementById("map-canvas"),
+                    mapOptions);
+
+            //
+            //this part of the code is to be repeated for each trip in one day
+
+            //for index in coordinates (1 trip):
+            //route_.append {lat:co_1, lng:co_2}
+
+            var flightPlanCoordinates = [
+                {lat: 37.772323, lng: -122.214897},
+                {lat: 21.291982, lng: -157.821856},
+                {lat: -18.142599, lng: 178.431},
+                {lat: -27.46758, lng: 153.027892}
+                /*                new google.maps.LatLng(37.772323, -122.214897),
+                new google.maps.LatLng(21.291982, -157.821856),
+                new google.maps.LatLng(-18.142599, 178.431),
+                new google.maps.LatLng(-27.46758, 153.027892)*/
+            ];
+
+            //with geodesic false or omitted
+
+            flightPath = new google.maps.Polyline({
+                path: flightPlanCoordinates,
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 1
+            });
+
+            //push adds each route to "trips"
+
+            trips.push(flightPath);
+
+            //write a certain (first?) trip on the map
+
+            addLine();
+            }
+
+
+            //only addLine and removeLine, but they will have an input corresponding to which trip
+
+            function addLine() {
+                trips[0].setMap(map);
+            }
+
+            function removeLine() {
+                trips[0].setMap(null);
+            }
+
+            function testing() {
+                document.getElementById("tester").innerHTML = "It works!"
+            }
+
+
+//        google.maps.event.addDomListener(window, 'load', initialize);
+        $(document).ready(initialize);
+    </script>
+
+    <!--add buttons for each trip as follows (make sure with the relative timing compared to other elements-->
+    <!--Is it possible to make one button to turn routes on or off?-->
+
+    <script>
+        function addButtons() {
+            for (i = 0; i < 5; i++) {
+                var node = document.createElement("INPUT");
+                var att1 = document.createAttribute("onclick");
+                att1.value = "testing();";
+                var att2 = document.createAttribute("type");
+                att2.value = "button";
+                var att3 = document.createAttribute("value");
+                att3.value = "button";
+                node.setAttributeNode(att1);
+                node.setAttributeNode(att2);
+                node.setAttributeNode(att3);
+                console.log(node);
+                document.getElementById("panel").appendChild(node);
+
+            }
+        }
+    </script>
+
+</head>
+
+<body>
+
+<h1>Map API test site</h1>
+
+<p id="tester"></p>
+
+<div id="panel">
+    <input onclick="removeLine();" type=button value="Remove line">
+    <input onclick="addLine();" type=button value="Restore line">
+    <input onclick="testing();" type="button" value="testing">
+    <input onclick="addButtons();" type="button" value="add buttons">
+</div>
+
+<div id="map-canvas" style="width: 90%; height: 85%">
+
+</div>
+
+</body>
+
+</html>
