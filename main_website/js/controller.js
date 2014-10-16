@@ -1,5 +1,10 @@
 var bol = bol || {};
 
+var month = new Date();
+var monthData = new Array();
+
+var monthArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 /**
  * This file serves as the controller and depends on everything in the js folder
  */
@@ -11,14 +16,37 @@ bol.controller = (function() {
     function init() {
 
 
+        $("#detailCloseButton").click(function() {
+
+            $('#detailSection').css("display","none");
+        });
+
+        $("#prev_month").click(function() {
+
+            bol.controller.changeMonth(-1);
+
+            $("#calendarTable").DataTable().ajax.reload(bol.controller.tableHasBeenRedrawn);
+        });
+
+        $("#next_month").click(function () {
+
+            bol.controller.changeMonth(1);
+
+            $("#calendarTable").DataTable().ajax.reload(bol.controller.tableHasBeenRedrawn);
+        });
+
+
         /* Initialise the calendar using the external dataTable library.
          We use ajax initialisation to load the calendar data asynchronously. */
         $("#calendarTable").dataTable( {
+
             "ajax": function(data, callback, settings) {
 
-                var today = new Date();
+                /* We add a loadingSpinner div to the only cell the table currently holds.
+                 This content will be overwritten once the data is loaded. */
+                $("#calendarTable tbody").html('<td colspan="7"><div class="loadingSpinner"></div></td>');
 
-                bol.controller.queryDataForMonth(today, function (data) {
+                bol.controller.queryDataForMonth(month, function (data) {
 
                     callback({data: data});
                 });
@@ -31,34 +59,8 @@ bol.controller = (function() {
             "info": false,
 
             /* This function gets called when the initialisation is complete. */
-            "initComplete": function(settings, json) {
-
-                /* We remove the style attribute to make sure the table adjusts itself when the window resizes.
-                 The style attribute is added by the dataTables library and contains a width attribute. */
-                $('#calendarTable').removeAttr('style');
-
-                /* We loop over all cells to determine which cells hold content. */
-                $('#calendarTable td').each(function(index, value) {
-
-                    if ($(this).html() != "") {
-
-                        /* We assign the containsContent class to manage hover effects and stuff like that. */
-                        $(this).addClass("containsContent");
-
-                        $(this).click(function() {
-
-                            $('#detailSection').css("display","block").ScrollTo();
-
-
-                        });
-                    }
-                });
-            }
+            "initComplete": bol.controller.tableHasBeenRedrawn
         });
-
-        /* We add a loadingSpinner div to the only cell the table currently holds.
-         This content will be overwritten once the data is loaded. */
-        $("#calendarTable td").html('<div class="loadingSpinner"></div>');
 
     }
 
@@ -76,9 +78,9 @@ bol.controller = (function() {
 
                 console.log("We got " + json.length + " elements for cwa3.");
 
-                var data = bol.controller.filterDataForMonth(json, date);
+                monthData = bol.controller.filterDataForMonth(json, date);
 
-                data = bol.controller.convertDataToCalendarCells(data, date);
+                var data = bol.controller.convertDataToCalendarCells(monthData, date);
 
                 callback(data);
             }
@@ -93,8 +95,6 @@ bol.controller = (function() {
         var month = date.getMonth()+1;
         var year = date.getFullYear();
         var nrOfDays = new Date(year, month, 0).getDate();
-
-        console.log(year + " " + month + " " + nrOfDays);
 
         var returnData = new Array();
 
@@ -128,12 +128,12 @@ bol.controller = (function() {
         var endDay = beginDay + nrOfDays - 1;
         var nrOfRows = Math.ceil(endDay/7.0);
 
-        console.log("first day: " + firstDayDate);
-        console.log("last day: " + lastDayDate);
-        console.log("begin day: " + beginDay);
-        console.log("nr of days: " + nrOfDays);
-        console.log("end day: " + endDay);
-        console.log("nr of rows: " + nrOfRows);
+//        console.log("first day: " + firstDayDate);
+//        console.log("last day: " + lastDayDate);
+//        console.log("begin day: " + beginDay);
+//        console.log("nr of days: " + nrOfDays);
+//        console.log("end day: " + endDay);
+//        console.log("nr of rows: " + nrOfRows);
 
         var averages = bol.controller.getAveragesFromData(data);
 
@@ -152,7 +152,6 @@ bol.controller = (function() {
                 if (day > 0 && day <= nrOfDays) {
 
                     var average = averages[day-1];
-                    console.log(average);
 
                     var dayNumberHTML = '<h1 class="dayNumber">' + day + '</h1>';
                     cellData += dayNumberHTML;
@@ -221,12 +220,65 @@ bol.controller = (function() {
     }
 
 
+    function changeMonth(diff) {
+
+        var current_year = month.getFullYear();
+        var current_month = month.getMonth();
+
+        current_month += diff;
+
+        if (current_month < 0) {
+            current_month = 11;
+            current_year -= 1;
+        } else if (current_month > 11) {
+            current_month = 0;
+            current_year += 1;
+        }
+
+        month = new Date(current_year, current_month, 1);
+
+        var calendarMonthTitle = monthArray[current_month] + ", " + current_year;
+
+        $("#monthTitleSpan").text(calendarMonthTitle);
+
+        console.log("changed month to: " + month);
+    }
+
+
+    function tableHasBeenRedrawn() {
+
+        /* We remove the style attribute to make sure the table adjusts itself when the window resizes.
+         The style attribute is added by the dataTables library and contains a width attribute. */
+        $('#calendarTable').removeAttr('style');
+
+        /* We loop over all cells to determine which cells hold content. */
+        $('#calendarTable td').each(function(index, value) {
+
+            if ($(this).html() != "") {
+
+                /* We assign the containsContent class to manage hover effects and stuff like that. */
+                $(this).addClass("containsContent");
+
+                /* We add a click funtion to every table cell. */
+                $(this).click(function() {
+
+                    $('#detailSection').css("display","block").ScrollTo();
+
+
+                });
+            }
+        });
+    }
+
+
     return {
         init: init,
         queryDataForMonth: queryDataForMonth,
         filterDataForMonth: filterDataForMonth,
         convertDataToCalendarCells: convertDataToCalendarCells,
-        getAveragesFromData: getAveragesFromData
+        getAveragesFromData: getAveragesFromData,
+        changeMonth: changeMonth,
+        tableHasBeenRedrawn: tableHasBeenRedrawn
     };
 
 })();
