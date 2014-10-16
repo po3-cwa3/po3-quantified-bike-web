@@ -262,15 +262,14 @@ bol.controller = (function() {
                 /* We add a click funtion to every table cell. */
                 $(this).click(function() {
 
-
-
+                    bol.controller.tableCellHasBeenClicked($(this));
                 });
             }
         });
     }
 
 
-    function tableCellHasBeenClicked() {
+    function tableCellHasBeenClicked(cell) {
 
         $('#detailSection').css("display","block").ScrollTo();
 
