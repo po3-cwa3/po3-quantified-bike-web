@@ -262,12 +262,18 @@ bol.controller = (function() {
                 /* We add a click funtion to every table cell. */
                 $(this).click(function() {
 
-                    $('#detailSection').css("display","block").ScrollTo();
 
 
                 });
             }
         });
+    }
+
+
+    function tableCellHasBeenClicked() {
+
+        $('#detailSection').css("display","block").ScrollTo();
+
     }
 
 
@@ -278,7 +284,8 @@ bol.controller = (function() {
         convertDataToCalendarCells: convertDataToCalendarCells,
         getAveragesFromData: getAveragesFromData,
         changeMonth: changeMonth,
-        tableHasBeenRedrawn: tableHasBeenRedrawn
+        tableHasBeenRedrawn: tableHasBeenRedrawn,
+        tableCellHasBeenClicked: tableCellHasBeenClicked
     };
 
 })();
