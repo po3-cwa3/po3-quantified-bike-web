@@ -1,0 +1,34 @@
+body {
+    /*background-color: #F00AF7;*/
+   /* background-image: url("http://www.tuinposter.be/library/original/97774-twee-paarden-rennen-door-weiland-blauwe-lucht.jpg");*/
+}
+
+h1 {
+    font-family: "Comic Sans MS";
+    color: deeppink;
+    text-align: center;
+    font-size: 100px;
+}
+
+p {
+    font-family: "Comic Sans MS";
+    font-size: 16px;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+.knop{
+    text-align: center;
+    color: indianred;
+    background-color: lightgrey;
+    width: 200px;
+    border: 10px darkred;
+    border-style: groove;
+
+
+}
+
