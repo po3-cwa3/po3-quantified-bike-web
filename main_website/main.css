@@ -128,6 +128,12 @@ h1 {
 	left: 15px;
 }
 
+.containerHeader > .mid {
+    left: 15px;
+    right: 15px;
+    text-align: center !important;
+}
+
 .containerHeader .month {
 	right: 45px;
 	left: auto;
@@ -198,6 +204,37 @@ h1 {
 	font-size: 34pt;
 	text-align: center;
 	background-color: deepskyblue;
+}
+
+#calendarBarSelectContainer {
+    position: absolute;
+    top: 9px;
+    left: 15px;
+    right: 15px;
+    text-align: center;
+}
+
+#calendarBarSelectContainer > div {
+    padding: 5px 10px 5px 10px;
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid white;
+    border-radius: 3px;
+}
+
+#calendarBarSelectContainer select {
+    -webkit-appearance: none;
+    border: none;
+    background-color: transparent;
+    font-size: 12pt;
+    color: white;
+    font-family: 'Heiti SC', 'Heiti TC', 'Futura', 'Gill Sans';
+    cursor: pointer;
+}
+
+#calendarBarSelectContainer img {
+    width: 10px;
+    -webkit-transform: rotateZ(90deg) translate(1px, 0);
 }
 
 

@@ -1,27 +1,49 @@
-var bol = bol || {};
-
 var month = new Date();
 var monthData = new Array();
+
+var barOption;
 
 var detailsMap;
 
 var monthArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 var propertiesInDetailsView = [
-    {prop: "averageTemperature", title: "Average Temperature", postfix: " °C"},
-    {prop: "averageHumidity", title: "Average Humidity", postfix: " %"}
+    {prop: "averageSpeed", title: "Average Speed", postfix: " km/h", accuracy: 2},
+    {prop: "totalDistance", title: "Total Distance", postfix: " km", accuracy: 2},
+    {prop: "averageTemperature", title: "Average Temperature", postfix: " °C", accuracy: 0},
+    {prop: "averageHumidity", title: "Average Humidity", postfix: " %", accuracy: 0}
 ];
 
-/**
- * This file serves as the controller and depends on everything in the js folder
- */
+var noReadingsMessage = "No Readings"
 
-bol.controller = (function() {
 
-    var assets; //all our ajax-loaded assets (templates and json data)
 
+dataController = (function() {
+
+    
     function init() {
 
-        bol.controller.changeMonth(month);
+        dataController.changeMonth(month);
+
+
+        $.each(propertiesInDetailsView, function(index, object) {
+
+            $("#calendarBarSelect").append('<option prop="' + object.prop + '">' + object.title + '</option>');
+        });
+
+        var beginOption = propertiesInDetailsView[2];
+        dataController.changeSelectedBarOption(beginOption.title, beginOption.prop);
+
+        $("#calendarBarSelect").change(function() {
+
+            var selectedOption = $('#calendarBarSelect').find(":selected");
+
+            console.log("Changed selected calendar bar option to " + selectedOption.text());
+
+            dataController.changeSelectedBarOption(selectedOption.text(), selectedOption.attr("prop"));
+
+            //dataController.reloadTable();
+        });
+
 
         $("#detailCloseButton").click(function() {
 
@@ -30,16 +52,16 @@ bol.controller = (function() {
 
         $("#prev_month").click(function() {
 
-            bol.controller.changeMonth(-1);
+            dataController.changeMonth(-1);
 
-            $("#calendarTable").DataTable().ajax.reload(bol.controller.tableHasBeenRedrawn);
+            dataController.reloadTable();
         });
 
         $("#next_month").click(function () {
 
-            bol.controller.changeMonth(1);
+            dataController.changeMonth(1);
 
-            $("#calendarTable").DataTable().ajax.reload(bol.controller.tableHasBeenRedrawn);
+            dataController.reloadTable();
         });
 
 
@@ -53,7 +75,7 @@ bol.controller = (function() {
                  This content will be overwritten once the data is loaded. */
                 $("#calendarTable tbody").html('<td colspan="7"><div class="loadingSpinner"></div></td>');
 
-                bol.controller.queryDataForMonth(month, function (data) {
+                dataController.queryDataForMonth(month, function (data) {
 
                     callback({data: data});
                 });
@@ -66,7 +88,7 @@ bol.controller = (function() {
             "info": false,
 
             /* This function gets called when the initialisation is complete. */
-            "initComplete": bol.controller.tableHasBeenRedrawn
+            "initComplete": dataController.tableHasBeenRedrawn
         });
 
     }
@@ -85,9 +107,10 @@ bol.controller = (function() {
 
                 console.log("We got " + json.length + " elements for cwa3.");
 
-                monthData = bol.controller.filterDataForMonth(json, date);
+                monthData = dataController.filterDataForMonth(json, date);
+                dataController.calculateMonthAverages();
 
-                data = bol.controller.convertDataToCalendarCells(monthData, date);
+                data = dataController.convertDataToCalendarCells(monthData, date);
 
                 callback(data);
             }
@@ -103,10 +126,10 @@ bol.controller = (function() {
         var year = date.getFullYear();
         var nrOfDays = new Date(year, month, 0).getDate();
 
-        var returnData = new Array();
+        var returnData = [];
 
         for (i = 0; i<nrOfDays; i++) {
-            returnData.push(new Array());
+            returnData.push({trips: []});
         }
 
         $.each(data, function(index, value) {
@@ -116,7 +139,7 @@ bol.controller = (function() {
 
                 var day = date.getDate()-1;
 
-                returnData[day].push(value);
+                returnData[day].trips.push(value);
             }
 
         });
@@ -142,7 +165,6 @@ bol.controller = (function() {
 //        console.log("end day: " + endDay);
 //        console.log("nr of rows: " + nrOfRows);
 
-        var averages = bol.controller.getAveragesFromData(data);
 
         var calendar = new Array();
 
@@ -158,12 +180,12 @@ bol.controller = (function() {
 
                 if (day > 0 && day <= nrOfDays) {
 
-                    var average = averages[day-1];
+                    var average = monthData[day-1].average;
 
                     var dayNumberHTML = '<h1 class="dayNumber">' + day + '</h1>';
                     cellData += dayNumberHTML;
 
-                    var avTempHTML = '<div class="avSpeed" style="top:' + (110 - average.averageTemperature) + '"></div>';
+                    var avTempHTML = '<div class="avSpeed" style="top:' + (110 - average[barOption]) + '"></div>';
                     cellData += avTempHTML;
                 }
 
@@ -177,28 +199,22 @@ bol.controller = (function() {
     }
 
 
-    function getAveragesFromData(data) {
+    function calculateMonthAverages() {
 
-        var averages = new Array();
+        $.each(monthData, function(day, dayData) {
 
-        $.each(data, function (day, trips) {
-
-            var average = bol.controller.getAveragesFromDay(trips);
-
-            averages.push(average);
+            dayData.average = dataController.getAveragesFromDay(dayData.trips);
         });
-
-        return averages;
     }
 
 
     function getAveragesFromDay(trips) {
 
-        var avTemp = 0;
-        var avTempCount = 0;
+        //var totalDist = 0;
 
-        var avHum = 0;
-        var avHumCount = 0;
+        var tempReadings = [];
+
+        var humReadings = [];
 
         $.each(trips, function(index, trip) {
 
@@ -215,8 +231,7 @@ bol.controller = (function() {
 
                             if (!isNaN(temp)) {
 
-                                avTemp += temp;
-                                avTempCount += 1;
+                                tempReadings.push(temp);
                             }
 
                             break;
@@ -229,8 +244,7 @@ bol.controller = (function() {
 
                             if (!isNaN(hum)) {
 
-                                avHum += hum;
-                                avHumCount += 1;
+                                humReadings.push(hum);
                             }
 
                             break;
@@ -239,21 +253,32 @@ bol.controller = (function() {
                     }
                 });
             }
+
+//            if (trip.hasOwnProperty("meta")) {
+//
+//                $.each(trip.meta, function(key, metaValue) {
+//
+//                    switch(key) {
+//
+//                        case "distance":
+//
+//                                totalDist += parseInt(metaValue);
+//
+//                            break;
+//
+//                        case "averageSpeed":
+//
+//
+//
+//                            break;
+//                    }
+//                });
+//            }
         });
 
-        if (avTempCount > 0) {
-            avTemp /= avTempCount;
-            avTemp = Math.round(avTemp *100)/100;
-        } else {
-            avTemp = "No Readings";
-        }
+        var avTemp = arrayAverage(tempReadings);
 
-        if (avHumCount > 0) {
-            avHum /= avHumCount;
-            avHum = Math.round(avHum *100)/100;
-        } else {
-            avHum = "No Readings";
-        }
+        var avHum = arrayAverage(humReadings)
 
         var average = new Object();
         average.averageTemperature = avTemp;
@@ -266,8 +291,6 @@ bol.controller = (function() {
     function changeMonth(diff) {
 
         var calendarMonthTitle = "";
-
-        console.log(typeof new Date());
 
         if (typeof diff == "number") {
 
@@ -286,18 +309,57 @@ bol.controller = (function() {
 
             month = new Date(current_year, current_month, 1);
 
-            calendarMonthTitle = monthArray[current_month] + ", " + current_year;
-
         } else if (typeof diff == "object") {
 
             month = diff;
-
-            calendarMonthTitle = monthArray[month.getMonth()] + ", " + month.getFullYear();
         }
+
+        if (month.getMonth() == new Date().getMonth()) {
+
+            $('#next_month').css({
+                opacity: 0.7,
+                "pointer-events": "none"
+            });
+
+        } else {
+
+            $('#next_month').css({
+                opacity: 1,
+                "pointer-events": "auto"
+            });
+        }
+
+        calendarMonthTitle = monthArray[month.getMonth()] + ", " + month.getFullYear();
 
         $("#monthTitleSpan").text(calendarMonthTitle);
 
         console.log("changed month to: " + month);
+    }
+
+
+    function changeSelectedBarOption(option, key) {
+
+        $('#calendarBarSelect').val(option);
+
+        barOption = key;
+
+        $('#calendarTable td').each(function() {
+
+            var dayIndex = parseInt($(this).find(".dayNumber").text()) - 1;
+
+            if (!isNaN(dayIndex)) {
+
+                var avValue = monthData[dayIndex].average[barOption];
+
+                if (isNaN(avValue) || typeof avValue != "number") {
+
+                    avValue = 0;
+                }
+
+                $(this).find(".avSpeed").css("top", 110 - avValue);
+
+            }
+        });
     }
 
 
@@ -318,7 +380,7 @@ bol.controller = (function() {
                 /* We add a click funtion to every table cell. */
                 $(this).click(function() {
 
-                    bol.controller.tableCellHasBeenClicked($(this));
+                    dataController.tableCellHasBeenClicked($(this));
                 });
             }
         });
@@ -335,17 +397,16 @@ bol.controller = (function() {
 
         $("#detailSection .loadingSpinner").css("display", "block");
 
-        bol.controller.queryDetailsForDay(dayIndex);
+        dataController.queryDetailsForDay(dayIndex);
     }
 
 
     function queryDetailsForDay(dayIndex) {
 
-        var trips = monthData[dayIndex];
+        var dayH1 = monthArray[month.getMonth()] + " " + (dayIndex + 1);
+        $("#detailsDayH1").text(dayH1);
 
-        console.log("Day " + dayIndex + " contains " + trips.length + " entries.");
-
-        var average = bol.controller.getAveragesFromDay(trips);
+        var average = monthData[dayIndex].average;
 
         var averagesHTML = "";
 
@@ -354,7 +415,17 @@ bol.controller = (function() {
             var divHTML = '<div class="averageDiv">';
 
             divHTML += '<span class="averageDivTitle">' + property.title + '</span>';
-            divHTML += '<span class="averageDivValue">' + average[property.prop] + property.postfix + '</span>';
+
+            divHTML += '<span class="averageDivValue">';
+
+            var roundedValue = round(average[property.prop], property.accuracy);
+            divHTML += roundedValue;
+
+            if (roundedValue != noReadingsMessage) {
+                divHTML += property.postfix
+            }
+
+            divHTML += '</span>'
 
             divHTML += '</div>';
 
@@ -363,7 +434,7 @@ bol.controller = (function() {
 
         $("#detailsAveragesViewContainer").html(averagesHTML);
 
-        bol.controller.initDetailsMap();
+        dataController.initDetailsMap();
 
         $("#detailSection .loadingSpinner").css("display", "none");
     }
@@ -382,20 +453,67 @@ bol.controller = (function() {
     }
 
 
+    function arrayAverage(array) {
+
+        if (array.length == 0) {
+            return null;
+        }
+
+        var total = 0.0;
+
+        $.each(array, function(index, element) {
+
+            total += element;
+        });
+
+        return total/array.length;
+    }
+
+
+    function round(number, accuracy) {
+
+        if (typeof number == "number") {
+
+            var rounder = Math.pow(10, accuracy);
+
+            return Math.round(number * rounder) / rounder;
+        }
+
+        return noReadingsMessage;
+    }
+
+
+    function reloadTable() {
+
+        $("#calendarTable").DataTable().ajax.reload(dataController.tableHasBeenRedrawn);
+    }
+
+
     return {
         init: init,
+
         queryDataForMonth: queryDataForMonth,
         filterDataForMonth: filterDataForMonth,
-        convertDataToCalendarCells: convertDataToCalendarCells,
-        getAveragesFromData: getAveragesFromData,
+
+        calculateMonthAverages: calculateMonthAverages,
         getAveragesFromDay: getAveragesFromDay,
+
+        convertDataToCalendarCells: convertDataToCalendarCells,
+
         changeMonth: changeMonth,
+        changeSelectedBarOption: changeSelectedBarOption,
+
+        reloadTable: reloadTable,
         tableHasBeenRedrawn: tableHasBeenRedrawn,
         tableCellHasBeenClicked: tableCellHasBeenClicked,
+
         queryDetailsForDay: queryDetailsForDay,
-        initDetailsMap: initDetailsMap
+        initDetailsMap: initDetailsMap,
+
+        arrayAverage: arrayAverage,
+        round: round
     };
 
 })();
 
-$(document).ready(bol.controller.init);
+$(document).ready(dataController.init);
