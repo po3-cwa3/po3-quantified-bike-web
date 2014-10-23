@@ -1,0 +1,63 @@
+\section{Used technologies}
+\subsection{Device}
+\subsubsection{MySQL}
+When the application can't send data to the remote server, all data is stored on a local MySQL database. MySQL is an open source relational database engine and is very popular for use in web applications. It is easy to use, installing the software is no big deal, the language can be learned very quickly and it is free. For those reasons we prefer MySQL to other database management systems. Although it has a relative poor performance \cite{MySQLDatarealm}. Too many operations at a given time can give problems. There is no problem for us since it is used in a small application.
+\subsubsection{Raspberry Pi}
+The Raspberry Pi is a credit card-sized single-board computer developed in the UK by the Raspberry Pi Foundation with the intention of promoting the teaching of basic computer science in schools.\cite{RaspberryWikipedia}
+Because of its low cost, the Raspberry Pi is perfectly suited to be used as computing device for the Quantified Bike. 
+It's not a high-end device, but it is sufficiently fast to process the data for the Quantified Bike.
+
+The application uses the following additional libraries:
+\begin{enumerate}
+ \item \textit{pySerial}: The Arduino sends sensor data to the Raspberry Pi via serial communication.
+ \item \textit{SocketIO}: Communication between web clients and the server occurs freely, persistent and full duplex due to WebSockets \cite{SocketIOKaazing}. The employed application programming interface is called Socket.IO. One of the advantages of Socket.IO is the fact that the best suited real-time communication protocol will be selected. \cite{SocketIOWikipedia}
+ \item \textit{threading}: The application on the Raspberry Pi uses threads so the application can simultaneously read data from the serial interface which is sent by the Arduino and send data to the local database or the server.
+\end{enumerate}
+
+\subsubsection{Arduino Nano}
+The Arduino Nano is a single-board microcontroller, which can be used to simplify building an interactive environment. It has the advantage of being able to easily connect and read sensors. However, a disadvantage to the Arduino is the fact that it can only run one thread at a time. This makes reading multiple sensors more difficult. For example, the GPS module has to wait for a signal, while the temperature sensor gives us a constant signal. But it is still possible to program the Arduino so that it can read all sensors at the right time and transfer all the data to the Raspberry Pi.
+Using custom-made libraries makes it possible for the Arduino to read the sensors.
+\begin{enumerate}
+ \item DHT11 for the temperature-humidity sensor
+ \item Adafruit\_GPS for the GPS module
+ \item SoftwareSerial for the GPS module
+\end{enumerate}
+
+\subsubsection{Sensors and actuators}
+The sensors make it possible to quantify the bike. The GPS module gives data on when and where it is, it approximates how fast it is going and it returns the angle of movement as well. The temperature-humiditysensor does exactly as it says and streams data about the temperature and humidity of its environment. A pulse sensor will be connected to the Arduino too, so that the database can record how fast your heart is beating. For user input, such as starting and ending a trip, a classic button will be used. Other sensors might also be included, for example an accelerometer or a Hall effect sensor. To conclude the list, there will be LEDs connected to the Arduino to show te user, for example, if a trip is started.
+
+\subsection{Web interface}
+\subsubsection{JavaScript}
+JavaScript is a programing language used to program the behavior of a web page.
+It is easy to implement in a HTML file. An advantage of JavaScript is that it is
+executed on the client side. This way, the web server won't unnecessarily be strained.
+A disadvantage is that a lot of lines have to be written in order to get some basic
+functionality. In this project, JavaScript is used to create all functionality on the
+client side. Without JavaScript, the client side would not be able to get any data from
+the server and would thus be useless. 
+
+\subsubsection{jQuery}
+jQuery is a JavaScript library, created to simplify JavaScript programming. Using jQuery,
+lots of commands are a lot easier and faster to use. In every JavaScript file used in this
+project, jQuery commands are present.
+
+\subsubsection{DataTables} 
+For the calendar, an external jQuery library 'DataTables' was used. This library makes
+working with HTML tables a whole lot easier. It provides asynchronous initialisation,
+pagination, sorting, etc.
+
+\subsubsection{ScrollTo}
+When a calendar day is clicked, detailed information for that day is presented in a
+'details' section beneath the calendar. To automatically scroll down to this view, the application
+uses the external jQuery ScrollTo library. This library still contains a few bugs, so an alternative
+solution may be necessary.
+
+\subsubsection{Chart}
+Chart is an external jQuery library for making charts. The website does not use this library yet,
+but it seems easy to use and supports multiple animations that could be used in the application.
+
+\subsubsection{JSON}
+JSON is a data interchange format. Although it stands for JavaScript Object Notation, it
+is language independent. JSON is relatively easy to understand and is faster than other
+similar formats. In this project, JSON is used for data interchange between the client
+side and the databank.
