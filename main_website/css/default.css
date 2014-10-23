@@ -156,16 +156,19 @@ a:hover {
 
 
 .bp-icon-question:after {
-	content: "\f059";
+    content: "\f059";
+}
+.bp-icon-home:after{
+    content: "\f015";
 }
 .bp-icon-conf:after {
-	content: "\f013";
+    content: "\f013";
 }
 .bp-icon-about:after {
-	content: "\f002";
+    content: "\f002";
 }
 .bp-icon-bicycle:after {
-	content: "\f206";
+    content: "\f206";
 }
 
 @media screen and (max-width: 55em) {
