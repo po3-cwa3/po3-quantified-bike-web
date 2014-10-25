@@ -31,6 +31,7 @@ h1 {
 	margin: 30px auto 30px auto;
 	background-color: #47a3da;
 	animation: spinnerAnimation 0.8s infinite ease-in-out;
+	-moz-animation: spinnerAnimation 0.8s infinite ease-in-out;
 	-webkit-animation: spinnerAnimation 0.8s infinite ease-in-out;
 }
 
@@ -44,6 +45,15 @@ h1 {
 		-webkit-transform: rotate(360deg);
 	}
 }
+
+@-moz-keyframes spinnerAnimation {
+	0% {
+		-moz-transform: rotate(0deg);
+	}
+	100% {
+		-moz-transform: rotate(360deg);
+	}
+ }
 
 @-webkit-keyframes spinnerAnimation {
 	0% {
@@ -149,6 +159,7 @@ h1 {
     left: -30px;
     right: auto;
     -webkit-transform: rotateZ(180deg);
+	-moz-transform: rotateZ(180deg);
     transform: rotateZ(180deg);
 }
 
@@ -235,6 +246,8 @@ h1 {
 #calendarBarSelectContainer img {
     width: 10px;
     -webkit-transform: rotateZ(90deg) translate(1px, 0);
+	-moz-transform: rotateZ(90deg) translate(1px, 0);
+	transform: rotateZ(90deg) translate(1px, 0);
 }
 
 
