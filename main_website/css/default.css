@@ -33,6 +33,10 @@ a:hover {
 	color: #000;
 }
 
+h3 {
+    text-transform: uppercase;
+}
+
 .container > header {
 	width: 90%;
 	max-width: 69em;
@@ -193,8 +197,9 @@ a:hover {
 }
 
 .content section {
+    position: relative;
     font-size: 1.25em;
-    padding: 3em 1em;
+    padding: 1em 1em;
     display: none;
     max-width: 1230px;
     margin: 0 auto;
@@ -207,9 +212,6 @@ a:hover {
     display: table;
 }
 
-.content section:after {
-    clear: both;
-}
 
 /* Fallback example */
 .no-js .content section {
@@ -218,6 +220,30 @@ a:hover {
     border-bottom: 1px solid #47a3da;
 }
 
-.content section.content-current {
-    display: block;
+
+#about-us {
+    position: relative;
+    display : none;
 }
+
+#detailCloseButton {
+    position: absolute;
+    right: 10px;
+    top: 1px;
+    left: auto;
+    font-size: 26pt;
+    cursor: pointer;
+}
+
+#about-device{
+    position: relative;
+    display : none;
+}
+
+#detailCloseButton2 {
+    position: absolute;
+    right: 10px;
+    top: 1px;
+    left: auto;
+    font-size: 26pt;
+    cursor: pointer;
