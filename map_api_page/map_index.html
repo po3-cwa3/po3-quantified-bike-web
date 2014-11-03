@@ -17,7 +17,7 @@
 
     html { height: 100% }
     body { height: 100%; margin: 0; padding: 0 }
-    #map-canvas { height: 100% }
+    #map-canvas { height: 50%; width: 50% }
     </style>
 
     <script type="text/javascript"
@@ -66,8 +66,8 @@
 
         function initialize() {
             var mapOptions = {
-                zoom: 3, //create some default, possibly dependant on distance between start and stop
-                center: {lat:0, lng:-180},  //either: user given coordinates or start of the first trip of the day or...?
+                zoom: 20, //create some default, possibly dependant on distance between start and stop
+                center: {lat: 50.864, lng: 4.679},  //either: user given coordinates or start of the first trip of the day or...?
                 mapTypeId: google.maps.MapTypeId.TERRAIN
                 // more map options? see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
             };
@@ -169,7 +169,7 @@
     <input onclick="addButtons();" type="button" value="add buttons">
 </div>
 
-<div id="map-canvas" style="width: 90%; height: 85%">
+<div id="map-canvas">
 
 </div>
 
