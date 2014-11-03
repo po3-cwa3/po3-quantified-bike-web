@@ -1,51 +1,36 @@
-
 $(document).ready(function() {
 
-    var counterus = 0;
-    var counterdevice = 0;
+    $(function () {
+        $("#header-loader").load("header.html", function() {
 
-    $("#about").click(function () {
-        //if (counterus){
-        //    $('#about-us').slideUp("fast");
-        //    counterus = 0;
-        //}
-        //else {
-        //    $('#about-device').slideUp("fast");
-        //    $('#about-us').slideDown("fast");
-        //    counterus = 1;
-        //}
-        $('#about-us').slideToggle("fast");
-        $('#about-device').slideUp("fast");
-    });
+            $("#about").click(function () {
+                $('#about-us').slideToggle("fast");
+                $('#about-device').slideUp("fast");
+            });
 
-    $("#detailCloseButton").click(function () {
-        $('#about-us').slideUp("fast");
-    });
+            $("#detailCloseButton").click(function () {
+                $('#about-us').slideUp("fast");
+            });
 
-    $("#device").click(function () {
-        //if (counterdevice){
-        //    $('#about-device').slideUp("fast");
-        //    counterdevice = 0;
-        //}
-        //else {
-        //    $('#about-us').slideUp("fast");
-        //    $('#about-device').slideDown("fast");
-        //    counterdevice = 1;
-        //}
-        $('#about-device').slideToggle("fast");
-        $('#about-us').slideUp("fast");
-    });
-
-    $("#detailCloseButton2").click(function () {
-        $('#about-device').slideUp("fast");
-    });
-
+<<<<<<< HEAD
     $("#settings").click(function (){
         console.log("settings have been clicked")
         $('#settings-list').slideToggle("fast");
+=======
+            $("#device").click(function () {
+                $('#about-device').slideToggle("fast");
+                $('#about-us').slideUp("fast");
+            });
+>>>>>>> ef674b04e35b4919f8709e273e6b2693c625d2ed
 
+            $("#detailCloseButton2").click(function () {
+                $('#about-device').slideUp("fast");
+            });
+
+            $("settings").click(function (){
+
+            });
+        });
     });
 
 });
-
-
