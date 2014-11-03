@@ -13,7 +13,7 @@ var propertiesInDetailsView = [
     {prop: "averageHumidity", title: "Average Humidity", postfix: " %", accuracy: 0}
 ];
 
-var noReadingsMessage = "No Readings"
+var noReadingsMessage = "No Readings";
 
 
 
