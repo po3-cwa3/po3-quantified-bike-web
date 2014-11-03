@@ -5,6 +5,7 @@ $(document).ready(function() {
         $("#about").click(function () {
             $('#about-us').slideToggle("fast");
             $('#about-device').slideUp("fast");
+            $('#settings-user').slideUp("fast")
         });
 
         $("#detailCloseButton").click(function () {
@@ -14,15 +15,22 @@ $(document).ready(function() {
         $("#device").click(function () {
             $('#about-device').slideToggle("fast");
             $('#about-us').slideUp("fast");
+            $('#settings-user').slideUp("fast")
         });
 
         $("#detailCloseButton2").click(function () {
             $('#about-device').slideUp("fast");
         });
 
+        $("#detailCloseButton3").click(function () {
+            $('#settings-user').slideUp("fast");
+        });
+
         $("#settings").click(function () {
             console.log("settings have been clicked");
-            $('#settings-list').slideToggle("fast");
+            $('#settings-user').slideToggle("fast");
+            $('#about-device').slideUp("fast");
+            $('#about-us').slideUp("fast");
         });
 
     });

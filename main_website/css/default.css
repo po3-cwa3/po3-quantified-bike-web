@@ -240,8 +240,17 @@ h3 {
     cursor: pointer;
 }
 
+#detailCloseButton3 {
+    position: absolute;
+    right: 10px;
+    top: 1px;
+    left: auto;
+    font-size: 26pt;
+    cursor: pointer;
+}
 
-#settings-list {
+
+#settings-user {
     display:none;
 }
 
@@ -251,10 +260,10 @@ h3 {
 
 .list {
     position: relative;
-    display:block;
+    top: 45px;
     width: 16em;
-    left: 50%;
-    display: inline-block;
+    left:80%;
+
 }
 
 
@@ -266,7 +275,7 @@ h3 {
 }
 
 .list > li > a {
-    padding: 5px 2.3em 5px 0.6em; /* top/bottom paddings in 'em' cause a tiny "jump" in Chrome on Win */
+    padding: 5px 2.3em 5px 0.6em;
     display: block;
     font-size: 1.2em;
     position: relative;
