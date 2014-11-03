@@ -5,13 +5,16 @@
 		<meta name="description" content="BOSS Website" >
 		<meta name="keywords" content="BOSS, Bike, Stats" >
 		<link href="main.css" rel="stylesheet" media="screen" type="text/css" >
-		<title>The BOSS</title>
+		<link rel="stylesheet" type="text/css" href="css/default.css" />
+		<link rel="stylesheet" type="text/css" href="css/component.css" />
+		<title>Bike of StatS - Calendar</title>
 		
 		<!-- DataTables CSS -->
 		<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.css">
   
 		<!-- jQuery -->
 		<script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script src="js/main.js"></script>
   
 		<!-- DataTables -->
 		<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.js"></script>
@@ -31,16 +34,14 @@
         <script src="js/controller.js"></script>
 
 
+
 	</head>
 	<body>
-	
-		<div id="headerWrapper">
-			
-			<h1 class="mainTitle">The Boss</h1>
-			<h1 class="accountName">Account Name</h1>
-			
-		</div>
-		
+
+	<div class="container">
+		<div id="header-loader"></div>
+	</div>
+
 		<div id="content">
 			
 			<div id="contentWrapper">
@@ -145,14 +146,6 @@
 			</div>
 			
 		</div>
-		
-<!--
-		<div id="footerWrapper">
-			
-			
-			
-		</div>
--->
 		
 	</body>
 </html>

@@ -1,0 +1,58 @@
+\documentclass[a4paper,10pt]{article}
+%\documentclass[dutch]{IEEEtran}
+%\documentclass[a4paper,10pt]{scrartcl}
+\usepackage{pdfpages} 
+%\usepackage[dutch]{babel}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[official]{eurosym}
+\usepackage{listings}
+\usepackage[titles]{tocloft}
+\usepackage{amssymb,amsmath}
+%\usepackage{caption}
+\usepackage{url}
+\usepackage[nottoc, numbib]{tocbibind}
+\usepackage{gensymb}
+\usepackage{placeins}
+\usepackage{float}
+%\usepackage[style=ieee, backend=bibtex]{biblatex}
+ 
+\title{Quantified Bike}
+\author{Lies Bollens \and Jakob Festraets \and Rugen Heidbuchel \and Floris Kint \and Peter Lacko}
+\date{\today}
+
+\pdfinfo{%
+  /Title    (Quantified Bike)
+  /Author   (Team CWA3: Lies Bollens, Ruben De Clercq, Jakob Festraets, Rugen Heidbuchel, Floris Kint, Peter Lacko)
+  /Creator  ()
+  /Producer ()
+  /Subject  ()
+  /Keywords ()
+}
+\setlength{\footskip}{100pt}
+\begin{document}
+%\maketitle
+\includepdf[pages={-},pagecommand={}]{voorbladtv1415.pdf}
+\newpage
+\tableofcontents
+\newpage
+\listoffigures
+%\newpage
+%\listoftables
+\newpage
+%\input{inleiding/sec.tex}
+\input{group/sec.tex}
+\input{brainstorm/sec.tex}
+\input{user_stories/sec.tex}
+\input{architecture/sec.tex}
+\input{technologies/sec.tex}
+\input{course_integration/sec.tex}
+\input{conclusion/sec.tex}
+\input{appendix_working_times/sec.tex}
+\input{appendix_planning/sec.tex}
+\input{attachments/sec.tex}
+
+\bibliographystyle{IEEEtran}
+\bibliography{referenties}{}
+
+\end{document}

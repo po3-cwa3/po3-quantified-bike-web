@@ -10,7 +10,6 @@ html, body {
 
 body {
 	font-family: 'Heiti SC', 'Heiti TC', 'Futura', 'Gill Sans';
-	background-color: #f6f6f6;
     min-width: 850px;
 }
 
@@ -29,8 +28,9 @@ h1 {
 	width: 40px;
 	height: 40px;
 	margin: 30px auto 30px auto;
-	background-color: deepskyblue;
+	background-color: #47a3da;
 	animation: spinnerAnimation 0.8s infinite ease-in-out;
+	-moz-animation: spinnerAnimation 0.8s infinite ease-in-out;
 	-webkit-animation: spinnerAnimation 0.8s infinite ease-in-out;
 }
 
@@ -45,6 +45,15 @@ h1 {
 	}
 }
 
+@-moz-keyframes spinnerAnimation {
+	0% {
+		-moz-transform: rotate(0deg);
+	}
+	100% {
+		-moz-transform: rotate(360deg);
+	}
+ }
+
 @-webkit-keyframes spinnerAnimation {
 	0% {
 		-webkit-transform: rotate(0deg);
@@ -58,7 +67,7 @@ h1 {
 /* Header */
 
 #headerWrapper {
-	background-color: deepskyblue;
+	background-color: #47a3da;
 	height: 70px;
 	width: 100%;
 	float: left;
@@ -87,12 +96,9 @@ h1 {
 /* Content */
 
 #content {
-	position: absolute;
     min-width: 850px;
-	top: 70px;
-	bottom: 0px;
 	width: 100%;
-	padding-top: 20px;
+	padding-top: 10px;
 	overflow: scroll;
 }
 
@@ -104,8 +110,7 @@ h1 {
 #contentWrapper > div {
 	margin-top: 20px;
 	margin-bottom: 20px;
-	border-radius: 3px;
-	border: 1px solid deepskyblue;
+	border: 1px solid #47a3da;
 	background-color: white;
 }
 
@@ -118,7 +123,7 @@ h1 {
 	position: relative;
 	width: 100%;
 	height: 50px;
-	background-color: deepskyblue;
+	background-color: #47a3da;
 	color: white;
 }
 
@@ -149,6 +154,7 @@ h1 {
     left: -30px;
     right: auto;
     -webkit-transform: rotateZ(180deg);
+	-moz-transform: rotateZ(180deg);
     transform: rotateZ(180deg);
 }
 
@@ -166,12 +172,12 @@ h1 {
 
 #calendarTable {
 	border-collapse: collapse;
-    border-bottom: 1px solid deepskyblue;
+    border-bottom: 1px solid #47a3da;
 }
 
 #calendarTable thead th {
 	color: gray;
-	border-bottom: 1px solid deepskyblue;
+	border-bottom: 1px solid #47a3da;
 }
 
 #calendarTable td {
@@ -181,7 +187,7 @@ h1 {
 }
 
 #calendarTable td.containsContent {
-	border: 1px solid deepskyblue;
+	border: 1px solid #47a3da;
 }
 
 #calendarTable td.containsContent:hover {
@@ -203,7 +209,7 @@ h1 {
 	right: 0px;
 	font-size: 34pt;
 	text-align: center;
-	background-color: deepskyblue;
+	background-color: #47a3da;
 }
 
 #calendarBarSelectContainer {
@@ -235,6 +241,8 @@ h1 {
 #calendarBarSelectContainer img {
     width: 10px;
     -webkit-transform: rotateZ(90deg) translate(1px, 0);
+	-moz-transform: rotateZ(90deg) translate(1px, 0);
+	transform: rotateZ(90deg) translate(1px, 0);
 }
 
 
@@ -253,7 +261,7 @@ h1 {
 	margin-left: -25px;
 	border-style: solid;
 	border-width: 0 25px 25px;
-	border-color: deepskyblue transparent;
+	border-color: #47a3da transparent;
 	display: block;
 	width: 0;
 }
@@ -277,11 +285,11 @@ h1 {
 }
 
 #detailsContainerTable th {
-    border-bottom: 1px solid deepskyblue;
+    border-bottom: 1px solid #47a3da;
     padding-top: 10px;
     padding-bottom: 10px;
     font-size: 16pt;
-    color: deepskyblue;
+    color: #47a3da;
     font-weight: bold;
 }
 
@@ -323,7 +331,7 @@ h1 {
 #detailsMapCanvas {
     width: 100%;
     height: 400px;
-    border: 1px solid deepskyblue;
+    border: 1px solid #47a3da;
 }
 
 
@@ -334,7 +342,7 @@ h1 {
 	height: 70px;
 	width: 100%;
 	bottom: 0;
-	background-color: deepskyblue;
+	background-color: #47a3da;
 	color: white;
 	box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
 }
