@@ -39,9 +39,7 @@ dataController = ( function () {
             $('#about-device').css("display", "none");
         });
 
-        $("settings").click(function (){
 
-        });
     }
 
     return {
