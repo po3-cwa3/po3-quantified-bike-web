@@ -40,7 +40,9 @@ $(document).ready(function() {
         $('#about-device').slideUp("fast");
     });
 
-    $("settings").click(function (){
+    $("#settings").click(function (){
+        console.log("settings have been clicked")
+        $('#settings-list').slideToggle("fast");
 
     });
 
