@@ -11,8 +11,15 @@
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" type="text/css" href="css/default.css" />
     <link rel="stylesheet" type="text/css" href="css/component.css" />
+    <link rel="stylesheet" type="text/xss" href="css/mapstyle.css" />
     <script type="text/javascript" charset="utf8" src="js/jQuery.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/mapscript.js"></script>
+    <!-- Google Maps -->
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4SUA1W38uRk2aigX5gHDug9SNgndHnNw">
+    </script>
+
 </head>
 <body>
 <div class="container">
@@ -45,6 +52,11 @@
     <!-- laat alles boven deze lijn staan-->
     <div>
         this is the maps view.
+    </div>
+    <div id="MapCanvas">
+    </div>
+    <div id="MapOptions">
+        <input onclick="addLine();" type=button value="show route">
     </div>
     <!--laat alles hieronder staan-->
 </div>
