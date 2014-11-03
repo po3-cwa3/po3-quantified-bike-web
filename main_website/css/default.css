@@ -248,3 +248,7 @@ h3 {
     left: auto;
     font-size: 26pt;
     cursor: pointer;
+
+#settings{
+    display: none;
+}
