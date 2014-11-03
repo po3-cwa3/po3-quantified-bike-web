@@ -1,55 +1,30 @@
+$(document).ready(function() {
 
-
-dataController = ( function () {
-
-
-    function init() {
-        var counterus = 0;
-        var counterdevice = 0;
+    $("#header-loader").load("header.html", function() {
 
         $("#about").click(function () {
-            if (counterus){
-                $('#about-us').css("display", "none");
-                counterus = 0;
-            }
-            else {
-                $('#about-device').css("display", "none");
-                $('#about-us').css("display", "block");
-                counterus = 1;
-            }
+            $('#about-us').slideToggle("fast");
+            $('#about-device').slideUp("fast");
         });
 
         $("#detailCloseButton").click(function () {
-            $('#about-us').css("display", "none");
+            $('#about-us').slideUp("fast");
         });
 
         $("#device").click(function () {
-            if (counterdevice){
-                $('#about-device').css("display", "none");
-                counterdevice = 0;
-            }
-            else {
-                $('#about-us').css("display", "none");
-                $('#about-device').css("display", "block");
-                counterdevice = 1;
-            }
+            $('#about-device').slideToggle("fast");
+            $('#about-us').slideUp("fast");
         });
 
         $("#detailCloseButton2").click(function () {
-            $('#about-device').css("display", "none");
+            $('#about-device').slideUp("fast");
         });
 
-        $("settings").click(function (){
-
+        $("#settings").click(function () {
+            console.log("settings have been clicked");
+            $('#settings-list').slideToggle("fast");
         });
-    }
 
-    return {
-        init: init
-     };
+    });
 
-
-})();
-
-$(document).ready(dataController.init);
-
+});

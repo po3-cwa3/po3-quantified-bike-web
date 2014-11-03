@@ -10,7 +10,6 @@ html, body {
 
 body {
 	font-family: 'Heiti SC', 'Heiti TC', 'Futura', 'Gill Sans';
-	background-color: #f6f6f6;
     min-width: 850px;
 }
 
@@ -97,12 +96,9 @@ h1 {
 /* Content */
 
 #content {
-	position: absolute;
     min-width: 850px;
-	top: 70px;
-	bottom: 0px;
 	width: 100%;
-	padding-top: 20px;
+	padding-top: 10px;
 	overflow: scroll;
 }
 
@@ -114,7 +110,6 @@ h1 {
 #contentWrapper > div {
 	margin-top: 20px;
 	margin-bottom: 20px;
-	border-radius: 3px;
 	border: 1px solid #47a3da;
 	background-color: white;
 }
