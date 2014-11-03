@@ -27,4 +27,8 @@ $(document).ready(function() {
 
     });
 
+    if (/firefox/.test(navigator.userAgent.toLowerCase())) {
+        alert("Please don't use Firefox. This website won't work properly on Firefox.");
+    }
+
 });

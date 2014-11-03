@@ -47,7 +47,7 @@ dataController = (function() {
 
         $("#detailCloseButton").click(function() {
 
-            $('#detailSection').css("display","none");
+            $('#detailSection').slideUp("fast");
         });
 
         $("#prev_month").click(function() {
@@ -99,6 +99,7 @@ dataController = (function() {
     function queryDataForMonth(date, callback) {
 
         $.ajax({
+            //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
             url: "http://dali.cs.kuleuven.be:8080/qbike/trips?groupID=cwa3",
             jsonp: "callback",
             dataType: "jsonp",
@@ -393,7 +394,7 @@ dataController = (function() {
 
         console.log("Loading details for day with index: " + dayIndex);
 
-        $('#detailSection').css("display","block").ScrollTo();
+        $('#detailSection').slideDown("fast").ScrollTo();
 
         $("#detailSection .loadingSpinner").css("display", "block");
 
@@ -422,10 +423,10 @@ dataController = (function() {
             divHTML += roundedValue;
 
             if (roundedValue != noReadingsMessage) {
-                divHTML += property.postfix
+                divHTML += property.postfix;
             }
 
-            divHTML += '</span>'
+            divHTML += '</span>';
 
             divHTML += '</div>';
 
