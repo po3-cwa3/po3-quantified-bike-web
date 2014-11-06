@@ -1,3 +1,23 @@
+<?php
+
+require('userClass.php');
+
+session_name('qbLogin');
+session_set_cookie_params(10);
+session_start();
+
+if (!isset($_SESSION['user'])) {
+
+    header('Location: login/loginForm.php');
+    exit();
+
+} else {
+
+    $user = $_SESSION['user'];
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 	<head>
@@ -23,7 +43,7 @@
 					<li>
 						<a href="calendar.html">
 							<span class="cbp-ig-icon cbp-ig-icon-calendar"></span>
-							<h3 class="cbp-ig-title">Calendar view</h3>
+							<h3 class="cbp-ig-title"><?php echo $user->username ?>  Calendar view</h3>
 							<span class="cbp-ig-category">easy detail viewer</span>
 						</a>
 					</li>

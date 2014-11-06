@@ -9,16 +9,39 @@
     <meta name="keywords" content="BOSS, bike, data, dashboard, home" />
     <meta name="author" content="BOSS" />
     <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" type="text/css" href="css/default.css" />
-    <link rel="stylesheet" type="text/css" href="css/component.css" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
     <script type="text/javascript" charset="utf8" src="js/jQuery.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/compare.js"></script>
 </head>
 <body>
 <div class="container">
     <div id="header-loader"></div>
-    <div>
-        this is the compare view.
+    <div class="content">
+        <div>
+            <h2>choose trips to compare</h2><br>
+            <a id="month">month:</a><br>
+            <select id="select_month" class="select_month"></select>
+            <button id="show_month">select month</button>
+            <br>
+            <p id="day">day:</p>
+            <select id="select_day" class="select_day"></select>
+            <button id="show_day">select day</button>
+            <br>
+            <p id="trip">trip:</p>
+            <select id="select_trip" class="select_trip"></select>
+            <button id="show_trip">select trip</button>
+
+        </div><br><br>
+
+        <button id="start_comparing">compare</button>
+        <table id="table_compare">
+            <tr id="elements_to_compare"></tr>
+            <tr id="table_day"></tr>
+            <tr id="km"></tr>
+        </table>
+
+
     </div>
 
 </div>
