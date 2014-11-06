@@ -17,6 +17,8 @@ dataController = (function() {
 
         $("#show_day").click(function () {
             var day = $('.select_day option:selected').val();
+            console.log(day);
+            console.log("day");
             dataController.queryDataForDay(day);
         });
 
@@ -28,6 +30,7 @@ dataController = (function() {
         });
 
         $("#start_comparing").click(function () {
+            console.log(items_to_compare);
             $.each(items_to_compare, function (index, value) {
                 dataController.create_table(value);
             });
