@@ -1,95 +1,42 @@
-@import url("reset.css");
-
-
 /* General Tags */
 
-html, body {
-	height: 100%;
-	color: #494949;
-}
-
 body {
-	font-family: 'Heiti SC', 'Heiti TC', 'Futura', 'Gill Sans';
     min-width: 850px;
 }
 
 h1 {
-	font-size: 26pt;
-	text-transform: uppercase;
-	letter-spacing: 2pt;
-}
-
-
-/* General Technologies */
-
-/* Loading Spinner */
-
-.loadingSpinner {
-	width: 40px;
-	height: 40px;
-	margin: 30px auto 30px auto;
-	background-color: #47a3da;
-	animation: spinnerAnimation 0.8s infinite ease-in-out;
-	-moz-animation: spinnerAnimation 0.8s infinite ease-in-out;
-	-webkit-animation: spinnerAnimation 0.8s infinite ease-in-out;
-}
-
-@keyframes spinnerAnimation {
-	0% {
-		transform: rotate(0deg);
-		-webkit-transform: rotate(0deg);
-	}
-	100% {
-		transform: rotate(360deg);
-		-webkit-transform: rotate(360deg);
-	}
-}
-
-@-moz-keyframes spinnerAnimation {
-	0% {
-		-moz-transform: rotate(0deg);
-	}
-	100% {
-		-moz-transform: rotate(360deg);
-	}
- }
-
-@-webkit-keyframes spinnerAnimation {
-	0% {
-		-webkit-transform: rotate(0deg);
-	}
-	100% {
-		-webkit-transform: rotate(360deg);
-	}
+    font-size: 26pt;
+    text-transform: uppercase;
+    letter-spacing: 2pt;
 }
 
 
 /* Header */
 
 #headerWrapper {
-	background-color: #47a3da;
-	height: 70px;
-	width: 100%;
-	float: left;
-	color: white;
-	box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+    background-color: #47a3da;
+    height: 70px;
+    width: 100%;
+    float: left;
+    color: white;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
 }
 
 #headerWrapper h1 {
-	margin-top: 19px;
+    margin-top: 19px;
 }
 
 #headerWrapper .mainTitle {
-	float: left;
-	height: 100%;
-	margin-left: 20px;
+    float: left;
+    height: 100%;
+    margin-left: 20px;
 }
 
 #headerWrapper .accountName {
-	float: right;
-	height: 100%;
-	margin-right: 20px;
-	text-align: right;
+    float: right;
+    height: 100%;
+    margin-right: 20px;
+    text-align: right;
 }
 
 
@@ -97,40 +44,40 @@ h1 {
 
 #content {
     min-width: 850px;
-	width: 100%;
-	padding-top: 10px;
-	overflow: scroll;
+    width: 100%;
+    padding-top: 10px;
+    overflow: scroll;
 }
 
 #contentWrapper {
-	margin-left: 50px;
-	margin-right: 50px;
+    margin-left: 50px;
+    margin-right: 50px;
 }
 
 #contentWrapper > div {
-	margin-top: 20px;
-	margin-bottom: 20px;
-	border: 1px solid #47a3da;
-	background-color: white;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #47a3da;
+    background-color: white;
 }
 
 #contentWrapper h1 {
-	font-size: 24px;
-	text-align: left;
+    font-size: 24px;
+    text-align: left;
 }
 
 .containerHeader {
-	position: relative;
-	width: 100%;
-	height: 50px;
-	background-color: #47a3da;
-	color: white;
+    position: relative;
+    width: 100%;
+    height: 50px;
+    background-color: #47a3da;
+    color: white;
 }
 
 .containerHeader > h1 {
-	position: absolute;
-	top: 15px;
-	left: 15px;
+    position: absolute;
+    top: 15px;
+    left: 15px;
 }
 
 .containerHeader > .mid {
@@ -140,9 +87,9 @@ h1 {
 }
 
 .containerHeader .month {
-	right: 45px;
-	left: auto;
-	text-align: right;
+    right: 45px;
+    left: auto;
+    text-align: right;
 }
 
 .containerHeader .month img {
@@ -154,7 +101,7 @@ h1 {
     left: -30px;
     right: auto;
     -webkit-transform: rotateZ(180deg);
-	-moz-transform: rotateZ(180deg);
+    -moz-transform: rotateZ(180deg);
     transform: rotateZ(180deg);
 }
 
@@ -163,53 +110,54 @@ h1 {
     left: auto;
 }
 
+
 /* Calendar */
 
 #calendarTable_wrapper {
-	margin-top: 20px;
-	margin-bottom: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 #calendarTable {
-	border-collapse: collapse;
+    border-collapse: collapse;
     border-bottom: 1px solid #47a3da;
 }
 
 #calendarTable thead th {
-	color: gray;
-	border-bottom: 1px solid #47a3da;
+    color: gray;
+    border-bottom: 1px solid #47a3da;
 }
 
 #calendarTable td {
-	position: relative;
-	height: 110px;
-	width: 14.2857%;
+    position: relative;
+    height: 110px;
+    width: 14.2857%;
 }
 
 #calendarTable td.containsContent {
-	border: 1px solid #47a3da;
+    border: 1px solid #47a3da;
 }
 
 #calendarTable td.containsContent:hover {
-	background-color: #ededed;
+    background-color: #ededed;
 }
 
 #calendarTable .dayNumber {
-	position: relative;
-	top: 0px;
-	right: 0px;
-	text-align: right;
-	font-size: 18pt;
+    position: relative;
+    top: 0px;
+    right: 0px;
+    text-align: right;
+    font-size: 18pt;
 }
 
 #calendarTable .avSpeed {
-	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	font-size: 34pt;
-	text-align: center;
-	background-color: #47a3da;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    font-size: 34pt;
+    text-align: center;
+    background-color: #47a3da;
 }
 
 #calendarBarSelectContainer {
@@ -241,29 +189,29 @@ h1 {
 #calendarBarSelectContainer img {
     width: 10px;
     -webkit-transform: rotateZ(90deg) translate(1px, 0);
-	-moz-transform: rotateZ(90deg) translate(1px, 0);
-	transform: rotateZ(90deg) translate(1px, 0);
+    -moz-transform: rotateZ(90deg) translate(1px, 0);
+    transform: rotateZ(90deg) translate(1px, 0);
 }
 
 
 /* Detail Section */
 
 #detailSection {
-	position: relative;
-	margin-top: 50px !important;
+    position: relative;
+    margin-top: 50px !important;
 }
 
 #detailSection:after {
-	content: "";
-	position: absolute;
-	top: -25px;
-	left: 50%;
-	margin-left: -25px;
-	border-style: solid;
-	border-width: 0 25px 25px;
-	border-color: #47a3da transparent;
-	display: block;
-	width: 0;
+    content: "";
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    margin-left: -25px;
+    border-style: solid;
+    border-width: 0 25px 25px;
+    border-color: #47a3da transparent;
+    display: block;
+    width: 0;
 }
 
 #detailCloseButton {
@@ -332,17 +280,4 @@ h1 {
     width: 100%;
     height: 400px;
     border: 1px solid #47a3da;
-}
-
-
-/* Footer */
-
-#footerWrapper {
-	position: absolute;
-	height: 70px;
-	width: 100%;
-	bottom: 0;
-	background-color: #47a3da;
-	color: white;
-	box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
 }
