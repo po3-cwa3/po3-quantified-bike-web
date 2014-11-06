@@ -15,6 +15,7 @@ body { height: 100%;
     border: 1px solid #000000;
     float:left;
     margin: 0;
+    text-align: center;
 }
 #MapOptions { float:left;
     margin: 5px;
