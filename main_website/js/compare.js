@@ -3,6 +3,7 @@
 compareController = (function() {
 
     var items_to_compare = [];
+    var month;
 
     function init() {
 
@@ -10,7 +11,7 @@ compareController = (function() {
 
         $("#show_month").click(function () {
 
-            var month = $('.select_month option:selected').val();
+            month = $('.select_month option:selected').val();
 
             display_days(month);
         });
@@ -42,20 +43,29 @@ compareController = (function() {
 
     function queryDataForMonth() {
 
-        $.ajax({
-            //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
-            url: "http://dali.cs.kuleuven.be:8080/qbike/trips?groupID=cwa3",
-            jsonp: "callback",
-            dataType: "jsonp",
+        //$.ajax({
+        //    //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
+        //    url: "http://dali.cs.kuleuven.be:8080/qbike/trips?groupID=cwa3",
+        //    jsonp: "callback",
+        //    dataType: "jsonp",
+        //
+        //    success: function (json) {
+        //
+        //        console.log("We got " + json.length + " elements for cwa3.");
+        //        data = display_months(json);
+        //        //monthData = calendarController.filterDataForMonth(json, date);
+        //        //calendarController.calculateMonthAverages();
+        //        //data = calendarController.convertDataToCalendarCells(monthData, date);
+        //    }
+        //});
 
-            success: function (json) {
+        dataController.queryTripsForGroupID("cwa3", function (trips) {
 
-                console.log("We got " + json.length + " elements for cwa3.");
-                data = display_months(json);
-                //monthData = calendarController.filterDataForMonth(json, date);
-                //calendarController.calculateMonthAverages();
-                //data = calendarController.convertDataToCalendarCells(monthData, date);
-            }
+            console.log("We got " + trips.length + " elements for cwa3.");
+            data = display_months(trips);
+            //monthData = calendarController.filterDataForMonth(json, date);
+            //calendarController.calculateMonthAverages();
+            //data = calendarController.convertDataToCalendarCells(monthData, date);
         });
     }
 
@@ -69,7 +79,7 @@ compareController = (function() {
 
         });
         $.each(month, function(index,value){
-            $("#select_month").append("<option id='"+value +"'>"+ value +"</option>");
+            $("#select_month").append("<option id='"+ value +"'>"+ value +"</option>");
         });
     }
 
@@ -103,21 +113,30 @@ compareController = (function() {
     }
 
     function queryDataForDay(day){
-        $.ajax({
-            //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
-            url: "http://dali.cs.kuleuven.be:8080/qbike/trips?toDate=2014-"+month+"-"+day+"&groupID=cwa3",
-            jsonp: "callback",
-            dataType: "jsonp",
+        //$.ajax({
+        //    //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
+        //    url: "http://dali.cs.kuleuven.be:8080/qbike/trips?toDate=2014-"+month+"-"+day+"&groupID=cwa3",
+        //    jsonp: "callback",
+        //    dataType: "jsonp",
+        //
+        //    success: function (json) {
+        //
+        //        console.log("We got " + json.length + " elements for this day ");
+        //        $.each(json, function(index, value){
+        //            var _id = value._id;
+        //            $("#select_trip").append("<option value='"+_id +"'>"+index +"</option>");
+        //        });
+        //
+        //    }
+        //});
 
-            success: function (json) {
+        dataController.queryTripsForDay(new Date(2014, month-1, day), function (trips) {
 
-                console.log("We got " + json.length + " elements for this day ");
-                $.each(json, function(index, value){
-                    var _id = value._id;
-                    $("#select_trip").append("<option value='"+_id +"'>"+index +"</option>");
-                });
-
-            }
+            console.log("We got " + trips.length + " elements for this day.");
+            $.each(trips, function(index, value){
+                var _id = value._id;
+                $("#select_trip").append("<option value='"+_id +"'>"+index +"</option>");
+            });
         });
     }
 

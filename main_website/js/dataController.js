@@ -70,7 +70,7 @@ dataController = (function() {
         var month = date.getMonth() + 1;
         var day = date.getDate();
 
-        console.log(day + "/" + month + "/" + year);
+        console.log("Querying trips for " + day + "/" + month + "/" + year + ".");
 
         //queryURL("?groupID=cwa3&fromDate=" + year + "-" + month + "-" + day + "&toDate=" + year + "-" + month + "-" + day, function (json) {
         //
@@ -79,7 +79,7 @@ dataController = (function() {
         //    callback(json);
         //});
 
-        queryTripsForPeriod(date, date, function (trips) {
+        queryTripsForPeriod(date, new Date(year, month-1, day+1), function (trips) {
 
             callback(trips);
         });
