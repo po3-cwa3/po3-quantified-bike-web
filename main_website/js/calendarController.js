@@ -12,7 +12,9 @@ calendarController = (function() {
     var detailsMap;
 
     var monthArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
     var propertiesInDetailsView = [
+        {prop: "nrOfTrips", title: "Nr. of trips", postfix: "", accuracy: 0},
         {prop: "averageSpeed", title: "Average Speed", postfix: " km/h", accuracy: 2},
         {prop: "totalDistance", title: "Total Distance", postfix: " km", accuracy: 2},
         {prop: "averageTemperature", title: "Average Temperature", postfix: " °C", accuracy: 0},
@@ -26,7 +28,7 @@ calendarController = (function() {
 
     function init() {
 
-        calendarController.changeMonth(month);
+        changeMonth(month);
 
 
         $.each(propertiesInDetailsView, function(index, object) {
@@ -34,8 +36,8 @@ calendarController = (function() {
             $("#calendarBarSelect").append('<option prop="' + object.prop + '">' + object.title + '</option>');
         });
 
-        var beginOption = propertiesInDetailsView[2];
-        calendarController.changeSelectedBarOption(beginOption.title, beginOption.prop);
+        var beginOption = propertiesInDetailsView[0];
+        changeSelectedBarOption(beginOption.title, beginOption.prop);
 
         $("#calendarBarSelect").change(function() {
 
@@ -43,9 +45,7 @@ calendarController = (function() {
 
             console.log("Changed selected calendar bar option to " + selectedOption.text());
 
-            calendarController.changeSelectedBarOption(selectedOption.text(), selectedOption.attr("prop"));
-
-            //calendarController.reloadTable();
+            changeSelectedBarOption(selectedOption.text(), selectedOption.attr("prop"));
         });
 
 
@@ -56,16 +56,16 @@ calendarController = (function() {
 
         $("#prev_month").click(function() {
 
-            calendarController.changeMonth(-1);
+            changeMonth(-1);
 
-            calendarController.reloadTable();
+            reloadTable();
         });
 
         $("#next_month").click(function () {
 
-            calendarController.changeMonth(1);
+            changeMonth(1);
 
-            calendarController.reloadTable();
+            reloadTable();
         });
 
 
@@ -79,7 +79,7 @@ calendarController = (function() {
                  This content will be overwritten once the data is loaded. */
                 $("#calendarTable tbody").html('<td colspan="7"><div class="loadingSpinner"></div></td>');
 
-                calendarController.queryDataForMonth(month, function (data) {
+                queryDataForMonth(month, function (data) {
 
                     callback({data: data});
                 });
@@ -92,7 +92,7 @@ calendarController = (function() {
             "info": false,
 
             /* This function gets called when the initialisation is complete. */
-            "initComplete": calendarController.tableHasBeenRedrawn
+            "initComplete": tableHasBeenRedrawn
         });
 
     }
@@ -102,23 +102,34 @@ calendarController = (function() {
 
     function queryDataForMonth(date, callback) {
 
-        $.ajax({
-            //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
-            url: "http://dali.cs.kuleuven.be:8080/qbike/trips?groupID=cwa3",
-            jsonp: "callback",
-            dataType: "jsonp",
+        //$.ajax({
+        //    //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
+        //    url: "http://dali.cs.kuleuven.be:8080/qbike/trips?groupID=cwa3",
+        //    jsonp: "callback",
+        //    dataType: "jsonp",
+        //
+        //    success: function (json) {
+        //
+        //        console.log("We got " + json.length + " elements for cwa3.");
+        //
+        //        monthData = calendarController.filterDataForMonth(json, date);
+        //        calendarController.calculateMonthAverages();
+        //
+        //        var data = calendarController.convertDataToCalendarCells(monthData, date);
+        //
+        //        callback(data);
+        //    }
+        //});
 
-            success: function (json) {
+        dataController.queryDataForMonth(date, function (data) {
 
-                console.log("We got " + json.length + " elements for cwa3.");
+            console.log(data);
 
-                monthData = calendarController.filterDataForMonth(json, date);
-                calendarController.calculateMonthAverages();
+            monthData = data;
 
-                data = calendarController.convertDataToCalendarCells(monthData, date);
+            var tableData = convertDataToCalendarCells(monthData, date);
 
-                callback(data);
-            }
+            callback(tableData);
         });
     }
 
@@ -185,7 +196,7 @@ calendarController = (function() {
 
                 if (day > 0 && day <= nrOfDays) {
 
-                    var average = monthData[day-1].average;
+                    var average = data[day-1].average;
 
                     var dayNumberHTML = '<h1 class="dayNumber">' + day + '</h1>';
                     cellData += dayNumberHTML;
@@ -208,7 +219,7 @@ calendarController = (function() {
 
         $.each(monthData, function(day, dayData) {
 
-            dayData.average = calendarController.getAveragesFromDay(dayData.trips);
+            dayData.average = dataController.getAveragesFromTrips(dayData.trips);
         });
     }
 

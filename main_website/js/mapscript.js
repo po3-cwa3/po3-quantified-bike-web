@@ -4,7 +4,7 @@ var myData = [["http://extranet.eco.ca/projects/crm/OccupationalProfiles/wopID20
 var markers = [];
 var infoWindows = [];
 
-dataController = ( function () {
+calendarController = ( function () {
 
 
     function initMap() {
@@ -61,5 +61,5 @@ dataController = ( function () {
 
 })();
 
-$(document).ready(dataController.initMap);
-$(document).ready(dataController.initMarkers);
+$(document).ready(calendarController.initMap);
+$(document).ready(calendarController.initMarkers);

@@ -1,25 +1,25 @@
-var items_to_compare = [];
 
-dataController = (function() {
+
+compareController = (function() {
+
+    var items_to_compare = [];
 
     function init() {
 
-        $("#month").click(function () {
-            dataController.queryDataForMonth();
-        });
+        $("#month").click(queryDataForMonth);
 
         $("#show_month").click(function () {
 
-            month = $('.select_month option:selected').val();
+            var month = $('.select_month option:selected').val();
 
-            dataController.display_days(month);
+            display_days(month);
         });
 
         $("#show_day").click(function () {
             var day = $('.select_day option:selected').val();
             console.log(day);
             console.log("day");
-            dataController.queryDataForDay(day);
+            queryDataForDay(day);
         });
 
         $("#show_trip").click(function () {
@@ -32,7 +32,7 @@ dataController = (function() {
         $("#start_comparing").click(function () {
             console.log(items_to_compare);
             $.each(items_to_compare, function (index, value) {
-                dataController.create_table(value);
+                create_table(value);
             });
             items_to_compare = [];
             $("#select_day").empty();
@@ -52,9 +52,9 @@ dataController = (function() {
 
                 console.log("We got " + json.length + " elements for cwa3.");
                 data = display_months(json);
-                //monthData = dataController.filterDataForMonth(json, date);
-                //dataController.calculateMonthAverages();
-                //data = dataController.convertDataToCalendarCells(monthData, date);
+                //monthData = calendarController.filterDataForMonth(json, date);
+                //calendarController.calculateMonthAverages();
+                //data = calendarController.convertDataToCalendarCells(monthData, date);
             }
         });
     }
@@ -146,4 +146,4 @@ dataController = (function() {
     }
 })();
 
-$(document).ready(dataController.init);
+$(document).ready(compareController.init);

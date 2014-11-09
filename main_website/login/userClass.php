@@ -2,8 +2,8 @@
 
 class User {
 
-    public $username;
-    public $password;
+    public $username = "";
+    public $password = "";
 }
 
 ?>

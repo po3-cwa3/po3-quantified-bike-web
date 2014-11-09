@@ -38,21 +38,25 @@ if ($allowedUsers[$username] != $password) {
     notAuthorised('The password you entered was incorrect.');
 }
 
+// if the user is registered, make a User object containing the user info
 $user = new User();
 $user->username = $username;
 $user->password = $password;
 
+// set the session User object to the one we just created
 $_SESSION['user'] = $user;
 
 // redirect to index.php
 header('Location: ../index.php');
 
 
-
+// functino to redirect to the login page with a certain error message
 function notAuthorised($message) {
 
+    // the message is passed in the URL with a GET request, therefore the message must be urlencoded
     $message = urlencode($message);
 
+    // redirect to loginForm.php with the message in a GET request
     header("Location: loginForm.php?msg=$message");
     exit();
 }

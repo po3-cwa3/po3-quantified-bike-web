@@ -1,6 +1,6 @@
 <?php
 
-require('userClass.php');
+require('login/userClass.php');
 
 session_name('qbLogin');
 session_set_cookie_params(10);
