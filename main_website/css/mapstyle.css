@@ -7,8 +7,18 @@ body { height: 100%;
 }
 
 .container {height: 100%;
-    width: 100%}
+    width: 100%;
+}
 
+div.pictureContainer {
+    height: 200px;
+    width: 200px;
+}
+
+img.picture {
+    height: 95%;
+    width: 95%;
+}
 
 #MapCanvas { height: 60% ;
     width: 70%;

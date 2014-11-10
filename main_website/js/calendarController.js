@@ -12,7 +12,9 @@ calendarController = (function() {
     var detailsMap;
 
     var monthArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
     var propertiesInDetailsView = [
+        {prop: "nrOfTrips", title: "Nr. of trips", postfix: "", accuracy: 0},
         {prop: "averageSpeed", title: "Average Speed", postfix: " km/h", accuracy: 2},
         {prop: "totalDistance", title: "Total Distance", postfix: " km", accuracy: 2},
         {prop: "averageTemperature", title: "Average Temperature", postfix: " °C", accuracy: 0},
@@ -26,7 +28,7 @@ calendarController = (function() {
 
     function init() {
 
-        calendarController.changeMonth(month);
+        changeMonth(month);
 
 
         $.each(propertiesInDetailsView, function(index, object) {
@@ -34,8 +36,8 @@ calendarController = (function() {
             $("#calendarBarSelect").append('<option prop="' + object.prop + '">' + object.title + '</option>');
         });
 
-        var beginOption = propertiesInDetailsView[2];
-        calendarController.changeSelectedBarOption(beginOption.title, beginOption.prop);
+        var beginOption = propertiesInDetailsView[0];
+        changeSelectedBarOption(beginOption.title, beginOption.prop);
 
         $("#calendarBarSelect").change(function() {
 
@@ -43,9 +45,7 @@ calendarController = (function() {
 
             console.log("Changed selected calendar bar option to " + selectedOption.text());
 
-            calendarController.changeSelectedBarOption(selectedOption.text(), selectedOption.attr("prop"));
-
-            //calendarController.reloadTable();
+            changeSelectedBarOption(selectedOption.text(), selectedOption.attr("prop"));
         });
 
 
@@ -56,16 +56,16 @@ calendarController = (function() {
 
         $("#prev_month").click(function() {
 
-            calendarController.changeMonth(-1);
+            changeMonth(-1);
 
-            calendarController.reloadTable();
+            reloadTable();
         });
 
         $("#next_month").click(function () {
 
-            calendarController.changeMonth(1);
+            changeMonth(1);
 
-            calendarController.reloadTable();
+            reloadTable();
         });
 
 
@@ -79,7 +79,7 @@ calendarController = (function() {
                  This content will be overwritten once the data is loaded. */
                 $("#calendarTable tbody").html('<td colspan="7"><div class="loadingSpinner"></div></td>');
 
-                calendarController.queryDataForMonth(month, function (data) {
+                queryDataForMonth(month, function (data) {
 
                     callback({data: data});
                 });
@@ -92,7 +92,7 @@ calendarController = (function() {
             "info": false,
 
             /* This function gets called when the initialisation is complete. */
-            "initComplete": calendarController.tableHasBeenRedrawn
+            "initComplete": tableHasBeenRedrawn
         });
 
     }
@@ -102,55 +102,20 @@ calendarController = (function() {
 
     function queryDataForMonth(date, callback) {
 
-        $.ajax({
-            //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
-            url: "http://dali.cs.kuleuven.be:8080/qbike/trips?groupID=cwa3",
-            jsonp: "callback",
-            dataType: "jsonp",
+        dataController.queryDataForMonth(date, function (data) {
 
-            success: function (json) {
+            console.log(data);
 
-                console.log("We got " + json.length + " elements for cwa3.");
+            monthData = data;
 
-                monthData = calendarController.filterDataForMonth(json, date);
-                calendarController.calculateMonthAverages();
+            var tableData = convertDataToCalendarCells(monthData, date);
 
-                data = calendarController.convertDataToCalendarCells(monthData, date);
-
-                callback(data);
-            }
+            callback(tableData);
         });
     }
 
 
 //    Helper Functions
-
-    function filterDataForMonth(data, date) {
-
-        var month = date.getMonth()+1;
-        var year = date.getFullYear();
-        var nrOfDays = new Date(year, month, 0).getDate();
-
-        var returnData = [];
-
-        for (i = 0; i<nrOfDays; i++) {
-            returnData.push({trips: []});
-        }
-
-        $.each(data, function(index, value) {
-            var date = new Date(value.startTime);
-
-            if (date.getMonth()+1 == month) {
-
-                var day = date.getDate()-1;
-
-                returnData[day].trips.push(value);
-            }
-
-        });
-
-        return returnData;
-    }
 
 
     function convertDataToCalendarCells(data, date) {
@@ -162,14 +127,6 @@ calendarController = (function() {
         var nrOfDays = lastDayDate.getDate();
         var endDay = beginDay + nrOfDays - 1;
         var nrOfRows = Math.ceil(endDay/7.0);
-
-//        console.log("first day: " + firstDayDate);
-//        console.log("last day: " + lastDayDate);
-//        console.log("begin day: " + beginDay);
-//        console.log("nr of days: " + nrOfDays);
-//        console.log("end day: " + endDay);
-//        console.log("nr of rows: " + nrOfRows);
-
 
         var calendar = new Array();
 
@@ -185,7 +142,7 @@ calendarController = (function() {
 
                 if (day > 0 && day <= nrOfDays) {
 
-                    var average = monthData[day-1].average;
+                    var average = data[day-1].average;
 
                     var dayNumberHTML = '<h1 class="dayNumber">' + day + '</h1>';
                     cellData += dayNumberHTML;
@@ -208,88 +165,8 @@ calendarController = (function() {
 
         $.each(monthData, function(day, dayData) {
 
-            dayData.average = calendarController.getAveragesFromDay(dayData.trips);
+            dayData.average = dataController.getAveragesFromTrips(dayData.trips);
         });
-    }
-
-
-    function getAveragesFromDay(trips) {
-
-        //var totalDist = 0;
-
-        var tempReadings = [];
-
-        var humReadings = [];
-
-        $.each(trips, function(index, trip) {
-
-            if (trip.hasOwnProperty("sensorData")) {
-
-                $.each(trip.sensorData, function(index, sensorValue) {
-
-                    switch(sensorValue.sensorID) {
-
-                        // Temperature
-                        case 3:
-
-                            var temp = parseInt(sensorValue.data[0].value);
-
-                            if (!isNaN(temp)) {
-
-                                tempReadings.push(temp);
-                            }
-
-                            break;
-
-
-                        // Humidity
-                        case 4:
-
-                            var hum = parseInt(sensorValue.data[0].value);
-
-                            if (!isNaN(hum)) {
-
-                                humReadings.push(hum);
-                            }
-
-                            break;
-
-                        default:
-                    }
-                });
-            }
-
-//            if (trip.hasOwnProperty("meta")) {
-//
-//                $.each(trip.meta, function(key, metaValue) {
-//
-//                    switch(key) {
-//
-//                        case "distance":
-//
-//                                totalDist += parseInt(metaValue);
-//
-//                            break;
-//
-//                        case "averageSpeed":
-//
-//
-//
-//                            break;
-//                    }
-//                });
-//            }
-        });
-
-        var avTemp = arrayAverage(tempReadings);
-
-        var avHum = arrayAverage(humReadings)
-
-        var average = new Object();
-        average.averageTemperature = avTemp;
-        average.averageHumidity = avHum;
-
-        return average;
     }
 
 
@@ -393,7 +270,7 @@ calendarController = (function() {
                 /* We add a click funtion to every table cell. */
                 $(this).click(function() {
 
-                    calendarController.tableCellHasBeenClicked($(this));
+                    tableCellHasBeenClicked($(this));
                 });
             }
         });
@@ -410,7 +287,7 @@ calendarController = (function() {
 
         $("#detailSection .loadingSpinner").css("display", "block");
 
-        calendarController.queryDetailsForDay(dayIndex);
+        queryDetailsForDay(dayIndex);
     }
 
 
@@ -447,7 +324,12 @@ calendarController = (function() {
 
         $("#detailsAveragesViewContainer").html(averagesHTML);
 
-        calendarController.initDetailsMap();
+        initDetailsMap();
+
+        $.each(average.routes, function(index, route) {
+            drawTrip(route,index).setMap(detailsMap);
+
+        });
 
         $("#detailSection .loadingSpinner").css("display", "none");
     }
@@ -458,7 +340,7 @@ calendarController = (function() {
         var detailsMapOptions = {
             zoom: 18,
             center: {lat: 50.864, lng: 4.679},
-            mapTypeId: google.maps.MapTypeId.TERRAIN
+            mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
         detailsMap = new google.maps.Map(document.getElementById("detailsMapCanvas"),
@@ -498,7 +380,35 @@ calendarController = (function() {
 
     function reloadTable() {
 
-        $("#calendarTable").DataTable().ajax.reload(calendarController.tableHasBeenRedrawn);
+        $("#calendarTable").DataTable().ajax.reload(tableHasBeenRedrawn);
+    }
+
+    function drawTrip(tripCoordinates,color) {
+
+        var digit = color - Math.floor(color/10)*10
+
+        tripPath = new google.maps.Polyline({
+            path: tripCoordinates,
+            geodesic: false,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 3
+        });
+
+        if (digit == 0||digit == 5) {
+            tripPath.strokeColor = '#00FF00'
+        } else if (digit == 1||digit == 6) {
+            tripPath.strokeColor = '#FF0000'
+        } else if (digit == 2||digit == 7) {
+            tripPath.strokeColor = '#FFFF00'
+        } else if (digit == 3||digit == 8) {
+            tripPath.strokeColor = '#00EFFF'
+        } else{
+            tripPath.strokeColor = '#0000FF'
+        }
+
+
+        return tripPath;
     }
 
 
@@ -506,10 +416,8 @@ calendarController = (function() {
         init: init,
 
         queryDataForMonth: queryDataForMonth,
-        filterDataForMonth: filterDataForMonth,
 
         calculateMonthAverages: calculateMonthAverages,
-        getAveragesFromDay: getAveragesFromDay,
 
         convertDataToCalendarCells: convertDataToCalendarCells,
 
@@ -524,7 +432,9 @@ calendarController = (function() {
         initDetailsMap: initDetailsMap,
 
         arrayAverage: arrayAverage,
-        round: round
+        round: round,
+
+        drawTrip: drawTrip
     };
 
 })();

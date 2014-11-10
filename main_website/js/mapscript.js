@@ -4,7 +4,7 @@ var myData = [["http://extranet.eco.ca/projects/crm/OccupationalProfiles/wopID20
 var markers = [];
 var infoWindows = [];
 
-dataController = ( function () {
+mapController = ( function () {
 
 
     function initMap() {
@@ -32,10 +32,14 @@ dataController = ( function () {
                     position: myLatLng,
                     map: Map
                 });
-//            var contentString = '<img src=myData[index][0] alt="Smiley face" height="100" width="100">'
+
+                var contentString = '<div class="pictureContainer">'+
+                    '<img class="picture" src='+myData[i][0]+'>'+
+                    '</div>';
+
                 infoWindows[i] = new google.maps.InfoWindow({
-                    content: '<img src='+myData[i][0]+' height="200" width="200">',
-                    position: myLatLng,
+                    content: contentString,
+                    position: myLatLng
                 });
 
 
@@ -61,5 +65,5 @@ dataController = ( function () {
 
 })();
 
-$(document).ready(dataController.initMap);
-$(document).ready(dataController.initMarkers);
+$(document).ready(mapController.initMap);
+$(document).ready(mapController.initMarkers);

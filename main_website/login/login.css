@@ -1,8 +1,12 @@
+body {
+    min-height: 308px;
+}
+
 #login{
     position: relative;
     width:350px;
     margin:0 auto;
-    margin-top:-140px;
+    margin-top:-154px;
     top: 50%;
     margin-bottom:2%;
     transition:opacity 1s;
