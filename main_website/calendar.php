@@ -41,9 +41,6 @@ if (!isset($user)) {
 		<!-- DataTables JS -->
 		<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.js"></script>
 		
-		<!-- Chart JS -->
-		<script src="Chart plugin/Chart.js"></script>
-		
 		<!-- jQuery ScrollTo JS -->
 		<script src="ScrollTo plugin/jquery-scrollto.js"></script>
 
