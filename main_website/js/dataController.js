@@ -166,6 +166,8 @@ dataController = (function() {
 
         var humReadings = [];
 
+        var tripsCoordinates = [];
+
         $.each(trips, function(index, trip) {
 
             if (trip.hasOwnProperty("sensorData")) {
@@ -173,6 +175,16 @@ dataController = (function() {
                 $.each(trip.sensorData, function(index, sensorValue) {
 
                     switch(sensorValue.sensorID) {
+
+                        // GPS coordinates
+
+                        case 1:
+
+                            var coordinateArray = convertTripCoToMapCo(sensorValue.data[0].coordinates);
+
+                            tripsCoordinates.push(coordinateArray);
+
+                            break;
 
                         // Temperature
                         case 3:
@@ -242,7 +254,8 @@ dataController = (function() {
             averageSpeed: avSpeed,
             averageTemperature: avTemp,
             averageHumidity: avHum,
-            nrOfTrips: trips.length
+            nrOfTrips: trips.length,
+            routes: tripsCoordinates
         };
 
         return average;
@@ -299,6 +312,25 @@ dataController = (function() {
         return nrOfDays;
     }
 
+    // Map Methods
+
+    function convertTripCoToMapCo(coordinates) {
+
+        var coordinateArray = [];
+
+        $.each(coordinates, function(index, position){
+
+            var lattitude = position[0];
+            var longitude = position[1];
+            var coordinatesObject = {lat: lattitude, lng: longitude};
+
+            coordinateArray.push(coordinatesObject)
+        });
+
+        coordinateArray.push({lat: 50.864, lng: 4.679})
+        return coordinateArray;
+    }
+
 
 
 
@@ -323,7 +355,9 @@ dataController = (function() {
 
         arrayAverage: arrayAverage,
         round: round,
-        nrOfDaysBetweenDates: nrOfDaysBetweenDates
+        nrOfDaysBetweenDates: nrOfDaysBetweenDates,
+
+        convertTripCoToMapCo: convertTripCoToMapCo
     };
 
 })();
