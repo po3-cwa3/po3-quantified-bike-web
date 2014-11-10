@@ -1,20 +1,20 @@
 <?php
 
-require('userClass.php');
-
-// Set session name
-session_name('qbLogin');
-
-// Session lives for 1 minute
-session_set_cookie_params(10);
-
-// Start the session
-session_start();
+require('session.php');
 
 $allowedUsers = [
     "rugheid" => "boss",
-    "lies" => "boss"
+    "lies" => "boss",
+    "guest" => "boss"
 ];
+
+if (isset($user)) {
+
+    session_destroy();
+    unset($user);
+
+    notAuthorised('There was an error, we are very sorry for the inconvenience. Please log in again.');
+}
 
 // redirect if username and/or password isn't set
 if (!isset($_POST['username']) || !isset($_POST['password'])) {
@@ -46,8 +46,13 @@ $user->password = $password;
 // set the session User object to the one we just created
 $_SESSION['user'] = $user;
 
+$to = "../index.php";
+if (isset($_GET['to'])) {
+    $to = $_GET['to'];
+}
+
 // redirect to index.php
-header('Location: ../index.php');
+header('Location: ' . $to);
 
 
 // functino to redirect to the login page with a certain error message
