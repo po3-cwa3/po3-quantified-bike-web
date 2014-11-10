@@ -326,6 +326,11 @@ calendarController = (function() {
 
         initDetailsMap();
 
+        $.each(average.routes, function(index, route) {
+            drawTrip(route,index).setMap(detailsMap);
+
+        });
+
         $("#detailSection .loadingSpinner").css("display", "none");
     }
 
@@ -335,7 +340,7 @@ calendarController = (function() {
         var detailsMapOptions = {
             zoom: 18,
             center: {lat: 50.864, lng: 4.679},
-            mapTypeId: google.maps.MapTypeId.TERRAIN
+            mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
         detailsMap = new google.maps.Map(document.getElementById("detailsMapCanvas"),
@@ -378,6 +383,34 @@ calendarController = (function() {
         $("#calendarTable").DataTable().ajax.reload(tableHasBeenRedrawn);
     }
 
+    function drawTrip(tripCoordinates,color) {
+
+        var digit = color - Math.floor(color/10)*10
+
+        tripPath = new google.maps.Polyline({
+            path: tripCoordinates,
+            geodesic: false,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 3
+        });
+
+        if (digit == 0||digit == 5) {
+            tripPath.strokeColor = '#00FF00'
+        } else if (digit == 1||digit == 6) {
+            tripPath.strokeColor = '#FF0000'
+        } else if (digit == 2||digit == 7) {
+            tripPath.strokeColor = '#FFFF00'
+        } else if (digit == 3||digit == 8) {
+            tripPath.strokeColor = '#00EFFF'
+        } else{
+            tripPath.strokeColor = '#0000FF'
+        }
+
+
+        return tripPath;
+    }
+
 
     return {
         init: init,
@@ -399,7 +432,9 @@ calendarController = (function() {
         initDetailsMap: initDetailsMap,
 
         arrayAverage: arrayAverage,
-        round: round
+        round: round,
+
+        drawTrip: drawTrip
     };
 
 })();
