@@ -15,11 +15,17 @@
     <!-- Main Theme CSS -->
     <link rel="stylesheet" type="text/css" href="css/main.css" />
 
+    <!-- specific CSS -->
+    <link rel="stylesheet" type="text/css" href="css/compare.css" />
+
     <!-- jQuery -->
     <script type="text/javascript" charset="utf8" src="js/jQuery.js"></script>
 
     <!-- Main Theme JS -->
     <script src="js/main.js"></script>
+
+    <!-- chart JS -->
+    <script src="js/ChartNew.js"></script>
 
     <!-- Data Controller JS -->
     <script src="js/dataController.js"></script>
@@ -48,14 +54,21 @@
 
         </div><br><br>
 
-        <button id="start_comparing">compare</button>
-        <table id="table_compare">
+        <button id="start_comparing">compare</button><br>
+        <button id="example">example graph</button>
+        <table id="table_compare" class="table_compare">
             <tr id="elements_to_compare"></tr>
+
             <tr id="table_day"></tr>
+
             <tr id="km"></tr>
+
+            <tr id="duration"></tr>
+
         </table>
 
-
+        <canvas id="first_chart" width="400" height="400"></canvas>
+        <div id="legend"></div>
     </div>
 
 </div>
