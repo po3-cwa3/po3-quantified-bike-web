@@ -34,7 +34,7 @@ dataController = ( function () {
                 });
 //            var contentString = '<img src=myData[index][0] alt="Smiley face" height="100" width="100">'
                 infoWindows[i] = new google.maps.InfoWindow({
-                    content: '<img src='+myData[i][0]+' height="200" width="200">',
+                    content: '<img class="picture" src='+myData[i][0]+'>',
                     position: myLatLng,
                 });
 

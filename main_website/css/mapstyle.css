@@ -9,6 +9,10 @@ body { height: 100%;
 .container {height: 100%;
     width: 100%}
 
+.picture {
+    height: 200px
+    width: 200px
+}
 
 #MapCanvas { height: 60% ;
     width: 70%;
