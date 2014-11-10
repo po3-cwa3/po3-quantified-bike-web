@@ -1,3 +1,17 @@
+<?php
+
+require('login/session.php');
+
+if (!isset($user)) {
+
+    header('Location: login/loginForm.php?from=' . urlencode('../compare.php'));
+    exit();
+
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 <head>
@@ -11,6 +25,9 @@
     <title>Bike of StatS</title>
 
     <link rel="shortcut icon" href="../favicon.ico">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="Bootstrap/css/bootstrap.css">
 
     <!-- Main Theme CSS -->
     <link rel="stylesheet" type="text/css" href="css/main.css" />
@@ -26,6 +43,9 @@
 
     <!-- chart JS -->
     <script src="js/ChartNew.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script type="text/javascript" charset="utf8" src="Bootstrap/js/bootstrap.js"></script>
 
     <!-- Data Controller JS -->
     <script src="js/dataController.js"></script>

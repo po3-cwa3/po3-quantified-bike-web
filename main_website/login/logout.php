@@ -6,7 +6,7 @@ $_SESSION = Array();
 session_destroy();
 unset($user);
 
-$message = "You are successfully logged out.";
+$message = "You have successfully logged out.";
 
 header("Location: loginForm.php?msg=$message");
 
