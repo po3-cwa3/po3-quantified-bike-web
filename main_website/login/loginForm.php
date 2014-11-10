@@ -1,3 +1,19 @@
+<?php
+
+$message = "";
+
+if (isset($_GET['msg'])) {
+    $message = $_GET['msg'];
+}
+
+$from = "";
+
+if (isset($_GET['from'])) {
+    $from = '?to=' . urlencode($_GET['from']);
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 <head>
@@ -18,17 +34,11 @@
 
     <div id="login">
 
-        <p id="errorMessage"><?php
-
-            if (isset($_GET['msg'])) {
-                echo $_GET['msg'];
-            }
-
-            ?></p>
+        <p id="errorMessage"><?php echo $message ?></p>
 
         <h1>Login</h1>
 
-        <form id="loginForm" action="login.php" method="post">
+        <form id="loginForm" action="login.php<?php echo $from ?>" method="post">
 
             <input type="text" name="username" placeholder="Username">
             <input type="password" name="password" placeholder="Password">

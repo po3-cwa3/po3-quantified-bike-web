@@ -173,6 +173,20 @@ a:hover {
 	border: 4px solid #47a3da;
 }
 
+.container header nav #username {
+    float: right;
+    margin-top: -5px;
+    padding-left: 10px;
+}
+
+.container header nav p {
+    cursor: pointer;
+}
+
+.container header nav p:hover {
+    color: #245269;
+}
+
 .container header nav a > span {
 	display: none;
 }

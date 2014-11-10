@@ -1,11 +1,26 @@
+<?php
+
+require('login/session.php');
+
+$username = "";
+
+if (isset($user)) {
+
+    $username = $user->username;
+
+}
+
+?>
+
 <header class="clearfix">
-    <span>The Boss <span class="bp-icon bp-icon-question" data-content="The Boss is a bycicle device, designed to give you information about all your trips in an easy way."></span></span>
+    <span>The Boss<span class="bp-icon bp-icon-question" data-content="The Boss is a bycicle device, designed to give you information about all your trips in an easy way."></span></span>
     <h1>Bike of StatS</h1>
     <nav>
         <a href="index.php" class="bp-icon bp-icon-home" data-info="home"><span>home</span></a>
         <a id="device"  class="bp-icon bp-icon-bicycle" data-info="about the device"><span>about the device</span></a>
         <a id="about"   class="bp-icon bp-icon-about" data-info="about us"><span>about us</span></a>
         <a id="settings"  class="bp-icon bp-icon-conf" data-info="settings"><span>settings</span></a>
+        <h1 id="username"><?php echo $username ?></h1>
     </nav>
 </header>
 

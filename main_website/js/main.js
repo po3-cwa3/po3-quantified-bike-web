@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $("#header-loader").load("header.html", function() {
+    $("#header-loader").load("header.php", function() {
 
         $("#about").click(function () {
             $('#about-us').slideToggle("fast");
@@ -26,11 +26,42 @@ $(document).ready(function() {
             $('#settings-user').slideUp("fast");
         });
 
+        $("#settings").popover({
+            title: "Settings",
+            content: "<p id='settings-logout'>Log out</p>" +
+                        "<p id='settings-preferences'>Preferences</p>",
+            placement: "bottom",
+            html: true
+        });
+
+
+
         $("#settings").click(function () {
-            console.log("settings have been clicked");
-            $('#settings-user').slideToggle("fast");
-            $('#about-device').slideUp("fast");
-            $('#about-us').slideUp("fast");
+            //console.log("settings have been clicked");
+            //$('#settings-user').slideToggle("fast");
+            //$('#about-device').slideUp("fast");
+            //$('#about-us').slideUp("fast");
+
+            if ($(this).attr("popover-visible") == "true") {
+
+                $(this).popover('hide');
+                $(this).attr("popover-visible", "false");
+
+            } else {
+
+                $(this).popover('show');
+                $(this).attr("popover-visible", "true");
+
+                $("#settings-logout").click(function() {
+
+                    window.location.href = "login/logout.php";
+                });
+
+                $("#settings-preferences").click(function() {
+
+                    alert("Preferences are in development");
+                });
+            }
         });
 
     });
