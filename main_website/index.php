@@ -50,7 +50,7 @@ if (!isset($user)) {
 						</a>
 					</li>
 					<li>
-						<a href="maps.html">
+						<a href="maps.php">
 							<span class="cbp-ig-icon cbp-ig-icon-maps"></span>
 							<h3 class="cbp-ig-title">maps</h3>
 							<span class="cbp-ig-category">all your trips together</span>
