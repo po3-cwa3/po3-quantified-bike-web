@@ -43,7 +43,7 @@ if (!isset($user)) {
 						</a>
 					</li>
 					<li>
-						<a href="compare.html">
+						<a href="compare.php">
 							<span class="cbp-ig-icon cbp-ig-icon-compare"></span>
 							<h3 class="cbp-ig-title">compare view</h3>
 							<span class="cbp-ig-category">multiple trips </span>
