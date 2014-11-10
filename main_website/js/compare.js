@@ -1,23 +1,26 @@
-var items_to_compare = [];
 
-dataController = (function() {
+
+compareController = (function() {
+
+    var items_to_compare = [];
+    var month;
 
     function init() {
 
-        $("#month").click(function () {
-            dataController.queryDataForMonth();
-        });
+        $("#month").click(queryDataForMonth);
 
         $("#show_month").click(function () {
 
             month = $('.select_month option:selected').val();
 
-            dataController.display_days(month);
+            display_days(month);
         });
 
         $("#show_day").click(function () {
             var day = $('.select_day option:selected').val();
-            dataController.queryDataForDay(day);
+            console.log(day);
+            console.log("day");
+            queryDataForDay(day);
         });
 
         $("#show_trip").click(function () {
@@ -28,8 +31,9 @@ dataController = (function() {
         });
 
         $("#start_comparing").click(function () {
+            console.log(items_to_compare);
             $.each(items_to_compare, function (index, value) {
-                dataController.create_table(value);
+                create_table(value);
             });
             items_to_compare = [];
             $("#select_day").empty();
@@ -39,20 +43,29 @@ dataController = (function() {
 
     function queryDataForMonth() {
 
-        $.ajax({
-            //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
-            url: "http://dali.cs.kuleuven.be:8080/qbike/trips?groupID=cwa3",
-            jsonp: "callback",
-            dataType: "jsonp",
+        //$.ajax({
+        //    //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
+        //    url: "http://dali.cs.kuleuven.be:8080/qbike/trips?groupID=cwa3",
+        //    jsonp: "callback",
+        //    dataType: "jsonp",
+        //
+        //    success: function (json) {
+        //
+        //        console.log("We got " + json.length + " elements for cwa3.");
+        //        data = display_months(json);
+        //        //monthData = calendarController.filterDataForMonth(json, date);
+        //        //calendarController.calculateMonthAverages();
+        //        //data = calendarController.convertDataToCalendarCells(monthData, date);
+        //    }
+        //});
 
-            success: function (json) {
+        dataController.queryTripsForGroupID("cwa3", function (trips) {
 
-                console.log("We got " + json.length + " elements for cwa3.");
-                data = display_months(json);
-                //monthData = dataController.filterDataForMonth(json, date);
-                //dataController.calculateMonthAverages();
-                //data = dataController.convertDataToCalendarCells(monthData, date);
-            }
+            console.log("We got " + trips.length + " elements for cwa3.");
+            data = display_months(trips);
+            //monthData = calendarController.filterDataForMonth(json, date);
+            //calendarController.calculateMonthAverages();
+            //data = calendarController.convertDataToCalendarCells(monthData, date);
         });
     }
 
@@ -66,7 +79,7 @@ dataController = (function() {
 
         });
         $.each(month, function(index,value){
-            $("#select_month").append("<option id='"+value +"'>"+ value +"</option>");
+            $("#select_month").append("<option id='"+ value +"'>"+ value +"</option>");
         });
     }
 
@@ -100,21 +113,30 @@ dataController = (function() {
     }
 
     function queryDataForDay(day){
-        $.ajax({
-            //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
-            url: "http://dali.cs.kuleuven.be:8080/qbike/trips?toDate=2014-"+month+"-"+day+"&groupID=cwa3",
-            jsonp: "callback",
-            dataType: "jsonp",
+        //$.ajax({
+        //    //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
+        //    url: "http://dali.cs.kuleuven.be:8080/qbike/trips?toDate=2014-"+month+"-"+day+"&groupID=cwa3",
+        //    jsonp: "callback",
+        //    dataType: "jsonp",
+        //
+        //    success: function (json) {
+        //
+        //        console.log("We got " + json.length + " elements for this day ");
+        //        $.each(json, function(index, value){
+        //            var _id = value._id;
+        //            $("#select_trip").append("<option value='"+_id +"'>"+index +"</option>");
+        //        });
+        //
+        //    }
+        //});
 
-            success: function (json) {
+        dataController.queryTripsForDay(new Date(2014, month-1, day), function (trips) {
 
-                console.log("We got " + json.length + " elements for this day ");
-                $.each(json, function(index, value){
-                    var _id = value._id;
-                    $("#select_trip").append("<option value='"+_id +"'>"+index +"</option>");
-                });
-
-            }
+            console.log("We got " + trips.length + " elements for this day.");
+            $.each(trips, function(index, value){
+                var _id = value._id;
+                $("#select_trip").append("<option value='"+_id +"'>"+index +"</option>");
+            });
         });
     }
 
@@ -143,4 +165,4 @@ dataController = (function() {
     }
 })();
 
-$(document).ready(dataController.init);
+$(document).ready(compareController.init);
