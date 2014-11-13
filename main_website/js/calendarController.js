@@ -392,7 +392,7 @@ calendarController = (function() {
             geodesic: false,
             strokeColor: '#FF0000',
             strokeOpacity: 1.0,
-            strokeWeight: 3
+            strokeWeight: 5
         });
 
         if (digit == 0||digit == 5) {

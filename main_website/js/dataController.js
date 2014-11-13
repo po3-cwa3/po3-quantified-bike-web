@@ -172,6 +172,7 @@ dataController = (function() {
 
             if (trip.hasOwnProperty("sensorData")) {
 
+                var gpsDataArray = [];
                 var singleTripCoordinates = [];
 
                 $.each(trip.sensorData, function(index, sensorValue) {
@@ -181,13 +182,28 @@ dataController = (function() {
                         // GPS
                         case 1:
 
-                            var latitude = sensorValue.data[0].coordinates[0];
-                            var longitude = sensorValue.data[0].coordinates[1];
-                            var coordinateArray = {lat: latitude, lng: longitude};
+                            gpsDataArray.push(sensorValue);
 
-                            singleTripCoordinates.push(coordinateArray);
+                            if (sensorValue.data[0].type == "MultiPoint") {
 
-                            break;
+                                var latitude = sensorValue.data[0].coordinates[0][0];
+                                var longitude = sensorValue.data[0].coordinates[0][1];
+                                var coordinateArray = {lat: latitude, lng: longitude};
+
+                                singleTripCoordinates.push(coordinateArray);
+
+                                break;
+                            }
+                            else {
+                                var latitudeSingle = sensorValue.data[0].coordinates[0];
+                                var longitudeSingle = sensorValue.data[0].coordinates[1];
+                                var coordinateArraySingle = {lat: latitudeSingle, lng: longitudeSingle};
+
+                                singleTripCoordinates.push(coordinateArraySingle);
+
+                                break;
+                            }
+
 
                         // Temperature
                         case 3:
@@ -216,6 +232,30 @@ dataController = (function() {
 
                         default:
                     }
+                });
+
+                gpsDataArray.sort(compareTime);
+
+                $.each(gpsDataArray, function(index, gpsData){
+
+                    if (gpsData.data[0].type == "MultiPoint") {
+
+                        var latitude = gpsData.data[0].coordinates[0][0];
+                        var longitude = gpsData.data[0].coordinates[0][1];
+                        var coordinateArray = {lat: latitude, lng: longitude};
+
+                        singleTripCoordinates.push(coordinateArray);
+
+                    }
+                    else {
+                        var latitudeSingle = gpsData.data[0].coordinates[0];
+                        var longitudeSingle = gpsData.data[0].coordinates[1];
+                        var coordinateArraySingle = {lat: latitudeSingle, lng: longitudeSingle};
+
+                        singleTripCoordinates.push(coordinateArraySingle);
+
+                    }
+
                 });
 
                 tripsCoordinates.push(singleTripCoordinates);
@@ -319,6 +359,24 @@ dataController = (function() {
     }
 
 
+    // Map Methods
+
+    function compareTime(data1, data2) {
+
+        var time1 = new Date(data1.timestamp);
+        var time2 = new Date(data2.timestamp);
+
+        if (time1 < time2){
+            return -1;
+        }
+        if (time1 > time2){
+            return 1;
+        }
+        return 0;
+    }
+
+
+
 
     return {
         init: init,
@@ -340,7 +398,9 @@ dataController = (function() {
 
         arrayAverage: arrayAverage,
         round: round,
-        nrOfDaysBetweenDates: nrOfDaysBetweenDates
+        nrOfDaysBetweenDates: nrOfDaysBetweenDates,
+
+        compareTime: compareTime
     };
 
 })();

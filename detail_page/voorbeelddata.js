@@ -1,6 +1,6 @@
 
-    var data =
-        [
+var data =
+    [
         {
             "startTime": "2014-10-02T13:33:37.619Z",
             "endTime": "2014-10-02T13:33:49.026Z",
@@ -18,7 +18,7 @@
                     "sensorID": 1,
                     "timestamp": 1412256813951,
                     "data": [
-                        {"type": "MultiPoint", "coordinates":    //see geoJSON.org
+                        {"type": "Point", "coordinates":    //see geoJSON.org
                             [50.8640, 4.6790]
                         }
                     ]},
@@ -26,7 +26,7 @@
                     "sensorID": 1,
                     "timestamp": 1412256813951,
                     "data": [
-                        {"type": "MultiPoint", "coordinates":    //see geoJSON.org
+                        {"type": "Point", "coordinates":    //see geoJSON.org
                             [50.8645, 4.6795]
                         }
                     ]},
@@ -34,7 +34,7 @@
                     "sensorID": 1,
                     "timestamp": 1412256813951,
                     "data": [
-                        {"type": "MultiPoint", "coordinates":    //see geoJSON.org
+                        {"type": "Point", "coordinates":    //see geoJSON.org
                             [50.8650, 4.6795]
                         }
                     ]}
@@ -48,5 +48,4 @@
                     {"comment": "awesome trip!"}
                 ]
             }
-        }
-    ];
+        }]
