@@ -85,12 +85,18 @@ if (!isset($user)) {
             <tr id="km"></tr>
 
             <tr id="duration"></tr>
+            <tr id="circles"></tr>
 
         </table>
 
         <canvas id="first_chart" width="400" height="400"></canvas>
 
-        <div id="outer" class="circle"><div id="inner" class="circle"><div><h3>hello!</h3></div></div></div>
+
+        <svg id="first_pie" class ="pie">
+          <circle cx="75" cy="75" r="74"></circle>
+          <circle id="inner" cx="75" cy="75" r="40"></circle>
+        </svg>
+
 
     </div>
 
