@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set( 'display_errors','1');
+
 require('session.php');
 
 $allowedUsers = [
@@ -26,17 +29,23 @@ if (!isset($_POST['username']) || !isset($_POST['password'])) {
 $username = $_POST['username'];
 $password = $_POST['password'];
 
-// check whether the username is registered
-if (!isset($allowedUsers[$username])) {
+$sql = <<<EOF
+SELECT username, password FROM accounts WHERE username = "$username";
+EOF;
 
-    notAuthorised('You are not registered yet, please register first.');
+$ret = $db->query($sql);
+
+$databaseUser = $ret->fetchArray(SQLITE3_ASSOC);
+
+if (!$databaseUser) {
+
+    notAuthorised("There is no account with the given username.");
+
+} else if ($databaseUser['password'] != $password) {
+
+    notAuthorised("The given password was incorrect.");
 }
 
-// check the password if the username is registered
-if ($allowedUsers[$username] != $password) {
-
-    notAuthorised('The password you entered was incorrect.');
-}
 
 // if the user is registered, make a User object containing the user info
 $user = new User();
@@ -55,7 +64,7 @@ if (isset($_GET['to'])) {
 header('Location: ' . $to);
 
 
-// functino to redirect to the login page with a certain error message
+// function to redirect to the login page with a certain error message
 function notAuthorised($message) {
 
     // the message is passed in the URL with a GET request, therefore the message must be urlencoded

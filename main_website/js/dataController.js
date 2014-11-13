@@ -178,8 +178,7 @@ dataController = (function() {
 
                     switch(sensorValue.sensorID) {
 
-                        // GPS coordinates
-
+                        // GPS
                         case 1:
 
                             var latitude = sensorValue.data[0].coordinates[0];
