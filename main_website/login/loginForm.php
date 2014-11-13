@@ -46,7 +46,7 @@ if (isset($_GET['from'])) {
 
         </form>
 
-        <a href="">Don't have an account yet?</a>
+        <a href="registerForm.php">Don't have an account yet?</a>
 
     </div>
 

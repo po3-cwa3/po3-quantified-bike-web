@@ -36,7 +36,7 @@ if (isset($_GET['from'])) {
 
     <p id="errorMessage"><?php echo $message ?></p>
 
-    <h1>Register</h1>
+    <h1>Please choose a username and password.</h1>
 
     <form id="registerForm" action="register.php<?php echo $from ?>" method="post">
 
