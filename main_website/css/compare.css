@@ -27,3 +27,59 @@ td {
     text-transform: uppercase;
     font-size: 14px;
 }
+/*
+
+#circle {
+    width: 150px;
+    height: 150px;
+    -webkit-border-radius: 75px;
+    -moz-border-radius: 75px;
+    border-radius: 75px;
+    color: blue;
+    display: inline-block;
+    background: red;
+}*/
+
+.circle{
+    width: 20%;
+    height:0;
+    padding-bottom: 20%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    /*background: #4679BD;*/
+}
+
+.circle div {
+    float:left;
+    width:100%;
+    padding-top:20%;
+    line-height:1em;
+    margin-top:-0.5em;
+    text-align:center;
+    color:#47a3da;
+}
+
+#outer{
+    width: 15%;
+    height:0;
+    padding-bottom: 15%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    background: #47a3da;
+    position: relative;
+}
+
+#inner{
+    width: 60%;
+    height:60%;
+
+    top: 70%;
+    left: -80%
+    border-radius: 50%;
+    background: #ffffff;
+    position: absolute;
+    margin: -50% 0px 0px 20%;
+}
+

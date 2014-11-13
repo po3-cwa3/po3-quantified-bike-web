@@ -60,6 +60,7 @@ if (!isset($user)) {
     <div class="content">
         <div>
             <h2>choose trips to compare</h2><br>
+
             <a id="month">month:</a><br>
             <select id="select_month" class="select_month"></select>
             <button id="show_month">select month</button>
@@ -88,7 +89,9 @@ if (!isset($user)) {
         </table>
 
         <canvas id="first_chart" width="400" height="400"></canvas>
-        <div id="legend"></div>
+
+        <div id="outer" class="circle"><div id="inner" class="circle"><div><h3>hello!</h3></div></div></div>
+
     </div>
 
 </div>
