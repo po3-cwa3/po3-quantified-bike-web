@@ -90,7 +90,7 @@ QUnit.test("Writing coordinates in an array", function(assert) {
                         "sensorID": 1,
                         "timestamp": 1412256813951,
                         "data": [
-                            {"type": "MultiPoint", "coordinates":    //see geoJSON.org
+                            {"type": "Point", "coordinates":    //see geoJSON.org
                                 [50.8640, 4.6790]
                             }
                         ]},
@@ -98,7 +98,7 @@ QUnit.test("Writing coordinates in an array", function(assert) {
                         "sensorID": 1,
                         "timestamp": 1412256813951,
                         "data": [
-                            {"type": "MultiPoint", "coordinates":    //see geoJSON.org
+                            {"type": "Point", "coordinates":    //see geoJSON.org
                                 [50.8645, 4.6795]
                             }
                         ]},
@@ -106,7 +106,7 @@ QUnit.test("Writing coordinates in an array", function(assert) {
                         "sensorID": 1,
                         "timestamp": 1412256813951,
                         "data": [
-                            {"type": "MultiPoint", "coordinates":    //see geoJSON.org
+                            {"type": "Point", "coordinates":    //see geoJSON.org
                                 [50.8650, 4.6795]
                             }
                         ]}
@@ -138,7 +138,7 @@ QUnit.test("Writing coordinates in an array", function(assert) {
                         "sensorID": 1,
                         "timestamp": 1412256813951,
                         "data": [
-                            {"type": "MultiPoint", "coordinates":    //see geoJSON.org
+                            {"type": "Point", "coordinates":    //see geoJSON.org
                                 [50.8640, 4.6790]
                             }
                         ]},
@@ -146,7 +146,7 @@ QUnit.test("Writing coordinates in an array", function(assert) {
                         "sensorID": 1,
                         "timestamp": 1412256813951,
                         "data": [
-                            {"type": "MultiPoint", "coordinates":    //see geoJSON.org
+                            {"type": "Point", "coordinates":    //see geoJSON.org
                                 [50.8643, 4.6793]
                             }
                         ]}

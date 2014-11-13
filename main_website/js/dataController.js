@@ -182,13 +182,26 @@ dataController = (function() {
 
                         case 1:
 
-                            var latitude = sensorValue.data[0].coordinates[0];
-                            var longitude = sensorValue.data[0].coordinates[1];
-                            var coordinateArray = {lat: latitude, lng: longitude};
+                            if (sensorValue.data[0].type == "MultiPoint") {
 
-                            singleTripCoordinates.push(coordinateArray);
+                                var latitude = sensorValue.data[0].coordinates[0][0];
+                                var longitude = sensorValue.data[0].coordinates[0][1];
+                                var coordinateArray = {lat: latitude, lng: longitude};
 
-                            break;
+                                singleTripCoordinates.push(coordinateArray);
+
+                                break;
+                            }
+                            else {
+                                var latitudeSingle = sensorValue.data[0].coordinates[0];
+                                var longitudeSingle = sensorValue.data[0].coordinates[1];
+                                var coordinateArraySingle = {lat: latitudeSingle, lng: longitudeSingle};
+
+                                singleTripCoordinates.push(coordinateArraySingle);
+
+                                break;
+                            }
+
 
                         // Temperature
                         case 3:

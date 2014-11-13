@@ -27,7 +27,7 @@
                     "timestamp": 1412256813951,
                     "data": [
                         {"type": "MultiPoint", "coordinates":    //see geoJSON.org
-                            [50.8645, 4.6795]
+                            [[50.8645, 4.6795]]
                         }
                     ]},
                 {
