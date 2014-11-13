@@ -72,27 +72,43 @@ QUnit.test( "Dates difference test: dates from different year", function( assert
 QUnit.test("Writing coordinates in an array", function(assert) {
 
     var data =
+        [
             {
                 "startTime": "2014-10-02T13:33:37.619Z",
                 "endTime": "2014-10-02T13:33:49.026Z",
                 "groupID": "assistants",
                 "userID": "u0044250",
                 "_id": "542d543d45dce96f3d00001d",
-                sensorData: [
+                "sensorData": [
                     {
-                        sensorID: 8,
+                        "sensorID": 8,
                         "timestamp": 1412256813951,
                         "data": [
                             {"nbOfBreakHits": 8, "breaks": [1412256813951, 1412256813951, 1412256813951]}
                         ]},
                     {
-                        sensorID: 1,
+                        "sensorID": 1,
                         "timestamp": 1412256813951,
-                        data: [
-                            {"type": "MultiPoint", coordinates: [   //see geoJSON.org
-                                [50.8640, 4.6790],
-                                [50.8643, 4.6793]
-                            ]}
+                        "data": [
+                            {"type": "MultiPoint", "coordinates":    //see geoJSON.org
+                                [50.8640, 4.6790]
+                            }
+                        ]},
+                    {
+                        "sensorID": 1,
+                        "timestamp": 1412256813951,
+                        "data": [
+                            {"type": "MultiPoint", "coordinates":    //see geoJSON.org
+                                [50.8645, 4.6795]
+                            }
+                        ]},
+                    {
+                        "sensorID": 1,
+                        "timestamp": 1412256813951,
+                        "data": [
+                            {"type": "MultiPoint", "coordinates":    //see geoJSON.org
+                                [50.8650, 4.6795]
+                            }
                         ]}
                 ],
                 "meta":
@@ -104,9 +120,51 @@ QUnit.test("Writing coordinates in an array", function(assert) {
                         {"comment": "awesome trip!"}
                     ]
                 }
-            };
+            },
+            {
+                "startTime": "2014-10-02T13:33:37.619Z",
+                "endTime": "2014-10-02T13:33:49.026Z",
+                "groupID": "assistants",
+                "userID": "u0044250",
+                "_id": "542d543d45dce96f3d00001d",
+                "sensorData": [
+                    {
+                        "sensorID": 8,
+                        "timestamp": 1412256813951,
+                        "data": [
+                            {"nbOfBreakHits": 8, "breaks": [1412256813951, 1412256813951, 1412256813951]}
+                        ]},
+                    {
+                        "sensorID": 1,
+                        "timestamp": 1412256813951,
+                        "data": [
+                            {"type": "MultiPoint", "coordinates":    //see geoJSON.org
+                                [50.8640, 4.6790]
+                            }
+                        ]},
+                    {
+                        "sensorID": 1,
+                        "timestamp": 1412256813951,
+                        "data": [
+                            {"type": "MultiPoint", "coordinates":    //see geoJSON.org
+                                [50.8643, 4.6793]
+                            }
+                        ]}
+                ],
+                "meta":
+                {
+                    "distance": 5000,
+                    "averageSpeed": 15.6,
+                    "maxSpeed": 23,
+                    "other": [
+                        {"comment": "awesome trip!"}
+                    ]
+                }
+            }
+        ];
 
-    var result = dataController.writeMapCoordinates(data);
-    var expected = [{lat: 50.864, lng: 4.679}, {lat: 50.8643, lng: 4.6793}];
+    var inBetween = dataController.getAveragesFromTrips(data);
+    var result = inBetween.routes
+    var expected = [[{lat: 50.864, lng: 4.679}, {lat: 50.8645, lng: 4.6795}, {lat: 50.865, lng: 4.6795}],[{lat: 50.864, lng: 4.679}, {lat: 50.8643, lng: 4.6793}]];
     assert.equal(JSON.stringify(result), JSON.stringify(expected), "")
 });

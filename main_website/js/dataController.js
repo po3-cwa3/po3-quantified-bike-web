@@ -172,6 +172,8 @@ dataController = (function() {
 
             if (trip.hasOwnProperty("sensorData")) {
 
+                var singleTripCoordinates = [];
+
                 $.each(trip.sensorData, function(index, sensorValue) {
 
                     switch(sensorValue.sensorID) {
@@ -180,9 +182,11 @@ dataController = (function() {
 
                         case 1:
 
-                            var coordinateArray = convertTripCoToMapCo(sensorValue.data[0].coordinates);
+                            var latitude = sensorValue.data[0].coordinates[0];
+                            var longitude = sensorValue.data[0].coordinates[1];
+                            var coordinateArray = {lat: latitude, lng: longitude};
 
-                            tripsCoordinates.push(coordinateArray);
+                            singleTripCoordinates.push(coordinateArray);
 
                             break;
 
@@ -214,6 +218,9 @@ dataController = (function() {
                         default:
                     }
                 });
+
+                tripsCoordinates.push(singleTripCoordinates);
+
             }
 
             if (trip.hasOwnProperty("meta") && trip.meta != null) {
@@ -312,27 +319,6 @@ dataController = (function() {
         return nrOfDays;
     }
 
-    // Map Methods
-
-    function convertTripCoToMapCo(coordinates) {
-
-        var coordinateArray = [];
-
-        $.each(coordinates, function(index, position){
-
-            var lattitude = position[0];
-            var longitude = position[1];
-            var coordinatesObject = {lat: lattitude, lng: longitude};
-
-            coordinateArray.push(coordinatesObject)
-        });
-
-        coordinateArray.push({lat: 50.864, lng: 4.679})
-        return coordinateArray;
-    }
-
-
-
 
 
     return {
@@ -355,9 +341,7 @@ dataController = (function() {
 
         arrayAverage: arrayAverage,
         round: round,
-        nrOfDaysBetweenDates: nrOfDaysBetweenDates,
-
-        convertTripCoToMapCo: convertTripCoToMapCo
+        nrOfDaysBetweenDates: nrOfDaysBetweenDates
     };
 
 })();
