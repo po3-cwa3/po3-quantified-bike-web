@@ -134,10 +134,11 @@ compareController = (function() {
             svg.appendChild(newElement);
 
         }
-        text.setAttributeNS(null,"x",52);
+        text.setAttributeNS(null,"x",75);
         text.setAttributeNS(null,"y",90);
         text.setAttributeNS(null,"font-size","40");
-        text.setAttributeNS(null,"font-family","Arial")
+        text.setAttributeNS(null,"font-family","Arial");
+        text.setAttributeNS(null,"text-anchor","middle");
         var textNode = document.createTextNode(procent);
         text.appendChild(textNode);
         svg.appendChild(text);
@@ -146,10 +147,12 @@ compareController = (function() {
     function create_circles(){
         var total = 0;
         $.each(data_for_circle, function(index, value){
+            console.log(value);
             total += value;
         });
         console.log("this is total ");
         console.log(total);
+        console.log("ok");
     }
 
     function queryDataForMonth() {
