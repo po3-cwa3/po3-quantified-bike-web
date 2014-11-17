@@ -120,6 +120,15 @@ dataController = (function() {
         });
     }
 
+    function queryPictureTrips(callback) {
+
+        queryURL("?sensorID=8&groupID=cwa3", function (json) {
+
+            console.log("We got " + json.length + " elements with pictures.");
+            callback(json);
+        })
+    }
+
 
 
     // Division Methods
@@ -183,26 +192,6 @@ dataController = (function() {
                         case 1:
 
                             gpsDataArray.push(sensorValue);
-
-                            if (sensorValue.data[0].type == "MultiPoint") {
-
-                                var latitude = sensorValue.data[0].coordinates[0][0];
-                                var longitude = sensorValue.data[0].coordinates[0][1];
-                                var coordinateArray = {lat: latitude, lng: longitude};
-
-                                singleTripCoordinates.push(coordinateArray);
-
-                                break;
-                            }
-                            else {
-                                var latitudeSingle = sensorValue.data[0].coordinates[0];
-                                var longitudeSingle = sensorValue.data[0].coordinates[1];
-                                var coordinateArraySingle = {lat: latitudeSingle, lng: longitudeSingle};
-
-                                singleTripCoordinates.push(coordinateArraySingle);
-
-                                break;
-                            }
 
 
                         // Temperature
@@ -390,6 +379,8 @@ dataController = (function() {
         queryTripsForDay: queryTripsForDay,
         queryDataForDay: queryDataForDay,
         queryDataForMonth: queryDataForMonth,
+
+        queryPictureTrips: queryPictureTrips,
 
         divideTripsIntoDays: divideTripsIntoDays,
 

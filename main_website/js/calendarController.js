@@ -409,9 +409,9 @@ calendarController = (function() {
         });
 
         if (digit == 0||digit == 5) {
-            tripPath.strokeColor = '#00FF00'
-        } else if (digit == 1||digit == 6) {
             tripPath.strokeColor = '#FF0000'
+        } else if (digit == 1||digit == 6) {
+            tripPath.strokeColor = '#00FF00'
         } else if (digit == 2||digit == 7) {
             tripPath.strokeColor = '#FFFF00'
         } else if (digit == 3||digit == 8) {
