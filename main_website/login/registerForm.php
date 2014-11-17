@@ -42,11 +42,11 @@ if (isset($_GET['from'])) {
 
         <input type="text" name="username" placeholder="Username">
         <input type="password" name="password" placeholder="Password">
-        <input type="submit">
+        <input type="submit" value="Register">
 
     </form>
 
-    <a href="">Don't have an account yet?</a>
+    <a href="loginForm.php">Already have an account?</a>
 
 </div>
 
