@@ -40,18 +40,18 @@ td {
     background: red;
 }*/
 
-.circle{
-    width: 20%;
+/*.circle{
+    width: 150px;
     height:0;
-    padding-bottom: 20%;
+    padding-bottom: 150px;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
     border-radius: 50%;
-    /*background: #4679BD;*/
-}
+    background: #4679BD;
+}*/
 
 .circle div {
-    float:left;
+    float:left ;
     width:100%;
     padding-top:20%;
     line-height:1em;
@@ -61,9 +61,9 @@ td {
 }
 
 #outer{
-    width: 15%;
+    width: 150px;
     height:0;
-    padding-bottom: 15%;
+    padding-bottom: 150px;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
     border-radius: 50%;
@@ -71,15 +71,51 @@ td {
     position: relative;
 }
 
-#inner{
+/*#inner{
     width: 60%;
     height:60%;
-
     top: 70%;
-    left: -80%
+    left: 0%;
     border-radius: 50%;
     background: #ffffff;
     position: absolute;
     margin: -50% 0px 0px 20%;
+}*/
+
+#part_circle {
+    width: 100%;
+    height:100%;
+    top: 50%;
+    left: -20%;
+    border-radius: 50%;
+    position: absolute;
+    margin: -50% 0px 0px 20%;
+    background:
+    linear-gradient(7deg, white 14%, transparent 14%) 0 0;
+    background-repeat: no-repeat;
+    background-size: 50% 50%;
+
 }
 
+#inner{
+    fill: #47a3da;
+    stroke: white;
+    stroke-width: 1px;
+}
+
+svg.pie {
+    width: 150px;
+    height: 150px;
+
+}
+
+circle {
+    fill: white;
+    stroke: #47a3da;
+    stroke-width: 1px;
+}
+
+
+path {
+    fill: #47a3da;
+}
