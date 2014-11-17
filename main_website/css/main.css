@@ -235,10 +235,6 @@ a:hover {
 	-webkit-font-smoothing: antialiased;
 }
 
-.bp-icon-question:after {
-	content: "\f059";
-}
-
 .bp-icon-home:after{
 	content: "\f015";
 }
@@ -320,6 +316,33 @@ a:hover {
 
 #settings-user {
 	display:none;
+}
+
+
+/* Welcome Message */
+
+#welcome-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 80px solid rgba(0,0,0,0.5);
+    z-index: 10000;
+    display: none;
+}
+
+#welcome-message #welcome-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #47a3da;
+    color: #ffffff;
+    font-size: 100pt;
+    text-align: center;
+    padding-top: 100px;
 }
 
 
