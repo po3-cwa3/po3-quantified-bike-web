@@ -8,6 +8,16 @@ compareController = (function() {
 
     function init() {
 
+        $("#trips").click(function(){
+            $("#choose-compare-sort").slideUp("fast");
+            $("#compare-trips").slideDown("fast");
+        });
+
+        $("#days").click(function(){
+            $("#choose-compare-sort").slideUp("fast");
+            $("#compare-days").slideDown("fast");
+        });
+
         $("#month").click(queryDataForMonth);
 
         $("#show_month").click(function () {
@@ -45,14 +55,18 @@ compareController = (function() {
             items_to_compare = [];
             $("#select_day").empty();
             $("#select_trip").empty();
-            create_circles();
+            $.when(create_table()).done(function(){
+                create_circles();
+            });
+
+
         });
 
         $("#example").click(function(){
             make_chart();
         });
 
-        calculate_size_circle(59,75);
+        calculate_size_circle(100,75);
 
 
 
@@ -146,9 +160,8 @@ compareController = (function() {
 
     function create_circles(){
         var total = 0;
-        $.each(data_for_circle, function(index, value){
-            console.log(value);
-            total += value;
+        $.each(data_for_circle, function(){
+            total += this;
         });
         console.log("this is total ");
         console.log(total);
@@ -258,13 +271,13 @@ compareController = (function() {
         $.ajax({
             url: "http://dali.cs.kuleuven.be:8080/qbike/trips/"+id,
             jsonp: "callback",
+            async: false,
             dataType: "jsonp",
 
             success: function (json) {
                 date = new Date(json[0].startTime);
                 end_date = new Date(json[0].endTime);
                 var duration = (end_date.getTime() - date.getTime())/1000;
-                console.log(duration);
                 if (document.getElementById("table_compare").rows[1].cells.length == 0){
                     $("#table_day").append("<td id='title_2' >start day:  </td>");
                     $("#km").append("<td id='title_3' > total distance:   </td>");
@@ -278,8 +291,15 @@ compareController = (function() {
                 }
                 $("#duration").append("<td> hours: " + ~~(duration/3600)+ "minutes: "+ duration%3600+ "</td>" );
                 data_for_circle.push(duration);
+                console.log(data_for_circle);
             }
+
         });
+        $.when($.ajax()).done(function(){
+            create_circles();
+        });
+
+
 
     }
     return {

@@ -52,8 +52,8 @@ if (!isset($user)) {
 					<li>
 						<a href="maps.php">
 							<span class="cbp-ig-icon cbp-ig-icon-maps"></span>
-							<h3 class="cbp-ig-title">maps</h3>
-							<span class="cbp-ig-category">all your trips together</span>
+							<h3 class="cbp-ig-title">photo viewer</h3>
+							<span class="cbp-ig-category">view your photos on a map</span>
 						</a>
 					</li>
 

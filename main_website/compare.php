@@ -58,25 +58,31 @@ if (!isset($user)) {
 <div class="container">
     <div id="header-loader"></div>
     <div class="content">
-        <div>
-            <h2>choose trips to compare</h2><br>
+        <nav id ="choose-compare-sort">
+            <a id="trips" class="bp-icon bp-icon-trip " data-info="compare trips"><span>compare trips</span></a>
+            <a id="days"  class="bp-icon bp-icon-day " data-info="compare days"><span>compare days</span></a>
+        </nav>
+        <div id="compare-trips">
+            <div>
+                <h2>choose trips to compare</h2><br>
 
-            <a id="month">month:</a><br>
-            <select id="select_month" class="select_month"></select>
-            <button id="show_month">select month</button>
-            <br>
-            <p id="day">day:</p>
-            <select id="select_day" class="select_day"></select>
-            <button id="show_day">select day</button>
-            <br>
-            <p id="trip">trip:</p>
-            <select id="select_trip" class="select_trip"></select>
-            <button id="show_trip">select trip</button>
+                <a id="month">month:</a><br>
+                <select id="select_month" class="select_month"></select>
+                <button id="show_month">select month</button>
+                <br>
+                <p id="day">day:</p>
+                <select id="select_day" class="select_day"></select>
+                <button id="show_day">select day</button>
+                <br>
+                <p id="trip">trip:</p>
+                <select id="select_trip" class="select_trip"></select>
+                <button id="show_trip">select trip</button>
 
-        </div><br><br>
+            </div><br><br>
 
-        <button id="start_comparing">compare</button><br>
-        <button id="example">example graph</button>
+            <button id="start_comparing">compare</button><br>
+            <button id="example">example graph</button>
+        </div>
         <table id="table_compare" class="table_compare">
             <tr id="elements_to_compare"></tr>
 

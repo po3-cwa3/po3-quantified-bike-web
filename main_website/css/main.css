@@ -255,6 +255,16 @@ a:hover {
 	content: "\f206";
 }
 
+.bp-icon-day:after {
+    content: "\f073";
+    font-size: 10em;
+
+}
+
+.bp-icon-trip:after {
+    content: "\f0c9";
+    font-size: 10em;
+}
 
 /* Header Icons Content */
 
