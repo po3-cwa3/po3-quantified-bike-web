@@ -13,7 +13,7 @@ if (isset($user)) {
 ?>
 
 <header class="clearfix">
-    <span>The Boss<span class="bp-icon bp-icon-question" data-content="The Boss is a bycicle device, designed to give you information about all your trips in an easy way."></span></span>
+    <span>The Boss</span>
     <h1>Bike of StatS</h1>
     <nav>
         <a href="index.php" class="bp-icon bp-icon-home" data-info="home"><span>home</span></a>

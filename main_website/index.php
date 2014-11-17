@@ -22,11 +22,23 @@ if (!isset($user)) {
 		<meta name="keywords" content="BOSS, bike, data, dashboard, home" />
 		<meta name="author" content="BOSS" />
 		<link rel="shortcut icon" href="../favicon.ico">
+
+        <!-- Bootstrap CSS -->
         <link rel="stylesheet" type="text/css" href="Bootstrap/css/bootstrap.css">
+
+        <!-- Main CSS -->
 		<link rel="stylesheet" type="text/css" href="css/main.css" />
+
+        <!-- Block Components CSS -->
 		<link rel="stylesheet" type="text/css" href="css/component.css" />
+
+        <!-- jQuery -->
         <script type="text/javascript" charset="utf8" src="js/jQuery.js"></script>
+
+        <!-- Bootstrap JS -->
         <script type="text/javascript" charset="utf8" src="Bootstrap/js/bootstrap.js"></script>
+
+        <!-- Main JS -->
         <script src="js/main.js"></script>
 	</head>
 	<body>
@@ -61,5 +73,11 @@ if (!isset($user)) {
 			</div>
 
 		</div>
+
+        <div id="welcome-message">
+            <div id="welcome-container">
+                Welcome!
+            </div>
+        </div>
 	</body>
 </html>

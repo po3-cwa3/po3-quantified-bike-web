@@ -142,6 +142,10 @@ body {
     background-color: #ededed;
 }
 
+#calendarTable td.activeCell {
+    background-color: #d9d9d9;
+}
+
 #calendarTable .dayNumber {
     position: relative;
     top: 0px;

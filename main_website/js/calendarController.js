@@ -4,6 +4,8 @@ calendarController = (function() {
 
     // Class Variables
 
+    var selectedCell;
+
     var month = new Date();
     var monthData = new Array();
 
@@ -50,6 +52,9 @@ calendarController = (function() {
 
 
         $("#detailCloseButton").click(function() {
+
+            selectedCell.removeClass("activeCell");
+            selectedCell = null;
 
             $('#detailSection').slideUp("fast");
         });
@@ -279,7 +284,15 @@ calendarController = (function() {
 
     function tableCellHasBeenClicked(cell) {
 
-        var dayIndex = parseInt($(cell).find(".dayNumber").text()) - 1;
+        if (selectedCell != null) {
+            selectedCell.removeClass("activeCell");
+        }
+
+        selectedCell = cell;
+
+        $(selectedCell).addClass("activeCell");
+
+        var dayIndex = parseInt($(selectedCell).find(".dayNumber").text()) - 1;
 
         console.log("Loading details for day with index: " + dayIndex);
 
