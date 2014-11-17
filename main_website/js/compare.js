@@ -49,15 +49,17 @@ compareController = (function() {
 
         $("#start_comparing").click(function () {
             console.log(items_to_compare);
-            $.each(items_to_compare, function (index, value) {
-                create_table(value);
-            });
-            items_to_compare = [];
+            compare_items();
+            setTimeout(create_circles,1000);
+
+
+            console.log(items_to_compare);
             $("#select_day").empty();
             $("#select_trip").empty();
-            $.when(create_table()).done(function(){
+
+            /*$.when(create_table()).done(function(){
                 create_circles();
-            });
+            });*/
 
 
         });
@@ -66,7 +68,7 @@ compareController = (function() {
             make_chart();
         });
 
-        calculate_size_circle(100,75);
+        calculate_size_circle(100);
 
 
 
@@ -117,7 +119,8 @@ compareController = (function() {
         var myNewChart = new Chart(ctx).Line(data,options);
     }
 
-    function calculate_size_circle(procent, radius){
+    function calculate_size_circle(procent){
+        var radius = 75;
         var angle = procent* 2*Math.PI/100;
         var svg = document.getElementById("first_pie");
         var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
@@ -165,7 +168,12 @@ compareController = (function() {
         });
         console.log("this is total ");
         console.log(total);
-        console.log("ok");
+        $.each(data_for_circle,function(){
+            procent = this/total;
+            calculate_size_circle(procent);
+        });
+        items_to_compare = [];
+
     }
 
     function queryDataForMonth() {
@@ -266,12 +274,17 @@ compareController = (function() {
             });
         });
     }
+    function compare_items(){
+        $.each(items_to_compare, function (index, value) {
+            create_table(value);
+        });
+
+    }
 
     function create_table(id){
         $.ajax({
             url: "http://dali.cs.kuleuven.be:8080/qbike/trips/"+id,
             jsonp: "callback",
-            async: false,
             dataType: "jsonp",
 
             success: function (json) {
@@ -291,15 +304,9 @@ compareController = (function() {
                 }
                 $("#duration").append("<td> hours: " + ~~(duration/3600)+ "minutes: "+ duration%3600+ "</td>" );
                 data_for_circle.push(duration);
-                console.log(data_for_circle);
+
             }
-
         });
-        $.when($.ajax()).done(function(){
-            create_circles();
-        });
-
-
 
     }
     return {
@@ -312,7 +319,8 @@ compareController = (function() {
         create_table: create_table,
         make_chart: make_chart,
         calculate_size_circle: calculate_size_circle,
-        create_circles : create_circles
+        create_circles : create_circles,
+        compare_items: compare_items
 
     }
 })();
