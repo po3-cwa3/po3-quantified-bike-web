@@ -4,6 +4,7 @@ compareController = (function() {
 
     var items_to_compare = [];
     var month;
+    var data_for_circle = [];
 
     function init() {
 
@@ -12,7 +13,8 @@ compareController = (function() {
         $("#show_month").click(function () {
 
             month = $('.select_month option:selected').val();
-
+            $("#select_day").empty();
+            $("#select_trip").empty();
             display_days(month);
         });
 
@@ -43,18 +45,22 @@ compareController = (function() {
             items_to_compare = [];
             $("#select_day").empty();
             $("#select_trip").empty();
+            create_circles();
         });
 
         $("#example").click(function(){
             make_chart();
         });
 
+        calculate_size_circle(59,75);
+
+
 
 
     }
 
     function make_chart(){
-        console.log("making chart")
+        console.log("making chart");
         var data = {
             labels: ["0km", "5km", "10km", "15km", "20km", "25km", "30km"],
             datasets: [
@@ -97,6 +103,57 @@ compareController = (function() {
         var myNewChart = new Chart(ctx).Line(data,options);
     }
 
+    function calculate_size_circle(procent, radius){
+        var angle = procent* 2*Math.PI/100;
+        var svg = document.getElementById("first_pie");
+        var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+        var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+        angle = angle - Math.PI/2;
+
+        if (procent > 50){
+            var path_1 = "M75,75 L75,0 A75,75 1 0,1 75,150 z";
+            var newElement_1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+            newElement_1.setAttribute("d",path_1);
+            svg.appendChild(newElement_1);
+            var x = radius + radius*Math.cos(angle);
+            var y = radius + radius*Math.sin(angle);
+            var path = "M75,75 L75,150 A75,75 1 0,1 "+Math.round(x)+","+Math.round(y)+" z";
+            console.log(path);
+            newElement.setAttribute("d",path);
+            svg.appendChild(newElement);
+        }
+
+        else {
+            var x = radius + radius * Math.cos(angle);
+            var y = radius + radius * Math.sin(angle);
+            var path = "M75,75 L75,0 A75,75 1 0,1 " + Math.round(x) + "," + Math.round(y) + " z";
+            console.log(path);
+            var svg = document.getElementById("first_pie");
+            var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+            newElement.setAttribute("d", path);
+            svg.appendChild(newElement);
+
+        }
+        text.setAttributeNS(null,"x",75);
+        text.setAttributeNS(null,"y",90);
+        text.setAttributeNS(null,"font-size","40");
+        text.setAttributeNS(null,"font-family","Arial");
+        text.setAttributeNS(null,"text-anchor","middle");
+        var textNode = document.createTextNode(procent);
+        text.appendChild(textNode);
+        svg.appendChild(text);
+    }
+
+    function create_circles(){
+        var total = 0;
+        $.each(data_for_circle, function(index, value){
+            console.log(value);
+            total += value;
+        });
+        console.log("this is total ");
+        console.log(total);
+        console.log("ok");
+    }
 
     function queryDataForMonth() {
 
@@ -213,16 +270,17 @@ compareController = (function() {
                     $("#km").append("<td id='title_3' > total distance:   </td>");
                     $("#duration").append("<td id='title_4' > duration:   </td>");
                 }
-                $("#table_day").append("<td> "+date.getDate()+" : " + date.getMonth()+"</td>");
+                $("#table_day").append("<td> "+date.getDate()+" : " + (date.getMonth()+1).toString() +"</td>");
                 if (json[0].hasOwnProperty("meta.distance")) {
                     $("#km").append("<td>" + json[0].meta.distance/1000 + " km "  + "</td>");
                 } else {
-                    $("#km").append("<td> undefined  </td>");
+                    $("#km").append("<td> not recorded  </td>");
                 }
                 $("#duration").append("<td> hours: " + ~~(duration/3600)+ "minutes: "+ duration%3600+ "</td>" );
-
+                data_for_circle.push(duration);
             }
         });
+
     }
     return {
         init: init,
@@ -232,7 +290,9 @@ compareController = (function() {
         display_days : display_days,
         queryDataForDay : queryDataForDay,
         create_table: create_table,
-        make_chart: make_chart
+        make_chart: make_chart,
+        calculate_size_circle: calculate_size_circle,
+        create_circles : create_circles
 
     }
 })();

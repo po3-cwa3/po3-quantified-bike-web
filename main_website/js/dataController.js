@@ -188,8 +188,7 @@ dataController = (function() {
 
                     switch(sensorValue.sensorID) {
 
-                        // GPS coordinates
-
+                        // GPS
                         case 1:
 
                             gpsDataArray.push(sensorValue);
