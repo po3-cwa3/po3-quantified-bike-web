@@ -120,6 +120,15 @@ dataController = (function() {
         });
     }
 
+    function queryPictureTrips(callback) {
+
+        queryURL("?sensorID=8&groupID=cwa3", function (json) {
+
+            console.log("We got " + json.length + " elements with pictures.");
+            callback(json);
+        })
+    }
+
 
 
     // Division Methods
@@ -391,6 +400,8 @@ dataController = (function() {
         queryTripsForDay: queryTripsForDay,
         queryDataForDay: queryDataForDay,
         queryDataForMonth: queryDataForMonth,
+
+        queryPictureTrips: queryPictureTrips,
 
         divideTripsIntoDays: divideTripsIntoDays,
 
