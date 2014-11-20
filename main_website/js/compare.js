@@ -7,6 +7,7 @@ compareController = (function() {
     var data_for_circle = [];
     var km_for_circle = [];
     var data;
+    var returnData;
 
     function init() {
 
