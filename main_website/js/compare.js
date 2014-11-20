@@ -5,6 +5,7 @@ compareController = (function() {
     var items_to_compare = [];
     var month;
     var data_for_circle = [];
+    var km_for_circle = [];
 
     function init() {
 
@@ -50,16 +51,13 @@ compareController = (function() {
         $("#start_comparing").click(function () {
             console.log(items_to_compare);
             compare_items();
-            setTimeout(create_circles,1000);
+
 
 
             console.log(items_to_compare);
             $("#select_day").empty();
             $("#select_trip").empty();
 
-            /*$.when(create_table()).done(function(){
-                create_circles();
-            });*/
 
 
         });
@@ -68,7 +66,7 @@ compareController = (function() {
             make_chart();
         });
 
-        calculate_size_circle(100);
+
 
 
 
@@ -119,13 +117,23 @@ compareController = (function() {
         var myNewChart = new Chart(ctx).Line(data,options);
     }
 
-    function calculate_size_circle(procent){
+
+    function calculate_size_circle(procent,sort,index,value){
+        procent = Math.round(procent);
         var radius = 75;
         var angle = procent* 2*Math.PI/100;
-        var svg = document.getElementById("first_pie");
+        var svg = "<svg id='circle_"+index+sort+"' class='pie'><circle cx='75' cy='75' r='74'></circle><circle class='inner' cx='75' cy='75' r='40'></circle></svg>"
+        if (sort =="time") {
+            $("#duration").append("<td>" + svg + "</td>");
+        } else {
+            $("#km").append("<td>" + svg + "</td>");
+        }
+        svg = document.getElementById("circle_"+index+sort);
         var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
         var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+        var text2 = document.createElementNS("http://www.w3.org/2000/svg", 'text');
         angle = angle - Math.PI/2;
+
 
         if (procent > 50){
             var path_1 = "M75,75 L75,0 A75,75 1 0,1 75,150 z";
@@ -145,54 +153,66 @@ compareController = (function() {
             var y = radius + radius * Math.sin(angle);
             var path = "M75,75 L75,0 A75,75 1 0,1 " + Math.round(x) + "," + Math.round(y) + " z";
             console.log(path);
-            var svg = document.getElementById("first_pie");
-            var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
             newElement.setAttribute("d", path);
             svg.appendChild(newElement);
 
         }
         text.setAttributeNS(null,"x",75);
-        text.setAttributeNS(null,"y",90);
-        text.setAttributeNS(null,"font-size","40");
-        text.setAttributeNS(null,"font-family","Arial");
+        text.setAttributeNS(null,"y",85);
+        text.setAttributeNS(null,"font-size","30");
+        text.setAttributeNS(null,"fill","#fff");
+        text.setAttributeNS(null,"font-family","'Lato', Calibri, Arial, sans-serif");
         text.setAttributeNS(null,"text-anchor","middle");
-        var textNode = document.createTextNode(procent);
+        text2.setAttributeNS(null,"x",75);
+        text2.setAttributeNS(null,"y",175);
+        text2.setAttributeNS(null,"font-size","20");
+        text2.setAttributeNS(null,"fill","#47a3da");
+        text2.setAttributeNS(null,"font-family","'Lato', Calibri, Arial, sans-serif");
+        text2.setAttributeNS(null,"text-anchor","middle");
+        var textNode = document.createTextNode(procent+"%");
+        if (sort == "time"){
+            var display_text = ~~(value/3600)+"h"+ Math.round((value%3600)/60)+"m";
+        } else {
+            var display_text = value + "km";
+        }
+        var textNode2 = document.createTextNode(display_text);
+        console.log(textNode);
         text.appendChild(textNode);
+        text2.appendChild(textNode2);
         svg.appendChild(text);
+        svg.appendChild(text2);
+
     }
 
-    function create_circles(){
+    function create_circles_time(){
         var total = 0;
         $.each(data_for_circle, function(){
             total += this;
         });
         console.log("this is total ");
         console.log(total);
-        $.each(data_for_circle,function(){
-            procent = this/total;
-            calculate_size_circle(procent);
+        $.each(data_for_circle,function(index,value){
+            procent = value/total;
+            calculate_size_circle(procent*100,"time",index,value);
         });
         items_to_compare = [];
 
     }
 
-    function queryDataForMonth() {
+    function create_circles_distance() {
+        var total = 0;
+        $.each(km_for_circle, function(){
+            total += this;
+        });
+        console.log("this is total ");
+        console.log(total);
+        $.each(km_for_circle,function(index,value){
+            procent = value/total;
+            calculate_size_circle(procent*100,"distance",index,value);
+        });
+    }
 
-        //$.ajax({
-        //    //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
-        //    url: "http://dali.cs.kuleuven.be:8080/qbike/trips?groupID=cwa3",
-        //    jsonp: "callback",
-        //    dataType: "jsonp",
-        //
-        //    success: function (json) {
-        //
-        //        console.log("We got " + json.length + " elements for cwa3.");
-        //        data = display_months(json);
-        //        //monthData = calendarController.filterDataForMonth(json, date);
-        //        //calendarController.calculateMonthAverages();
-        //        //data = calendarController.convertDataToCalendarCells(monthData, date);
-        //    }
-        //});
+    function queryDataForMonth() {
 
         dataController.queryTripsForGroupID("cwa3", function (trips) {
 
@@ -266,7 +286,7 @@ compareController = (function() {
         //});
 
         dataController.queryTripsForDay(new Date(2014, month-1, day), function (trips) {
-
+            console.log(trips);
             console.log("We got " + trips.length + " elements for this day.");
             $.each(trips, function(index, value){
                 var _id = value._id;
@@ -275,12 +295,17 @@ compareController = (function() {
         });
     }
     function compare_items(){
+        setTimeout(create_circles_time,500);
+        setTimeout(create_circles_distance,500);
         $.each(items_to_compare, function (index, value) {
             create_table(value);
         });
 
     }
 
+    function get_data_for_table{
+
+    }
     function create_table(id){
         $.ajax({
             url: "http://dali.cs.kuleuven.be:8080/qbike/trips/"+id,
@@ -288,22 +313,30 @@ compareController = (function() {
             dataType: "jsonp",
 
             success: function (json) {
-                date = new Date(json[0].startTime);
-                end_date = new Date(json[0].endTime);
-                var duration = (end_date.getTime() - date.getTime())/1000;
                 if (document.getElementById("table_compare").rows[1].cells.length == 0){
                     $("#table_day").append("<td id='title_2' >start day:  </td>");
                     $("#km").append("<td id='title_3' > total distance:   </td>");
                     $("#duration").append("<td id='title_4' > duration:   </td>");
                 }
-                $("#table_day").append("<td> "+date.getDate()+" : " + (date.getMonth()+1).toString() +"</td>");
+                if (json[0].hasOwnProperty("startTime") && json[0].hasOwnProperty("endTime")) {
+                    date = new Date(json[0].startTime);
+                    end_date = new Date(json[0].endTime);
+                    var duration = (end_date.getTime() - date.getTime()) / 1000;
+                    data_for_circle.push(duration);
+                } else {
+                    $("#duration").append("<td> not recorded </td>");
+                }
+                var monthNames = [ "January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December" ];
+                $("#table_day").append("<td> "+date.getDate() +" "+ monthNames[date.getMonth()] +"</td>");
                 if (json[0].hasOwnProperty("meta.distance")) {
-                    $("#km").append("<td>" + json[0].meta.distance/1000 + " km "  + "</td>");
+                    var distance = json[0].meta.distance/1000;
+                    $("#km").append("<td>" + distance + " km "  + "</td>");
+                    km_for_circle.push(distance);
                 } else {
                     $("#km").append("<td> not recorded  </td>");
                 }
-                $("#duration").append("<td> hours: " + ~~(duration/3600)+ "minutes: "+ duration%3600+ "</td>" );
-                data_for_circle.push(duration);
+
+
 
             }
         });
@@ -319,10 +352,53 @@ compareController = (function() {
         create_table: create_table,
         make_chart: make_chart,
         calculate_size_circle: calculate_size_circle,
-        create_circles : create_circles,
-        compare_items: compare_items
+        create_circles_time : create_circles_time,
+        compare_items: compare_items,
+        create_circles_distance : create_circles_distance
 
     }
 })();
 
 $(document).ready(compareController.init);
+
+/*
+function calculate_size_circle(procent,index){
+    var radius = 75;
+    var angle = procent* 2*Math.PI/100;
+    var svg = document.getElementById("first_pie");
+    var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+    angle = angle - Math.PI/2;
+
+    if (procent > 50){
+        var path_1 = "M75,75 L75,0 A75,75 1 0,1 75,150 z";
+        var newElement_1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+        newElement_1.setAttribute("d",path_1);
+        svg.appendChild(newElement_1);
+        var x = radius + radius*Math.cos(angle);
+        var y = radius + radius*Math.sin(angle);
+        var path = "M75,75 L75,150 A75,75 1 0,1 "+Math.round(x)+","+Math.round(y)+" z";
+        console.log(path);
+        newElement.setAttribute("d",path);
+        svg.appendChild(newElement);
+    }
+
+    else {
+        var x = radius + radius * Math.cos(angle);
+        var y = radius + radius * Math.sin(angle);
+        var path = "M75,75 L75,0 A75,75 1 0,1 " + Math.round(x) + "," + Math.round(y) + " z";
+        console.log(path);
+        var svg = document.getElementById("first_pie");
+        var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+        newElement.setAttribute("d", path);
+        svg.appendChild(newElement);
+
+    }
+    text.setAttributeNS(null,"x",75);
+    text.setAttributeNS(null,"y",90);
+    text.setAttributeNS(null,"font-size","40");
+    text.setAttributeNS(null,"font-family","Arial");
+    text.setAttributeNS(null,"text-anchor","middle");
+    var textNode = document.createTextNode(procent);
+    text.appendChild(textNode);
+    svg.appendChild(text);*/

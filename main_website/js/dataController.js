@@ -290,7 +290,9 @@ dataController = (function() {
             averageTemperature: avTemp,
             averageHumidity: avHum,
             nrOfTrips: trips.length,
-            routes: tripsCoordinates
+            routes: tripsCoordinates,
+            temparature: tempReadings
+
         };
 
         return average;
