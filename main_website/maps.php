@@ -50,7 +50,13 @@ if (!isset($user)) {
     <div>
         this is the maps view.
     </div>
-    <div id="MapCanvas">
+    <div id="mapContainer">
+    <div id="MapCanvas"></div>
+    </div>
+    <div id="spinnerContainer" >
+        <p>Loading pictures...</p>
+    <div class="loadingSpinner" style="display: block"></div>
+        <p>Please wait</p>
     </div>
     <!--laat alles hieronder staan-->
 

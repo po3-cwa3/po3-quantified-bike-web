@@ -7,6 +7,12 @@ var infoWindows = [];
 mapController = ( function () {
 
 
+    function init() {
+
+        initMap();
+        initPicturesAndCo();
+    }
+
     function initMap() {
 
         var MapOptions = {
@@ -21,55 +27,69 @@ mapController = ( function () {
             MapOptions);
     }
 
-    function combinePicturesToCo(trips) {
+    function combinePicturesAndCo(trips) {
 
         var pictureDataArray = [];
-        var gpsDataArray = [];
 
         $.each(trips,function(index,trip){
 
-            var dayPictureDataArray = [];
+            var tripPictureDataArray = [];
+            var gpsDataArray = [];
 
-            if (trip.hasOwnProperty("sensorData")){
 
-                $.each(trip.sensorData,function(index,sensorValue){
+            $.each(trip.sensorData,function(index,sensorValue){
 
-                    if (sensorValue.sensorID == 8) {
+                if (sensorValue.sensorID == 8) {
 
-                        var link = "http://dali.cs.kuleuven.be:8080/qbike/images/";
-                        link = link + sensorValue.data[0];
-                        console.log("picture link is" + link);
-                        var time = sensorValue.timestamp;
+                    var link = "http://dali.cs.kuleuven.be:8080/qbike/images/";
+                    link = link + sensorValue.data[0];
+                    console.log("picture link is " + link);
+                    var time = sensorValue.timestamp;
 
-                        var pictureTimeArray = [link, time];
-                        dayPictureDataArray.push(pictureTimeArray)
-                    }
-                    else if (sensorValue.sensorID == 1) {
+                    var pictureTimeArray = [link, time];
+                    tripPictureDataArray.push(pictureTimeArray);
+                }
+                else if (sensorValue.sensorID == 1) {
 
-                        gpsDataArray.push(sensorValue)
-                    }
-                });
+                    gpsDataArray.push(sensorValue)
+                }
+            });
+
+            if (tripPictureDataArray != []) {
+
+                console.log("there are "+ tripPictureDataArray.length +" pictures on the day of " + tripPictureDataArray[0][1] + "(trip ID: " +  trip._id +" )");
+//                console.log(tripPictureDataArray);
+                var gpsCo = [];
 
                 if (gpsDataArray.length == 0) {
 
-                    dayPictureDataArray = []
+//                        console.log("there is no gps data, so pictures from the day of "+ tripPictureDataArray[0][1] +"are removed (tripID: " + trip._id +" )");
+//                        tripPictureDataArray = [];
+                    $.each(tripPictureDataArray, function (index, pictureData) {
+
+                        console.log("no GPS data found. Standard values are used (there may be more than one picture, but only one coordinate set is used)");
+                        pictureData[1] = [50.864,4.679];
+
+                    })
                 }
 
                 else if (gpsDataArray.length == 1) {
 
-                    var gpsData = [];
+                    console.log("there is only one coordinate on trip of day " + tripPictureDataArray[0][1] + "(tripID: "+ trip._id +" )");
 
                     if (gpsDataArray[0].data[0].type == "Multipoint") {
 
-                        gpsData = gpsDataArray[0].data[0].coordinates[0]
+                        gpsCo = gpsDataArray[0].data[0].coordinates[0];
                     }
 
                     else {
 
-                        gpsData = gpsDataArray[0].data[0].coordinates
+                        gpsCo = gpsDataArray[0].data[0].coordinates;
                     }
 
-                    $.each(dayPictureDataArray, function(index, pictureData) {
+                    $.each(tripPictureDataArray, function (index, pictureData) {
+
+                        pictureData[1] = gpsCo;
 
                     })
                 }
@@ -79,18 +99,76 @@ mapController = ( function () {
 
                     gpsDataArray.sort(dataController.compareTime);
 
-                    $.each(dayPictureDataArray, function (index, pictureData) {
+                    $.each(tripPictureDataArray, function (index, pictureData) {
 
                         var timeTaken = Date.parse(pictureData[1]);
+                        var gpsIndex = 2;
+                        var prevDif = Math.abs(Date.parse(gpsDataArray[0].timestamp)-timeTaken);
+                        var currentDif = Math.abs(Date.parse(gpsDataArray[1].timestamp)-timeTaken);
+                        while (gpsIndex < gpsDataArray.length && currentDif < prevDif){
 
+                            prevDif = currentDif;
+                            currentDif = Math.abs(Date.parse(gpsDataArray[gpsIndex].timestamp)-timeTaken);
+                            gpsIndex = gpsIndex+1;
 
-                    })
+                        }
+
+                        if (gpsDataArray[gpsIndex-1].data[0].type == "Multipoint") {
+
+                            pictureData[1] = gpsDataArray[gpsIndex-1].data[0].coordinates[0]
+                        }
+
+                        else {
+
+                            pictureData[1] = gpsDataArray[gpsIndex-1].data[0].coordinates
+                        }
+
+                    });
                 }
+
+                console.log("tripPictureDataArray");
+                console.log(tripPictureDataArray);
+                pictureDataArray = pictureDataArray.concat(tripPictureDataArray);
+
             }
-        })
+
+
+        });
+        console.log("pictureDataArray");
+        console.log(pictureDataArray);
+        pictureDataArray = moveDuplicates(pictureDataArray);
+        initMarkers(pictureDataArray);
+
     }
 
-    function initMarkers() {
+    function moveDuplicates(pictureDataArray) {
+
+        $.each(pictureDataArray, function (index, pictureData) {
+
+            var pictureIndex = index+1;
+            while (pictureIndex<pictureDataArray.length) {
+
+                if (Math.abs(pictureData[1][0]-pictureDataArray[pictureIndex][1][0])<0.00003 && Math.abs(pictureData[1][1]-pictureDataArray[pictureIndex][1][1])<0.00003) {
+                    pictureDataArray[pictureIndex][1][1] = pictureDataArray[pictureIndex][1][1] + 0.00003
+                }
+                pictureIndex = pictureIndex + 1
+            }
+        });
+
+        return pictureDataArray
+    }
+
+    function initPicturesAndCo () {
+
+        var myData = [];
+
+        dataController.queryPictureTrips(function(data){
+
+            combinePicturesAndCo(data);
+        });
+    }
+
+    function initMarkers(myData) {
 
         for (index in myData) {
             (function () {
@@ -121,12 +199,21 @@ mapController = ( function () {
 
         }
 
+        setTimeout(function(){
+            $("#spinnerContainer").css("display", "none");
+        },2500)
+
+
 
     }
 
 
     return {
+        init:init,
         initMap: initMap,
+        combinePicturesAndCo: combinePicturesAndCo,
+        moveDuplicates: moveDuplicates,
+        initPicturesAndCo: initPicturesAndCo,
         initMarkers: initMarkers
     };
 
@@ -134,5 +221,4 @@ mapController = ( function () {
 
 })();
 
-$(document).ready(mapController.initMap);
-$(document).ready(mapController.initMarkers);
+$(document).ready(mapController.init);

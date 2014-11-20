@@ -8,6 +8,7 @@ compareController = (function() {
     var km_for_circle = [];
     var data;
     var returnData;
+    var temperature = [];
 
     function init() {
 
@@ -88,48 +89,58 @@ compareController = (function() {
 
     }
 
-    function make_chart(){
+    function make_chart(data_trip){
         console.log("making chart");
+        var trip = {
+            label: "first trip",
+            title: "first trip",
+            fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "#47a3da",
+            lineColor: "#47a3da",
+            pointColor: "rgba(151,187,205,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(151,187,205,1)",
+            data: []
+        }
+
+
         var data = {
-            labels: ["0km", "5km", "10km", "15km", "20km", "25km", "30km"],
-            datasets: [
-                {
-                    label: "first trip",
-                    title: "first trip",
-                    fillColor: "rgba(220,220,220,0.2)",
-                    lineColor: "#fff",
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(220,220,220,1)",
-                    data: [15, 17, 21, 19, 20, 23, 27]
-                },
-                {
-                    label: "second trip ",
-                    title: "second trip ",
-                    fillColor: "rgba(151,187,205,0.2)",
-                    strokeColor: "#47a3da",
-                    lineColor: "#47a3da",
-                    pointColor: "rgba(151,187,205,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(151,187,205,1)",
-                    data: [28, 28, 24, 30, 15, 16, 19]
-                }
-            ]
+            labels: [],
+            datasets: []
         };
+        $.each(data_trip,function(index,value){
+            trip.label = "trip "+index;
+            trip.title = "trip "+index;
+            trip.data = value;
+            data.datasets.push(trip);
+            if (value.length > data.labels.length){
+                data.labels = [];
+                var i ;
+                for (i=0; i < value.length; i++ ){
+                    data.labels.push(i.toString());
+                }
+            }
+        });
+
 
         var options = {
             graphTitle: "average speed in km/h",
             showTooltips: true,
             annotateDisplay: true,
-            legend: true
+            legend: true,
+            scaleOverride: true,
+            scaleStepWidth: 0.2
 
         };
 
+        console.log(data.datasets);
         var ctx = $("#first_chart").get(0).getContext("2d");
+        ctx.canvas.width = 500;
+        ctx.canvas.height = 300;
         var myNewChart = new Chart(ctx).Line(data,options);
+
+
     }
 
 
@@ -307,12 +318,18 @@ compareController = (function() {
             });
         });
     }
+
     function compare_items(){
         setTimeout(create_circles_time,500);
         setTimeout(create_circles_distance,500);
         $.each(items_to_compare, function (index, value) {
             create_table(value);
+
         });
+
+        setTimeout(function(){
+            make_chart(temperature);
+        },500);
 
     }
 
@@ -349,10 +366,12 @@ compareController = (function() {
                     $("#km").append("<td> not recorded  </td>");
                 }
 
-
+                temperature.push(dataController.getAveragesFromTrips(json).temparature);
+                console.log(temperature);
 
             }
         });
+
 
     }
     return {
@@ -367,7 +386,8 @@ compareController = (function() {
         calculate_size_circle: calculate_size_circle,
         create_circles_time : create_circles_time,
         compare_items: compare_items,
-        create_circles_distance : create_circles_distance
+        create_circles_distance : create_circles_distance,
+        get_data_for_table: get_data_for_table
 
     }
 })();
