@@ -73,14 +73,7 @@ if (!isset($user)) {
 
                 <div id="calendar"></div>
 
-                <a id="month">month:</a><br>
-                <select id="select_month" class="select_month"></select>
-                <button id="show_month">select month</button>
-                <br>
-                <p id="day">day:</p>
-                <select id="select_day" class="select_day"></select>
-                <button id="show_day">select day</button>
-                <br>
+                
                 <p id="trip">trip:</p>
                 <select id="select_trip" class="select_trip"></select>
                 <button id="show_trip">select trip</button>
@@ -88,7 +81,7 @@ if (!isset($user)) {
             </div><br><br>
 
             <button id="start_comparing">compare</button><br>
-            <button id="example">example graph</button>
+
         </div>
         <table id="table_compare" class="table_compare">
             <tr id="elements_to_compare"></tr>

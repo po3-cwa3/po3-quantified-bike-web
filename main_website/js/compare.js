@@ -129,8 +129,8 @@ compareController = (function() {
             showTooltips: true,
             annotateDisplay: true,
             legend: true,
-            scaleOverride: true,
-            scaleStepWidth: 0.2
+            yAxisMinimumInterval : 0.1,
+            yAxisLabel: "Temperature"
 
         };
 
