@@ -16,7 +16,7 @@ calendarController = (function() {
     var monthArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     var propertiesInDetailsView = [
-        {prop: "nrOfTrips", title: "Nr. of trips", postfix: "", accuracy: 0},
+        {prop: "nrOfTrips", title: "Nr. of trips", postfix: " trip(s)", accuracy: 0},
         {prop: "averageSpeed", title: "Average Speed", postfix: " km/h", accuracy: 2},
         {prop: "totalDistance", title: "Total Distance", postfix: " km", accuracy: 2},
         {prop: "averageTemperature", title: "Average Temperature", postfix: " °C", accuracy: 0},

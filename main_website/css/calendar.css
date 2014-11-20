@@ -45,7 +45,7 @@ body {
 #content {
     min-width: 850px;
     width: 100%;
-    padding-top: 10px;
+    padding-top: 0;
     overflow: scroll;
 }
 

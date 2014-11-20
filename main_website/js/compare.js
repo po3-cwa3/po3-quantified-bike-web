@@ -11,6 +11,19 @@ compareController = (function() {
 
     function init() {
 
+        $("#calendar").datepicker({
+            onSelect: function (dateText, datepicker) {
+
+                var elements = dateText.split("/");
+
+                month = elements[0];
+                var day = elements[1];
+
+                $("#select_trip").empty();
+                queryDataForDay(day);
+            }
+        });
+
         $("#trips").click(function(){
             $("#choose-compare-sort").slideUp("fast");
             $("#compare-trips").slideDown("fast");
@@ -303,7 +316,7 @@ compareController = (function() {
 
     }
 
-    function get_data_for_table{
+    function get_data_for_table(){
 
     }
     function create_table(id){

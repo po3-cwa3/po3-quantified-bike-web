@@ -38,6 +38,10 @@ if (!isset($user)) {
     <!-- jQuery -->
     <script type="text/javascript" charset="utf8" src="js/jQuery.js"></script>
 
+    <!-- jQuery UI (for datepicker) -->
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+
     <!-- Main Theme JS -->
     <script src="js/main.js"></script>
 
@@ -63,8 +67,11 @@ if (!isset($user)) {
             <a id="days"  class="bp-icon bp-icon-day " data-info="compare days"><span>compare days</span></a>
         </nav>
         <div id="compare-trips">
+
             <div>
                 <h2>choose trips to compare</h2><br>
+
+                <div id="calendar"></div>
 
                 <a id="month">month:</a><br>
                 <select id="select_month" class="select_month"></select>
