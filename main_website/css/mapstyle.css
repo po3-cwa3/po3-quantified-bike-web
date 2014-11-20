@@ -11,13 +11,28 @@ body { height: 100%;
 }
 
 div.pictureContainer {
-    height: 200px;
-    width: 200px;
+    width: 384px;
+    height: 216px;
 }
 
 img.picture {
     height: 95%;
     width: 95%;
+}
+
+#mapContainer {
+    position: relative;
+    display: inline;
+    left: 15%;
+
+}
+
+#spinnerContainer {
+
+    position: relative;
+    left: 0%;
+    top: 25%;
+    background: #ffffff;
 }
 
 #MapCanvas { height: 60% ;
