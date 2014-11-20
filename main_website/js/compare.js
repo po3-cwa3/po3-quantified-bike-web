@@ -5,6 +5,7 @@ compareController = (function() {
     var items_to_compare = [];
     var month;
     var data_for_circle = [];
+    var data;
 
     function init() {
 
@@ -157,29 +158,10 @@ compareController = (function() {
 
     function queryDataForMonth() {
 
-        //$.ajax({
-        //    //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
-        //    url: "http://dali.cs.kuleuven.be:8080/qbike/trips?groupID=cwa3",
-        //    jsonp: "callback",
-        //    dataType: "jsonp",
-        //
-        //    success: function (json) {
-        //
-        //        console.log("We got " + json.length + " elements for cwa3.");
-        //        data = display_months(json);
-        //        //monthData = calendarController.filterDataForMonth(json, date);
-        //        //calendarController.calculateMonthAverages();
-        //        //data = calendarController.convertDataToCalendarCells(monthData, date);
-        //    }
-        //});
-
         dataController.queryTripsForGroupID("cwa3", function (trips) {
 
             console.log("We got " + trips.length + " elements for cwa3.");
             data = display_months(trips);
-            //monthData = calendarController.filterDataForMonth(json, date);
-            //calendarController.calculateMonthAverages();
-            //data = calendarController.convertDataToCalendarCells(monthData, date);
         });
     }
 

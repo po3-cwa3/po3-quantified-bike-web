@@ -51,7 +51,7 @@ $ret = $db->exec($sql);
 
 if (!$ret) {
 
-    notAuthorised('There was an error, we are very sorry for the inconvenience. Please try again.');
+    notAuthorised('We are very sorry. An error occurred during data entry. Please try again.');
 }
 
 

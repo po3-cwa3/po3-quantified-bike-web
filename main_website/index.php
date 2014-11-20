@@ -40,6 +40,10 @@ if (!isset($user)) {
 
         <!-- Main JS -->
         <script src="js/main.js"></script>
+
+        <!-- Index JS -->
+        <script src="js/index.js"></script>
+
 	</head>
 	<body>
 		<div class="container">
@@ -76,7 +80,17 @@ if (!isset($user)) {
 
         <div id="welcome-message">
             <div id="welcome-container">
-                Welcome!
+                <div id="welcomeCloseButton">×</div>
+                <div id="welcome-header">
+                    <h1>Welcome!</h1>
+                </div>
+                <p>
+                    Welcome at the BOSS website, the Bike Of StatS! The website is divided into
+                    three big parts. If you want to take a look at your biking experiences over time,
+                    you can visit the Calendar. If you want to compare trips or days, you can visit the
+                    Compare page. If you want to see the collection of photos you've taken, you
+                    can visit the Photos page.
+                </p>
             </div>
         </div>
 	</body>
