@@ -6,6 +6,7 @@ compareController = (function() {
     var month;
     var data_for_circle = [];
     var km_for_circle = [];
+    var data;
 
     function init() {
 
@@ -212,15 +213,13 @@ compareController = (function() {
         });
     }
 
+
     function queryDataForMonth() {
 
         dataController.queryTripsForGroupID("cwa3", function (trips) {
 
             console.log("We got " + trips.length + " elements for cwa3.");
             data = display_months(trips);
-            //monthData = calendarController.filterDataForMonth(json, date);
-            //calendarController.calculateMonthAverages();
-            //data = calendarController.convertDataToCalendarCells(monthData, date);
         });
     }
 
@@ -361,44 +360,4 @@ compareController = (function() {
 
 $(document).ready(compareController.init);
 
-/*
-function calculate_size_circle(procent,index){
-    var radius = 75;
-    var angle = procent* 2*Math.PI/100;
-    var svg = document.getElementById("first_pie");
-    var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-    var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-    angle = angle - Math.PI/2;
 
-    if (procent > 50){
-        var path_1 = "M75,75 L75,0 A75,75 1 0,1 75,150 z";
-        var newElement_1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-        newElement_1.setAttribute("d",path_1);
-        svg.appendChild(newElement_1);
-        var x = radius + radius*Math.cos(angle);
-        var y = radius + radius*Math.sin(angle);
-        var path = "M75,75 L75,150 A75,75 1 0,1 "+Math.round(x)+","+Math.round(y)+" z";
-        console.log(path);
-        newElement.setAttribute("d",path);
-        svg.appendChild(newElement);
-    }
-
-    else {
-        var x = radius + radius * Math.cos(angle);
-        var y = radius + radius * Math.sin(angle);
-        var path = "M75,75 L75,0 A75,75 1 0,1 " + Math.round(x) + "," + Math.round(y) + " z";
-        console.log(path);
-        var svg = document.getElementById("first_pie");
-        var newElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-        newElement.setAttribute("d", path);
-        svg.appendChild(newElement);
-
-    }
-    text.setAttributeNS(null,"x",75);
-    text.setAttributeNS(null,"y",90);
-    text.setAttributeNS(null,"font-size","40");
-    text.setAttributeNS(null,"font-family","Arial");
-    text.setAttributeNS(null,"text-anchor","middle");
-    var textNode = document.createTextNode(procent);
-    text.appendChild(textNode);
-    svg.appendChild(text);*/

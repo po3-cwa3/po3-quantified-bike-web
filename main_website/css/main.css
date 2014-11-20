@@ -323,26 +323,52 @@ a:hover {
 
 #welcome-message {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border: 80px solid rgba(0,0,0,0.5);
+    top: 80px;
+    left: 80px;
+    right: 80px;
+    bottom: 80px;
     z-index: 10000;
     display: none;
 }
 
-#welcome-message #welcome-container {
+#welcome-container {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #47a3da;
-    color: #ffffff;
-    font-size: 100pt;
+    background-color: #ffffff;
     text-align: center;
-    padding-top: 100px;
+    overflow: scroll;
+    box-shadow: 0 0 50px #515151;
+}
+
+#welcomeCloseButton {
+    position: absolute;
+    top: -12px;
+    right: 14px;
+    color: #ffffff;
+    font-size: 80pt;
+    cursor: pointer;
+}
+
+#welcome-header {
+    background-color: #47a3da;
+    padding-left: 60px;
+    padding-right: 60px;
+    padding: 20px 60px;
+    margin-bottom: 20px;
+}
+
+#welcome-header h1 {
+    font-size: 40pt;
+    color: #ffffff;
+}
+
+#welcome-container p {
+    font-size: 13pt;
+    margin: 0 60px;
+    line-height: 1.2em;
 }
 
 
