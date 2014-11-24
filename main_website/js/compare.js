@@ -61,7 +61,7 @@ compareController = (function() {
             if ( document.getElementById("table_compare").rows[0].cells.length == 0){
                 $("#elements_to_compare").append("<td width='140px' id='title_1'>id:</td>");
             }
-            $("#elements_to_compare").append("<td id='" + day + "'> trip: " +  document.getElementById("table_compare").rows[0].cells.length+ " </td>");
+            $("#elements_to_compare").append("<td width='200px' id='" + day + "'> trip: " +  document.getElementById("table_compare").rows[0].cells.length+ " </td>");
         });
 
         $("#start_comparing").click(function () {
@@ -101,9 +101,9 @@ compareController = (function() {
         var trip_1 = {
             label: "second trip",
             title: "second trip",
-            fillColor: "rgba(220,220,220,"+fill+")",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
+            fillColor: "rgba(255,174,27,"+fill+")",
+            strokeColor: "rgba(255,174,27,1)",
+            pointColor: "rgba(255,174,27,1)",
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(220,220,220,1)",
