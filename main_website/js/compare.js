@@ -9,6 +9,7 @@ compareController = (function() {
     var data;
     var returnData;
     var temperature = [];
+    var humidity = [];
 
     function init() {
 
@@ -77,7 +78,7 @@ compareController = (function() {
         });
     }
 
-    function make_chart(data_trip){
+    function make_chart(data_trip,sort){
         var fill_choiche = data_trip.length;
         if (fill_choiche < 4){
             var fill = 0.2;
@@ -171,18 +172,33 @@ compareController = (function() {
             annotateDisplay: true,
             legend: true,
             yAxisMinimumInterval : 1,
-            /*scaleOverride: true,
+            scaleOverride: false,
             scaleStepWidth : 1,
             scaleStartValue: 10,
-            scaleSteps: 20,*/
+            scaleSteps: 20,
             yAxisUnit : "°C",
             yAxisUnitFontSize: 16,
             yAxisLabel: "Temperature"
 
         };
 
+        if (sort == "hum"){
+            options.graphTitle = "humidity during the trip";
+            options.yAxisLabel = "humidity";
+            options.yAxisUnit = "%";
+            options.scaleOverride = true;
+            options.scaleStartValue = 0;
+            options.scaleStepWidth = 5;
+            options.scaleSteps = 20;
+        }
         console.log(data.datasets);
-        var ctx = $("#first_chart").get(0).getContext("2d");
+        if (sort == "temp"){
+            var ctx = $("#first_chart").get(0).getContext("2d");
+        } else {
+            var ctx = $("#second_chart").get(0).getContext("2d");
+        }
+
+
         ctx.canvas.width = 1000;
         ctx.canvas.height = 500;
         var myNewChart = new Chart(ctx).Line(data,options);
@@ -375,7 +391,10 @@ compareController = (function() {
         });
 
         setTimeout(function(){
-            make_chart(temperature);
+            make_chart(temperature,"temp");
+        },500);
+        setTimeout(function(){
+            make_chart(humidity,"hum");
         },500);
 
     }
@@ -414,7 +433,8 @@ compareController = (function() {
                 }
 
                 temperature.push(dataController.getAveragesFromTrips(json).temparature);
-                console.log(temperature);
+                humidity.push(dataController.getAveragesFromTrips(json).humidity);
+                console.log(humidity);
 
             }
         });

@@ -96,6 +96,7 @@ if (!isset($user)) {
         </table>
 
         <canvas id="first_chart" width="400" height="400"></canvas>
+        <canvas id="second_chart" width="400" height="400"></canvas>
 
 
 
