@@ -61,14 +61,12 @@ compareController = (function() {
             if ( document.getElementById("table_compare").rows[0].cells.length == 0){
                 $("#elements_to_compare").append("<td width='140px' id='title_1'>id:</td>");
             }
-            $("#elements_to_compare").append("<td id='" + day + "'>" + day + " </td>");
+            $("#elements_to_compare").append("<td id='" + day + "'> trip: " +  document.getElementById("table_compare").rows[0].cells.length+ " </td>");
         });
 
         $("#start_comparing").click(function () {
             console.log(items_to_compare);
             compare_items();
-
-
 
             console.log(items_to_compare);
             $("#select_day").empty();
@@ -77,24 +75,20 @@ compareController = (function() {
 
 
         });
-
-        $("#example").click(function(){
-            make_chart();
-        });
-
-
-
-
-
-
     }
 
     function make_chart(data_trip){
+        var fill_choiche = data_trip.length;
+        if (fill_choiche < 4){
+            var fill = 0.2;
+        } else {
+            var fill =  0.1;
+        }
         console.log("making chart");
-        var trip = {
+        var trip_2 = {
             label: "first trip",
             title: "first trip",
-            fillColor: "rgba(151,187,205,0.2)",
+            fillColor: "rgba(151,187,205, "+fill+")",
             strokeColor: "#47a3da",
             lineColor: "#47a3da",
             pointColor: "rgba(151,187,205,1)",
@@ -104,15 +98,62 @@ compareController = (function() {
             data: []
         }
 
+        var trip_1 = {
+            label: "second trip",
+            title: "second trip",
+            fillColor: "rgba(220,220,220,"+fill+")",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: []
+        }
+
+        var trip_3 = {
+            label: "Third trip",
+            title: "Third trip",
+            fillColor: "rgba(126,116,133,"+fill+")",
+            strokeColor: "rgba(126,116,133,1)",
+            pointColor: "rgba(126,116,133,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: []
+        }
+
+        var trip_4 = {
+            label: "Third trip",
+            title: "Third trip",
+            fillColor: "rgba(54,255,187,"+fill+")",
+            strokeColor: "rgba(54,255,187,1)",
+            pointColor: "rgba(54,255,187,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: []
+        }
+
 
         var data = {
             labels: [],
             datasets: []
         };
         $.each(data_trip,function(index,value){
-            trip.label = "trip "+index;
-            trip.title = "trip "+index;
+            var lengte = data.datasets.length;
+            if (lengte == 0){
+                var trip = trip_1;
+            } else if (lengte == 1 ){
+                var trip = trip_2;
+            } else if(lengte == 2) {
+                var trip = trip_3;
+            } else {
+                var trip = trip_4;
+            }
+            trip.label = "trip "+(parseInt(index)+1).toString();
+            trip.title = "trip "+(parseInt(index)+1).toString();
             trip.data = value;
+            console.log(trip);
             data.datasets.push(trip);
             if (value.length > data.labels.length){
                 data.labels = [];
@@ -125,19 +166,25 @@ compareController = (function() {
 
 
         var options = {
-            graphTitle: "average speed in km/h",
+            graphTitle: "Temperature during the trip",
             showTooltips: true,
             annotateDisplay: true,
             legend: true,
-            yAxisMinimumInterval : 0.1,
+            yAxisMinimumInterval : 1,
+            /*scaleOverride: true,
+            scaleStepWidth : 1,
+            scaleStartValue: 10,
+            scaleSteps: 20,*/
+            yAxisUnit : "°C",
+            yAxisUnitFontSize: 16,
             yAxisLabel: "Temperature"
 
         };
 
         console.log(data.datasets);
         var ctx = $("#first_chart").get(0).getContext("2d");
-        ctx.canvas.width = 500;
-        ctx.canvas.height = 300;
+        ctx.canvas.width = 1000;
+        ctx.canvas.height = 500;
         var myNewChart = new Chart(ctx).Line(data,options);
 
 
