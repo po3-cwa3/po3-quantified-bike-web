@@ -148,7 +148,7 @@ mapController = ( function () {
             var pictureIndex = index+1;
             while (pictureIndex<pictureDataArray.length) {
 
-                if (Math.abs(pictureData[1][0]-pictureDataArray[pictureIndex][1][0])<0.00003 && Math.abs(pictureData[1][1]-pictureDataArray[pictureIndex][1][1])<0.00003) {
+                if (Math.abs(pictureData[1][0]-pictureDataArray[pictureIndex][1][0])<0.00007 && Math.abs(pictureData[1][1]-pictureDataArray[pictureIndex][1][1])<0.00003) {
                     pictureDataArray[pictureIndex][1][1] = pictureDataArray[pictureIndex][1][1] + 0.00003
                 }
                 pictureIndex = pictureIndex + 1
