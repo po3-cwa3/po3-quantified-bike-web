@@ -16,7 +16,7 @@ dataController = (function() {
             url: "http://dali.cs.kuleuven.be:8080/qbike/trips" + url,
             jsonp: "callback",
             dataType: "jsonp",
-            timeout: 5000
+            timeout: 7000
         }).done(function(data, textStatus, jqXHR) {
 
             console.log("Query returned successfully with status: " + textStatus);
@@ -79,13 +79,6 @@ dataController = (function() {
         var day = date.getDate();
 
         console.log("Querying trips for " + day + "/" + month + "/" + year + ".");
-
-        //queryURL("?groupID=cwa3&fromDate=" + year + "-" + month + "-" + day + "&toDate=" + year + "-" + month + "-" + day, function (json) {
-        //
-        //    console.log("We got " + json.length + " elements for group cwa3 for date " + day + "/" + month + "/" + year + ".");
-        //
-        //    callback(json);
-        //});
 
         queryTripsForPeriod(date, new Date(year, month-1, day+1), function (trips) {
 
@@ -229,8 +222,9 @@ dataController = (function() {
 
                             break;
 
-                        //acceleration
+                        // Acceleration
                         case 5:
+
                             var x_acc = sensorValue.data[0].acceleration[0].x;
                             var y_acc = sensorValue.data[0].acceleration[0].y;
                             var acceleration = Math.sqrt(Math.pow(x_acc,2) + Math.pow(y_acc,2));
