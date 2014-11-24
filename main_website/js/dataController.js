@@ -185,6 +185,8 @@ dataController = (function() {
 
         var tripsCoordinates = [];
 
+        var accReadings = [];
+
         $.each(trips, function(index, trip) {
 
             if (trip.hasOwnProperty("sensorData")) {
@@ -226,6 +228,15 @@ dataController = (function() {
                             }
 
                             break;
+
+                        //acceleration
+                        case 5:
+                            var x_acc = sensorValue.data[0].acceleration[0].x;
+                            var y_acc = sensorValue.data[0].acceleration[0].y;
+                            var acceleration = Math.sqrt(Math.pow(x_acc,2) + Math.pow(y_acc,2));
+                            // rekening houden met + of - teken --> versnelling of vertraging dus
+
+
 
                         default:
                     }
