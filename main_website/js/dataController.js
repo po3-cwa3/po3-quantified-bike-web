@@ -16,8 +16,16 @@ dataController = (function() {
             url: "http://dali.cs.kuleuven.be:8080/qbike/trips" + url,
             jsonp: "callback",
             dataType: "jsonp",
+            timeout: 5000
+        }).done(function(data, textStatus, jqXHR) {
 
-            success: callback
+            console.log("Query returned successfully with status: " + textStatus);
+            callback(data);
+
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+
+            console.log("Query returned with errors and status: " + textStatus);
+            alert("The server appears to be offline or is currently overloaded. We are sorry for the inconvenience.");
         });
     }
 
