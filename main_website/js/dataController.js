@@ -16,8 +16,16 @@ dataController = (function() {
             url: "http://dali.cs.kuleuven.be:8080/qbike/trips" + url,
             jsonp: "callback",
             dataType: "jsonp",
+            timeout: 7000
+        }).done(function(data, textStatus, jqXHR) {
 
-            success: callback
+            console.log("Query returned successfully with status: " + textStatus);
+            callback(data);
+
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+
+            console.log("Query returned with errors and status: " + textStatus);
+            alert("The server appears to be offline or is currently overloaded. We are sorry for the inconvenience.");
         });
     }
 
@@ -71,13 +79,6 @@ dataController = (function() {
         var day = date.getDate();
 
         console.log("Querying trips for " + day + "/" + month + "/" + year + ".");
-
-        //queryURL("?groupID=cwa3&fromDate=" + year + "-" + month + "-" + day + "&toDate=" + year + "-" + month + "-" + day, function (json) {
-        //
-        //    console.log("We got " + json.length + " elements for group cwa3 for date " + day + "/" + month + "/" + year + ".");
-        //
-        //    callback(json);
-        //});
 
         queryTripsForPeriod(date, new Date(year, month-1, day+1), function (trips) {
 
@@ -177,6 +178,8 @@ dataController = (function() {
 
         var tripsCoordinates = [];
 
+        var accReadings = [];
+
         $.each(trips, function(index, trip) {
 
 
@@ -220,6 +223,16 @@ dataController = (function() {
                             }
 
                             break;
+
+                        // Acceleration
+                        case 5:
+
+                            var x_acc = sensorValue.data[0].acceleration[0].x;
+                            var y_acc = sensorValue.data[0].acceleration[0].y;
+                            var acceleration = Math.sqrt(Math.pow(x_acc,2) + Math.pow(y_acc,2));
+                            // rekening houden met + of - teken --> versnelling of vertraging dus
+
+
 
                         default:
                     }
@@ -293,8 +306,8 @@ dataController = (function() {
             averageHumidity: avHum,
             nrOfTrips: trips.length,
             routes: tripsCoordinates,
-            temparature: tempReadings
-
+            temparature: tempReadings,
+            humidity: humReadings
         };
 
         return average;

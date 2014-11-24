@@ -73,7 +73,7 @@ if (!isset($user)) {
 
                 <div id="calendar"></div>
 
-                
+
                 <p id="trip">trip:</p>
                 <select id="select_trip" class="select_trip"></select>
                 <button id="show_trip">select trip</button>
@@ -96,6 +96,7 @@ if (!isset($user)) {
         </table>
 
         <canvas id="first_chart" width="400" height="400"></canvas>
+        <canvas id="second_chart" width="400" height="400"></canvas>
 
 
 
