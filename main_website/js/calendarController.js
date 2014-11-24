@@ -339,6 +339,7 @@ calendarController = (function() {
 
         initDetailsMap();
 
+
         $.each(average.routes, function(index, route) {
             drawTrip(route,index).setMap(detailsMap);
 

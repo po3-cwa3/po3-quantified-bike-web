@@ -179,12 +179,15 @@ dataController = (function() {
 
         $.each(trips, function(index, trip) {
 
+
             if (trip.hasOwnProperty("sensorData")) {
 
                 var gpsDataArray = [];
                 var singleTripCoordinates = [];
 
+
                 $.each(trip.sensorData, function(index, sensorValue) {
+
 
                     switch(sensorValue.sensorID) {
 
@@ -192,7 +195,6 @@ dataController = (function() {
                         case 1:
 
                             gpsDataArray.push(sensorValue);
-
 
                         // Temperature
                         case 3:

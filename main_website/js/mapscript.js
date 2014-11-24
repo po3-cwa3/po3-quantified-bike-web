@@ -33,102 +33,106 @@ mapController = ( function () {
 
         $.each(trips,function(index,trip){
 
-            var tripPictureDataArray = [];
-            var gpsDataArray = [];
+            if (trip.hasOwnProperty("sensorData")) {
+
+                var tripPictureDataArray = [];
+                var gpsDataArray = [];
 
 
-            $.each(trip.sensorData,function(index,sensorValue){
+                $.each(trip.sensorData, function (index, sensorValue) {
 
-                if (sensorValue.sensorID == 8) {
+                    if (sensorValue.sensorID == 8) {
 
-                    var link = "http://dali.cs.kuleuven.be:8080/qbike/images/";
-                    link = link + sensorValue.data[0];
-                    console.log("picture link is " + link);
-                    var time = sensorValue.timestamp;
+                        var link = "http://dali.cs.kuleuven.be:8080/qbike/images/";
+                        link = link + sensorValue.data[0];
+                        console.log("picture link is " + link);
+                        var time = sensorValue.timestamp;
 
-                    var pictureTimeArray = [link, time];
-                    tripPictureDataArray.push(pictureTimeArray);
-                }
-                else if (sensorValue.sensorID == 1) {
+                        var pictureTimeArray = [link, time];
+                        tripPictureDataArray.push(pictureTimeArray);
+                    }
+                    else if (sensorValue.sensorID == 1) {
 
-                    gpsDataArray.push(sensorValue)
-                }
-            });
+                        gpsDataArray.push(sensorValue)
+                    }
+                });
 
-            if (tripPictureDataArray != []) {
+                if (tripPictureDataArray != []) {
 
-                console.log("there are "+ tripPictureDataArray.length +" pictures on the day of " + tripPictureDataArray[0][1] + "(trip ID: " +  trip._id +" )");
+                    console.log("there are " + tripPictureDataArray.length + " pictures on the day of " + tripPictureDataArray[0][1] + "(trip ID: " + trip._id + " )");
 //                console.log(tripPictureDataArray);
-                var gpsCo = [];
+                    var gpsCo = [];
 
-                if (gpsDataArray.length == 0) {
+                    if (gpsDataArray.length == 0) {
 
 //                        console.log("there is no gps data, so pictures from the day of "+ tripPictureDataArray[0][1] +"are removed (tripID: " + trip._id +" )");
 //                        tripPictureDataArray = [];
-                    $.each(tripPictureDataArray, function (index, pictureData) {
+                        $.each(tripPictureDataArray, function (index, pictureData) {
 
-                        console.log("no GPS data found. Standard values are used (there may be more than one picture, but only one coordinate set is used)");
-                        pictureData[1] = [50.864,4.679];
+                            console.log("no GPS data found. Standard values are used (there may be more than one picture, but only one coordinate set is used)");
+                            pictureData[1] = [50.864, 4.679];
 
-                    })
-                }
-
-                else if (gpsDataArray.length == 1) {
-
-                    console.log("there is only one coordinate on trip of day " + tripPictureDataArray[0][1] + "(tripID: "+ trip._id +" )");
-
-                    if (gpsDataArray[0].data[0].type == "Multipoint") {
-
-                        gpsCo = gpsDataArray[0].data[0].coordinates[0];
+                        })
                     }
 
-                    else {
+                    else if (gpsDataArray.length == 1) {
 
-                        gpsCo = gpsDataArray[0].data[0].coordinates;
-                    }
+                        console.log("there is only one coordinate on trip of day " + tripPictureDataArray[0][1] + "(tripID: " + trip._id + " )");
 
-                    $.each(tripPictureDataArray, function (index, pictureData) {
+                        if (gpsDataArray[0].data[0].type == "Multipoint") {
 
-                        pictureData[1] = gpsCo;
-
-                    })
-                }
-
-                else {
-
-
-                    gpsDataArray.sort(dataController.compareTime);
-
-                    $.each(tripPictureDataArray, function (index, pictureData) {
-
-                        var timeTaken = Date.parse(pictureData[1]);
-                        var gpsIndex = 2;
-                        var prevDif = Math.abs(Date.parse(gpsDataArray[0].timestamp)-timeTaken);
-                        var currentDif = Math.abs(Date.parse(gpsDataArray[1].timestamp)-timeTaken);
-                        while (gpsIndex < gpsDataArray.length && currentDif < prevDif){
-
-                            prevDif = currentDif;
-                            currentDif = Math.abs(Date.parse(gpsDataArray[gpsIndex].timestamp)-timeTaken);
-                            gpsIndex = gpsIndex+1;
-
-                        }
-
-                        if (gpsDataArray[gpsIndex-1].data[0].type == "Multipoint") {
-
-                            pictureData[1] = gpsDataArray[gpsIndex-1].data[0].coordinates[0]
+                            gpsCo = gpsDataArray[0].data[0].coordinates[0];
                         }
 
                         else {
 
-                            pictureData[1] = gpsDataArray[gpsIndex-1].data[0].coordinates
+                            gpsCo = gpsDataArray[0].data[0].coordinates;
                         }
 
-                    });
-                }
+                        $.each(tripPictureDataArray, function (index, pictureData) {
 
-                console.log("tripPictureDataArray");
-                console.log(tripPictureDataArray);
-                pictureDataArray = pictureDataArray.concat(tripPictureDataArray);
+                            pictureData[1] = gpsCo;
+
+                        })
+                    }
+
+                    else {
+
+
+                        gpsDataArray.sort(dataController.compareTime);
+
+                        $.each(tripPictureDataArray, function (index, pictureData) {
+
+                            var timeTaken = Date.parse(pictureData[1]);
+                            var gpsIndex = 2;
+                            var prevDif = Math.abs(Date.parse(gpsDataArray[0].timestamp) - timeTaken);
+                            var currentDif = Math.abs(Date.parse(gpsDataArray[1].timestamp) - timeTaken);
+                            while (gpsIndex < gpsDataArray.length && currentDif < prevDif) {
+
+                                prevDif = currentDif;
+                                currentDif = Math.abs(Date.parse(gpsDataArray[gpsIndex].timestamp) - timeTaken);
+                                gpsIndex = gpsIndex + 1;
+
+                            }
+
+                            if (gpsDataArray[gpsIndex - 1].data[0].type == "Multipoint") {
+
+                                pictureData[1] = gpsDataArray[gpsIndex - 1].data[0].coordinates[0]
+                            }
+
+                            else {
+
+                                pictureData[1] = gpsDataArray[gpsIndex - 1].data[0].coordinates
+                            }
+
+                        });
+                    }
+
+                    console.log("tripPictureDataArray");
+                    console.log(tripPictureDataArray);
+                    pictureDataArray = pictureDataArray.concat(tripPictureDataArray);
+
+                }
 
             }
 
