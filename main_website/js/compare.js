@@ -4,12 +4,16 @@ compareController = (function() {
 
     var items_to_compare = [];
     var month;
-    var data_for_circle = [];
+    var data_for_circle = []; // deze array bevat de duur van elke trip in seconden uitgedrukt.
     var km_for_circle = [];
     var data;
     var returnData;
     var temperature = [];
     var humidity = [];
+    var coordinates = [];
+    var speed_for_graph = [];
+    var colors = ["rgba(255,174,27,1)","rgba(151,187,205,1)","rgba(126,116,133,1)","rgba(54,255,187,1)"];
+
 
     function init() {
 
@@ -48,8 +52,7 @@ compareController = (function() {
 
         $("#show_day").click(function () {
             var day = $('.select_day option:selected').val();
-            console.log(day);
-            console.log("day");
+
             $("#select_trip").empty();
             queryDataForDay(day);
         });
@@ -57,7 +60,7 @@ compareController = (function() {
         $("#show_trip").click(function () {
             var day = $('.select_trip option:selected').val();
             /*$("#title_1").css("display","inline");*/
-            console.log(day);
+
             items_to_compare.push(day);
             if ( document.getElementById("table_compare").rows[0].cells.length == 0){
                 $("#elements_to_compare").append("<td width='140px' id='title_1'>id:</td>");
@@ -66,10 +69,10 @@ compareController = (function() {
         });
 
         $("#start_comparing").click(function () {
-            console.log(items_to_compare);
+
             compare_items();
 
-            console.log(items_to_compare);
+
             $("#select_day").empty();
             $("#select_trip").empty();
 
@@ -79,8 +82,11 @@ compareController = (function() {
     }
 
     function make_chart(data_trip,sort){
+        console.log(data_trip + sort);
         var fill_choiche = data_trip.length;
-        if (fill_choiche < 4){
+        if (sort == "hum"){
+            var fill = 0;
+        } else if (fill_choiche < 4){
             var fill = 0.2;
         } else {
             var fill =  0.1;
@@ -190,12 +196,18 @@ compareController = (function() {
             options.scaleStartValue = 0;
             options.scaleStepWidth = 5;
             options.scaleSteps = 20;
+        } else if ( sort == "speed"){
+            options.graphTitle = "speed during the trip";
+            options.yAxisLabel = "speed";
+            options.yAxisUnit = "m/s";
         }
         console.log(data.datasets);
         if (sort == "temp"){
             var ctx = $("#first_chart").get(0).getContext("2d");
-        } else {
+        } else if (sort == "hum") {
             var ctx = $("#second_chart").get(0).getContext("2d");
+        } else {
+            var ctx = $("#speed_chart").get(0).getContext("2d");
         }
 
 
@@ -208,6 +220,7 @@ compareController = (function() {
 
 
     function calculate_size_circle(procent,sort,index,value){
+
         procent = Math.round(procent);
         var radius = 75;
         var angle = procent* 2*Math.PI/100;
@@ -232,7 +245,7 @@ compareController = (function() {
             var x = radius + radius*Math.cos(angle);
             var y = radius + radius*Math.sin(angle);
             var path = "M75,75 L75,150 A75,75 1 0,1 "+Math.round(x)+","+Math.round(y)+" z";
-            console.log(path);
+
             newElement.setAttribute("d",path);
             svg.appendChild(newElement);
         }
@@ -241,7 +254,7 @@ compareController = (function() {
             var x = radius + radius * Math.cos(angle);
             var y = radius + radius * Math.sin(angle);
             var path = "M75,75 L75,0 A75,75 1 0,1 " + Math.round(x) + "," + Math.round(y) + " z";
-            console.log(path);
+
             newElement.setAttribute("d", path);
             svg.appendChild(newElement);
 
@@ -255,17 +268,17 @@ compareController = (function() {
         text2.setAttributeNS(null,"x",75);
         text2.setAttributeNS(null,"y",175);
         text2.setAttributeNS(null,"font-size","20");
-        text2.setAttributeNS(null,"fill","#47a3da");
+        text2.setAttributeNS(null,"fill",colors[index]);
         text2.setAttributeNS(null,"font-family","'Lato', Calibri, Arial, sans-serif");
         text2.setAttributeNS(null,"text-anchor","middle");
         var textNode = document.createTextNode(procent+"%");
         if (sort == "time"){
             var display_text = ~~(value/3600)+"h"+ Math.round((value%3600)/60)+"m";
         } else {
-            var display_text = value + "km";
+            var display_text = Math.round(value) + "m";
         }
         var textNode2 = document.createTextNode(display_text);
-        console.log(textNode);
+
         text.appendChild(textNode);
         text2.appendChild(textNode2);
         svg.appendChild(text);
@@ -278,8 +291,7 @@ compareController = (function() {
         $.each(data_for_circle, function(){
             total += this;
         });
-        console.log("this is total ");
-        console.log(total);
+
         $.each(data_for_circle,function(index,value){
             procent = value/total;
             calculate_size_circle(procent*100,"time",index,value);
@@ -293,8 +305,7 @@ compareController = (function() {
         $.each(km_for_circle, function(){
             total += this;
         });
-        console.log("this is total ");
-        console.log(total);
+
         $.each(km_for_circle,function(index,value){
             procent = value/total;
             calculate_size_circle(procent*100,"distance",index,value);
@@ -384,22 +395,61 @@ compareController = (function() {
 
     function compare_items(){
         setTimeout(create_circles_time,500);
-        setTimeout(create_circles_distance,500);
+        setTimeout(create_circles_distance,1000);
         $.each(items_to_compare, function (index, value) {
             create_table(value);
-
         });
-
         setTimeout(function(){
             make_chart(temperature,"temp");
         },500);
         setTimeout(function(){
             make_chart(humidity,"hum");
         },500);
+        setTimeout(function(){
+            make_chart(speed_for_graph,"speed");
+        },1000);
+
+        var data = [];
+        setTimeout(function () {
+            $.each(coordinates, function(index,value){
+                calculate_speed(value[0],index);
+            });
+            console.log(coordinates);
+            console.log("above are the coordinates");
+            // coordinates geeft een array met daarin arrays die elk een waarde bevatten, namelijk nog een
+            // array met daarin de waarden --> de tweede waarde is altijd gelijk aan 0.
+            console.log(km_for_circle);
+            console.log(speed_for_graph + "speed_for_graph");
+            /*$.each(km_for_circle,function(){
+                $("#km").append("<td>"+ Math.round(this)  +" meter </td>");
+            });*/
+        },500);
 
     }
 
-    function get_data_for_table(){
+    function calculate_speed(coordinates,index){
+        var total_length = coordinates.length-1;
+        var distances = [];
+
+        var i;
+        for (i = 0; i < total_length; i++){
+            var value = new google.maps.LatLng(coordinates[i].lat,coordinates[i].lng);
+            var value_2 = new google.maps.LatLng(coordinates[i+1].lat,coordinates[i+1].lng);
+            var distance = google.maps.geometry.spherical.computeDistanceBetween (value, value_2); // returns the distance in meters
+            //console.log(distance);
+            distances.push(distance);
+        };
+        if (distances.length > 0){
+            var total_distance = distances.reduce(function(a, b) { return a + b });
+            var interval = data_for_circle[index]/total_length;
+            var speed = distances.map(function(x) {return x/ interval;});
+        } else {
+            var speed = [];
+            var total_distance = 0;
+        }
+
+        km_for_circle.push(total_distance);
+        speed_for_graph.push(speed);
 
     }
     function create_table(id){
@@ -424,17 +474,17 @@ compareController = (function() {
                 }
                 var monthNames = [ "January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December" ];
                 $("#table_day").append("<td> "+date.getDate() +" "+ monthNames[date.getMonth()] +"</td>");
-                if (json[0].hasOwnProperty("meta.distance")) {
+                /*if (json[0].hasOwnProperty("meta.distance")) {
                     var distance = json[0].meta.distance/1000;
                     $("#km").append("<td>" + distance + " km "  + "</td>");
                     km_for_circle.push(distance);
                 } else {
                     $("#km").append("<td> not recorded  </td>");
-                }
-
-                temperature.push(dataController.getAveragesFromTrips(json).temparature);
-                humidity.push(dataController.getAveragesFromTrips(json).humidity);
-                console.log(humidity);
+                }*/
+                var readings = dataController.getAveragesFromTrips(json);
+                temperature.push(readings.temparature);
+                humidity.push(readings.humidity);
+                coordinates.push(readings.routes);
 
             }
         });
@@ -454,7 +504,7 @@ compareController = (function() {
         create_circles_time : create_circles_time,
         compare_items: compare_items,
         create_circles_distance : create_circles_distance,
-        get_data_for_table: get_data_for_table
+        calculate_speed: calculate_speed
 
     }
 })();
