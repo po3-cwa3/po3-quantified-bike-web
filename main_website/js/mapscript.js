@@ -6,11 +6,37 @@ var infoWindows = [];
 
 mapController = ( function () {
 
+    var year = new Date().getFullYear();
+    var month = new Date().getMonth()+1;
+    var day = new Date().getDate();
 
     function init() {
 
+        $("#calendar").datepicker({
+            onSelect: function (dateText, datepicker) {
+
+                var elements = dateText.split("/");
+
+                year = elements[2];
+                month = elements[0];
+                day = elements[1];
+
+            }
+        });
+
+        $("#addDay").click(function(){
+
+            console.log("clicked");
+
+            dataController.queryTripsForDay(new Date(year, month-1, day), function(trips){
+
+                console.log(trips);
+                combinePicturesAndCo(trips)
+
+            })
+        });
+
         initMap();
-        initPicturesAndCo();
     }
 
     function initMap() {
@@ -48,7 +74,7 @@ mapController = ( function () {
                         console.log("picture link is " + link);
                         var time = sensorValue.timestamp;
 
-                        var pictureTimeArray = [link, time];
+                        var pictureTimeArray = [link, [], time];
                         tripPictureDataArray.push(pictureTimeArray);
                     }
                     else if (sensorValue.sensorID == 1) {
@@ -59,25 +85,25 @@ mapController = ( function () {
 
                 if (tripPictureDataArray != []) {
 
-                    console.log("there are " + tripPictureDataArray.length + " pictures on the day of " + tripPictureDataArray[0][1] + "(trip ID: " + trip._id + " )");
+//                    console.log("there are " + tripPictureDataArray.length + " pictures on the day of " + tripPictureDataArray[0][2] + "(trip ID: " + trip._id + " )");
 //                console.log(tripPictureDataArray);
                     var gpsCo = [];
 
                     if (gpsDataArray.length == 0) {
 
-//                        console.log("there is no gps data, so pictures from the day of "+ tripPictureDataArray[0][1] +"are removed (tripID: " + trip._id +" )");
-//                        tripPictureDataArray = [];
-                        $.each(tripPictureDataArray, function (index, pictureData) {
+//                        console.log("there is no gps data, so pictures from the day of "+ tripPictureDataArray[0][2] +"are removed (tripID: " + trip._id +" )");
+                        tripPictureDataArray = [];
+/*                        $.each(tripPictureDataArray, function (index, pictureData) {
 
                             console.log("no GPS data found. Standard values are used (there may be more than one picture, but only one coordinate set is used)");
                             pictureData[1] = [50.864, 4.679];
 
-                        })
+                        })*/
                     }
 
                     else if (gpsDataArray.length == 1) {
 
-                        console.log("there is only one coordinate on trip of day " + tripPictureDataArray[0][1] + "(tripID: " + trip._id + " )");
+//                        console.log("there is only one coordinate on trip of day " + tripPictureDataArray[0][2] + "(tripID: " + trip._id + " )");
 
                         if (gpsDataArray[0].data[0].type == "Multipoint") {
 
@@ -103,7 +129,7 @@ mapController = ( function () {
 
                         $.each(tripPictureDataArray, function (index, pictureData) {
 
-                            var timeTaken = Date.parse(pictureData[1]);
+                            var timeTaken = Date.parse(pictureData[2]);
                             var gpsIndex = 2;
                             var prevDif = Math.abs(Date.parse(gpsDataArray[0].timestamp) - timeTaken);
                             var currentDif = Math.abs(Date.parse(gpsDataArray[1].timestamp) - timeTaken);
@@ -184,8 +210,17 @@ mapController = ( function () {
                     map: Map
                 });
 
+                var dateTaken = new Date(myData[i][2]).toLocaleString();
+
                 var contentString = '<div class="pictureContainer">'+
                     '<img class="picture" src='+myData[i][0]+'>'+
+                    '<div class="takenOn">'+
+                    'This photo was taken on '+
+                    dateTaken +
+                    '</div>'+
+                    '<a class="photoLink" target="_blank" href=' + myData[i][0] + '>'+
+                    'Click here to view full size.'+
+                    '</a>'+
                     '</div>';
 
                 infoWindows[i] = new google.maps.InfoWindow({

@@ -4,6 +4,7 @@ html { height: 100% }
 body { height: 100%;
     margin: 0;
     padding: 0;
+    min-width: 800px;
 }
 
 .container {height: 100%;
@@ -11,37 +12,89 @@ body { height: 100%;
 }
 
 div.pictureContainer {
-    width: 384px;
-    height: 216px;
+    width: 505px;
+    height: 284px;
 }
 
 img.picture {
-    height: 95%;
-    width: 95%;
+    height: 90%;
+    width: 90%;
 }
 
-#mapContainer {
-    position: relative;
-    display: inline;
-    left: 15%;
-
+div.takenOn {
+    color: black;
 }
+
+a.photoLink:link {
+    color: blue;
+}
+
+a.photoLink:visited{
+    color: purple;
+}
+
+#pleaseWait {
+    position: absolute;
+    left: 46.5%;
+}
+
 
 #spinnerContainer {
 
-    position: relative;
-    left: 0%;
-    top: 25%;
+    height: 25%;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-width: 2px;
+    position: absolute;
     background: #ffffff;
+    right: 10px;
+    left: 350px;
+    top: 40%;
+    display: none;
 }
 
-#MapCanvas { height: 60% ;
-    width: 70%;
-    border: 1px solid #000000;
-    float:left;
+#mapContainer {
+    height: 75%;
+    width: 100%;
+    position: relative;
+    left: 0;
+
+}
+
+#calendar {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+#MapCanvas {
+    height: 95% ;
     margin: 0;
     text-align: center;
+    display: inline;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    left: 350px;
 }
 #MapOptions { float:left;
     margin: 5px;
+}
+
+p.loadingText {
+    position: absolute;
+    left: 45%;
+}
+
+#addDay {
+    position: absolute;
+    top: 270px;
+    left: 10px;
+}
+
+#removeDay {
+    position: absolute;
+    top: 295px;
+    left: 10px;
 }
