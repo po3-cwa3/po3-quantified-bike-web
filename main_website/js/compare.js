@@ -3,7 +3,7 @@
 compareController = (function() {
 
     var items_to_compare = [];
-    var month;
+    var month = new Date().getMonth() + 1;
     var data_for_circle = [];
     var km_for_circle = [];
     var data;
@@ -11,18 +11,72 @@ compareController = (function() {
     var temperature = [];
     var humidity = [];
 
+    var month_data;
+    var month_data_fetched = false;
+
     function init() {
 
+        dataController.queryDataForMonth(month, function(data) {
+
+            month_data = data;
+            month_data_fetched = true;
+
+            console.log(month_data);
+
+            $("#loading_popover").css("display", "none");
+
+            $("#calendar").datepicker("refresh");
+        });
+
         $("#calendar").datepicker({
+
             onSelect: function (dateText, datepicker) {
 
                 var elements = dateText.split("/");
 
-                month = elements[0];
                 var day = elements[1];
 
-                $("#select_trip").empty();
-                queryDataForDay(day);
+                setTableToTrips(month_data[day-1]);
+            },
+
+            onChangeMonthYear: function (newYear, newMonth, datepicker) {
+
+                console.log("Datepicker changed month to " + newMonth);
+
+                month_data_fetched = false;
+
+                month = newMonth;
+
+                $("#loading_popover").css("display", "block");
+
+                dataController.queryDataForMonth(month, function(data) {
+
+                    month_data = data;
+                    month_data_fetched = true;
+
+                    console.log(month_data);
+
+                    $("#loading_popover").css("display", "none");
+                    $("#calendar").datepicker("refresh");
+                });
+            },
+
+            beforeShowDay: function (day) {
+
+                var day_month = day.getMonth() + 1;
+
+                if (month_data_fetched && day_month == month) {
+
+                    var day_number = day.getDate();
+
+                    var trips_present = month_data[day_number-1].average.nrOfTrips > 0;
+
+                    if (trips_present) console.log("Trips present on " + day);
+
+                    return [trips_present, ""];
+                }
+
+                return [false, ""];
             }
         });
 
@@ -354,23 +408,37 @@ compareController = (function() {
         });
     }
 
+    function setTableToTrips(data) {
+
+        console.log(data);
+
+        $("#trip_lister ul").empty();
+
+        function pad (str, max) {
+            str = str.toString();
+            return str.length < max ? pad("0" + str, max) : str;
+        }
+
+        $.each(data.trips, function (index, trip) {
+
+            var startTime = new Date(trip.startTime);
+            var endTime = new Date(trip.endTime);
+
+            var begin = pad(startTime.getHours(), 2) + ":" + pad(startTime.getMinutes(), 2);
+            var end = pad(endTime.getHours(), 2) + ":" + pad(endTime.getMinutes(), 2);
+
+            $("#trip_lister ul").append("<li>" + begin + "  tot  " + end + "</li>");
+        });
+
+        $("#trip_lister ul li").click(function() {
+
+            // Add trips to compare here
+
+            alert("Bla bla blaaa");
+        });
+    }
+
     function queryDataForDay(day){
-        //$.ajax({
-        //    //url: "http://dali.cs.kuleuven.be:8080/qbike/trips",
-        //    url: "http://dali.cs.kuleuven.be:8080/qbike/trips?toDate=2014-"+month+"-"+day+"&groupID=cwa3",
-        //    jsonp: "callback",
-        //    dataType: "jsonp",
-        //
-        //    success: function (json) {
-        //
-        //        console.log("We got " + json.length + " elements for this day ");
-        //        $.each(json, function(index, value){
-        //            var _id = value._id;
-        //            $("#select_trip").append("<option value='"+_id +"'>"+index +"</option>");
-        //        });
-        //
-        //    }
-        //});
 
         dataController.queryTripsForDay(new Date(2014, month-1, day), function (trips) {
             console.log(trips);
@@ -454,8 +522,9 @@ compareController = (function() {
         create_circles_time : create_circles_time,
         compare_items: compare_items,
         create_circles_distance : create_circles_distance,
-        get_data_for_table: get_data_for_table
+        get_data_for_table: get_data_for_table,
 
+        setTableToTrips: setTableToTrips
     }
 })();
 

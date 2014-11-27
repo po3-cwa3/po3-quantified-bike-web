@@ -1,3 +1,7 @@
+body {
+    min-width: 800px;
+}
+
 tr {
     height: 25px;
 
@@ -199,6 +203,76 @@ path {
     color: #fff;
 }
 
-#compare-trips{
+#compare-trips {
     display: none;
+}
+
+
+/* Trip Selector */
+
+#trip_selector {
+    position: relative;
+    display: block;
+    height: 246px;
+    position: relative;
+}
+
+/* Calendar Day Selector */
+
+#calendar {
+    position: absolute;
+}
+
+
+/* Calendar Selection Loading Popover */
+
+#loading_popover {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: auto;
+    width: 200px;
+    margin-top: -60px;
+    margin-left: -100px;
+    background-color: #ffffff;
+    border: solid 1px #47a3da;
+    padding: 20px;
+    padding-bottom: 0;
+    overflow: hidden;
+    box-shadow: 0 0 20px 0px lightgray;
+}
+
+#loading_popover .loading_message {
+    text-align: center;
+}
+
+
+/* Calendar Trip Selector */
+
+#calendar_arrow {
+    position: absolute;
+    height: 80px;
+    top: 90px;
+    left: 310px;
+}
+
+#trip_lister {
+    position: absolute;
+    left: 410px;
+    top: 0;
+    bottom: 0;
+    right: 10px;
+    border: solid 1px #47a3da;
+    padding: 10px;
+    overflow: scroll;
+}
+
+#trip_lister li {
+    line-height: 1.5em;
+    cursor: pointer;
+}
+
+#trip_lister li:hover {
+
+    color: #285e8e;
 }

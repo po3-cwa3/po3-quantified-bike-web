@@ -69,10 +69,35 @@ if (!isset($user)) {
         <div id="compare-trips">
 
             <div>
-                <h2>choose trips to compare</h2><br>
 
-                <div id="calendar"></div>
+                <h2>Choose the trips you want to compare, then press 'Compare'.</h2><br>
 
+                <div id="trip_selector">
+
+                    <div id="calendar"></div>
+
+                    <img id="calendar_arrow" src="Images/arrow-alt-right.png"></img>
+
+                    <div id="trip_lister">
+
+                        <ul>
+
+                            <li>test item 1</li>
+                            <li>test item 2</li>
+
+                        </ul>
+
+                    </div>
+
+                    <div id="loading_popover">
+
+                        <p class="loading_message">Loading, please wait...</p>
+
+                        <div class="loadingSpinner"></div>
+
+                    </div>
+
+                </div>
 
                 <p id="trip">trip:</p>
                 <select id="select_trip" class="select_trip"></select>
