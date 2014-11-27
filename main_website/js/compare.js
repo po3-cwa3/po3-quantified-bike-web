@@ -446,7 +446,7 @@ compareController = (function() {
 
             // Add trips to compare here
 
-            alert("Bla bla blaaa");
+            alert("This trip will be added to the comparison list, but it still needs to programmed...");
         });
     }
 
