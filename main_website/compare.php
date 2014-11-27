@@ -51,11 +51,15 @@ if (!isset($user)) {
     <!-- Bootstrap JS -->
     <script type="text/javascript" charset="utf8" src="Bootstrap/js/bootstrap.js"></script>
 
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&v=3&libraries=geometry"></script>
+
     <!-- Data Controller JS -->
     <script src="js/dataController.js"></script>
 
     <!-- Compare Controller JS -->
     <script src="js/compare.js"></script>
+
+
 
 </head>
 <body>
@@ -122,6 +126,7 @@ if (!isset($user)) {
 
         <canvas id="first_chart" width="400" height="400"></canvas>
         <canvas id="second_chart" width="400" height="400"></canvas>
+        <canvas id="speed_chart" width="400" height="400"></canvas>
 
 
 
