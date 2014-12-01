@@ -40,7 +40,7 @@ if (!isset($user)) {
 
     <!-- jQuery UI (for datepicker) -->
     <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+<!--    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">-->
 
     <!-- Main Theme JS -->
     <script src="js/main.js"></script>
@@ -84,12 +84,7 @@ if (!isset($user)) {
 
                     <div id="trip_lister">
 
-                        <ul>
-
-                            <li>test item 1</li>
-                            <li>test item 2</li>
-
-                        </ul>
+                        <ul></ul>
 
                     </div>
 
@@ -103,13 +98,9 @@ if (!isset($user)) {
 
                 </div>
 
-                <p id="trip">trip:</p>
-                <select id="select_trip" class="select_trip"></select>
-                <button id="show_trip">select trip</button>
+            </div>
 
-            </div><br><br>
-
-            <button id="start_comparing">compare</button><br>
+            <button id="start_comparing">compare</button>
 
         </div>
         <table id="table_compare" class="table_compare">
