@@ -54,8 +54,6 @@ if (!isset($user)) {
     <div id="header-loader"></div>
     <div id="mapContainer">
         <div id="calendar"></div>
-        <button id="addDay">Add photos from this day</button>
-        <button id="removeDay">Remove photos from this day</button>
         <div id="MapCanvas">
         </div>
         <div id="spinnerContainer" >

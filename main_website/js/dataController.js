@@ -122,6 +122,46 @@ dataController = (function() {
         });
     }
 
+    function queryPictureDataForMonth(date, callback) {
+
+        var month = 0;
+        var year = 0;
+
+        // if the date is a number, it just specifies the month
+        if (typeof date == "number") {
+
+            month = date;
+            year = new Date().getFullYear();
+
+            // if the date is a date object it represents a day in the month
+        } else if (typeof date == "object") {
+
+            month = date.getMonth() + 1;
+            year = date.getFullYear();
+        }
+
+        var beginDate = new Date(year, month - 1, 1);
+        var endDate = new Date(year, month, 1);
+
+        queryPictureTripsForPeriod(beginDate, endDate, function (trips) {
+
+            callback(divideAndSetAveragesForPeriod(trips, beginDate, endDate));
+        });
+    }
+
+    function queryPictureTripsForPeriod(beginDate, endDate, callback) {
+
+        var fromDate = "fromDate=" + beginDate.getFullYear() + "-" + (beginDate.getMonth()+1) + "-" + beginDate.getDate();
+        var toDate = "toDate=" + endDate.getFullYear() + "-" + (endDate.getMonth()+1) + "-" + endDate.getDate();
+
+        queryURL("?groupID=cwa3&" + fromDate + "&" + toDate + "&sensorID=8", function (json) {
+
+            console.log("We got " + json.length + " elements for group cwa3 for period beginning " + beginDate + " and ending " + endDate);
+
+            callback(json);
+        });
+    }
+
     function queryPictureTrips(callback) {
 
         queryURL("?sensorID=8&groupID=cwa3", function (json) {
@@ -398,6 +438,8 @@ dataController = (function() {
         queryDataForDay: queryDataForDay,
         queryDataForMonth: queryDataForMonth,
 
+        queryPictureTripsForPeriod: queryPictureTripsForPeriod,
+        queryPictureDataForMonth: queryPictureDataForMonth,
         queryPictureTrips: queryPictureTrips,
 
         divideTripsIntoDays: divideTripsIntoDays,

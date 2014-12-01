@@ -3,6 +3,7 @@
 //var myData = [["http://extranet.eco.ca/projects/crm/OccupationalProfiles/wopID208/Petroleum-Engineer.jpg",[50.864,4.679]],["http://rossengineers.com/wp-content/themes/rosseng/img/j0439299.jpg", [50.874,4.689]],["http://construction-engineers.regionaldirectory.us/construction-engineer-720.jpg", [50.874,4.679]]];
 var markers = [];
 var infoWindows = [];
+var markersOnMap = {};
 
 mapController = ( function () {
 
@@ -10,9 +11,36 @@ mapController = ( function () {
     var month = new Date().getMonth()+1;
     var day = new Date().getDate();
 
+    var month_data;
+    var month_data_fetched = false;
+
     function init() {
 
-        $("#calendar").datepicker({
+        dataController.queryPictureDataForMonth(month, function(data) {
+
+            month_data = data;
+            month_data_fetched = true;
+
+            var myData = [];
+            $.each(month_data, function(index, day_data){
+
+                if (day_data.trips.length != 0){
+
+                    myData.concat(day_data.trips)
+                }
+
+            });
+            combinePicturesAndCo(myData);
+
+            console.log(month_data);
+
+
+//            $("#loading_popover").css("display", "none");
+
+            $("#calendar").datepicker("refresh");
+        });
+
+/*        $("#calendar").datepicker({
             onSelect: function (dateText, datepicker) {
 
                 var elements = dateText.split("/");
@@ -22,9 +50,107 @@ mapController = ( function () {
                 day = elements[1];
 
             }
+        });*/
+
+        $("#calendar").datepicker({
+
+            onSelect: function (dateText, datepicker) {
+
+                var elements = dateText.split("/");
+
+                var day = elements[1];
+                var month = elements[0];
+                var year = elements[2];
+
+//                setTableToTrips(month_data[day-1]);
+
+//                $("#select_trip").empty();
+//                queryDataForDay(day);
+//                console.log(markersOnMap);
+                addOrRemovePictures(day, month, year);
+//                removeMarkers(day);
+            },
+
+            onChangeMonthYear: function (newYear, newMonth, datepicker) {
+
+                console.log("Datepicker changed month to " + newMonth);
+
+                month_data_fetched = false;
+
+                month = newMonth;
+
+//                markers = [];
+
+                $("#loading_popover").css("display", "block");
+
+                dataController.queryPictureDataForMonth(month, function(data) {
+
+                    month_data = data;
+                    month_data_fetched = true;
+                    var myData = [];
+                    $.each(month_data, function(index, day_data){
+
+                        if (day_data.trips.length != 0){
+
+                            myData = myData.concat(day_data.trips);
+                        }
+
+                    });
+                    combinePicturesAndCo(myData);
+
+                    console.log(month_data);
+
+//                    $("#loading_popover").css("display", "none");
+                    $("#calendar").datepicker("refresh");
+                });
+            },
+
+            beforeShowDay: function (day) {
+
+                var day_month = day.getMonth() + 1;
+
+                if (month_data_fetched && day_month == month) {
+
+                    var day_number = day.getDate();
+
+                    var trips_present = month_data[day_number-1].average.nrOfTrips > 0;
+
+
+
+                    if (trips_present) {
+
+                        console.log("Trips present on " + day);
+//                        console.log(month_data[day_number-1].trips);
+                        var hasGPSData = false;
+                        $.each(month_data[day_number-1].trips, function(index, trip){
+
+                            $.each(trip.sensorData, function(index, sensor_data){
+
+                                if (sensor_data.sensorID == 1){
+
+                                    hasGPSData = true;
+                                    return false
+                                }
+
+                            });
+                            if (hasGPSData) {
+                                return false
+                            }
+                        });
+                        if (hasGPSData == false) {
+                            trips_present = false;
+                        }
+
+                    }
+
+                    return [trips_present, ""];
+                }
+
+                return [false, ""];
+            }
         });
 
-        $("#addDay").click(function(){
+ /*       $("#addDay").click(function(){
 
             console.log("clicked");
 
@@ -35,7 +161,7 @@ mapController = ( function () {
 
             })
         });
-
+*/
         initMap();
     }
 
@@ -71,7 +197,7 @@ mapController = ( function () {
 
                         var link = "http://dali.cs.kuleuven.be:8080/qbike/images/";
                         link = link + sensorValue.data[0];
-                        console.log("picture link is " + link);
+//                        console.log("picture link is " + link);
                         var time = sensorValue.timestamp;
 
                         var pictureTimeArray = [link, [], time];
@@ -154,8 +280,8 @@ mapController = ( function () {
                         });
                     }
 
-                    console.log("tripPictureDataArray");
-                    console.log(tripPictureDataArray);
+//                    console.log("tripPictureDataArray");
+//                    console.log(tripPictureDataArray);
                     pictureDataArray = pictureDataArray.concat(tripPictureDataArray);
 
                 }
@@ -164,8 +290,8 @@ mapController = ( function () {
 
 
         });
-        console.log("pictureDataArray");
-        console.log(pictureDataArray);
+//        console.log("pictureDataArray");
+//        console.log(pictureDataArray);
         pictureDataArray = moveDuplicates(pictureDataArray);
         initMarkers(pictureDataArray);
 
@@ -198,19 +324,64 @@ mapController = ( function () {
         });
     }
 
+
+    function addOrRemovePictures(day, month, year) {
+
+        console.log(markersOnMap);
+        var markerCheck = day.toString()+month.toString()+year.toString();
+        if (markersOnMap.hasOwnProperty(markerCheck)) {
+            console.log("has own property");
+            if (markersOnMap[markerCheck]) {
+                console.log("markerCheck is true");
+                removeMarkers(day);
+                markersOnMap[markerCheck] = false;
+            }
+            else {
+                console.log("markerCheck is false");
+                addMarkers(day);
+                markersOnMap[markerCheck] = true;
+            }
+        }
+        else {
+            console.log("does not have own property");
+            addMarkers(day);
+            markersOnMap[markerCheck] = true;
+        }
+    }
+
+    function addMarkers(day) {
+
+        $.each(markers, function(index, marker){
+
+            if (day == marker.date.getDate()){
+                markers[index].setMap(Map);
+            }
+        })
+    }
+
+    function removeMarkers(day) {
+
+        $.each(markers, function(index, marker){
+
+            if (day == marker.date.getDate()){
+                markers[index].setMap(null);
+            }
+        })
+    }
+
     function initMarkers(myData) {
 
         for (index in myData) {
             (function () {
 
                 var i = index;
+                var dateTaken = new Date(myData[i][2]).toLocaleString();
                 var myLatLng = {lat: myData[i][1][0], lng: myData[i][1][1]};
                 markers[i] = new google.maps.Marker({
                     position: myLatLng,
-                    map: Map
+                    map: Map,
+                    date: new Date(myData[i][2])
                 });
-
-                var dateTaken = new Date(myData[i][2]).toLocaleString();
 
                 var contentString = '<div class="pictureContainer">'+
                     '<img class="picture" src='+myData[i][0]+'>'+
@@ -233,10 +404,14 @@ mapController = ( function () {
                     infoWindows[i].open(Map, markers[i]);
                 });
 
+                markers[i].setMap(null)
+
             }())
 
 
         }
+
+        console.log(markers);
 
         setTimeout(function(){
             $("#spinnerContainer").css("display", "none");
@@ -253,6 +428,9 @@ mapController = ( function () {
         combinePicturesAndCo: combinePicturesAndCo,
         moveDuplicates: moveDuplicates,
         initPicturesAndCo: initPicturesAndCo,
+        addOrRemovePictures: addOrRemovePictures,
+        addMarkers: addMarkers,
+        removeMarkers: removeMarkers,
         initMarkers: initMarkers
     };
 
