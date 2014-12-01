@@ -55,6 +55,8 @@ compareController = (function() {
 
                 month = newMonth;
 
+                $("#trip_lister ul").empty();
+
                 $("#loading_popover").css("display", "block");
 
                 dataController.queryDataForMonth(month, function(data) {
