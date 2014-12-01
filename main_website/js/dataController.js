@@ -16,7 +16,8 @@ dataController = (function() {
             url: "http://dali.cs.kuleuven.be:8080/qbike/trips" + url,
             jsonp: "callback",
             dataType: "jsonp",
-            timeout: 7000
+            timeout: 70000
+
         }).done(function(data, textStatus, jqXHR) {
 
             console.log("Query returned successfully with status: " + textStatus);

@@ -33,6 +33,11 @@ if (!isset($user)) {
     <script type="text/javascript" charset="utf8" src="js/jQuery.js"></script>
     <script src="js/main.js"></script>
     <script src="js/mapscript.js"></script>
+
+    <!-- jQuery UI (for datepicker) -->
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+
     <!-- Google Maps -->
     <script type="text/javascript"
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4SUA1W38uRk2aigX5gHDug9SNgndHnNw">
@@ -47,17 +52,20 @@ if (!isset($user)) {
 <body>
 <div class="container">
     <div id="header-loader"></div>
-    <div>
-        this is the maps view.
-    </div>
     <div id="mapContainer">
-    <div id="MapCanvas"></div>
+        <div id="calendar"></div>
+        <button id="addDay">Add photos from this day</button>
+        <button id="removeDay">Remove photos from this day</button>
+        <div id="MapCanvas">
+        </div>
+        <div id="spinnerContainer" >
+            <br>
+            <p class="loadingText">Loading pictures...</p>
+            <div class="loadingSpinner" style="display: block"></div>
+            <p id="pleaseWait" class="loadingText">Please wait</p>
+        </div>
     </div>
-    <div id="spinnerContainer" >
-        <p>Loading pictures...</p>
-    <div class="loadingSpinner" style="display: block"></div>
-        <p>Please wait</p>
-    </div>
+
     <!--laat alles hieronder staan-->
 
 </div>
