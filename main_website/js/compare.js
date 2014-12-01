@@ -4,7 +4,6 @@ compareController = (function() {
 
     var items_to_compare = [];
     var month = new Date().getMonth() + 1;
-    var data_for_circle = [];
     var data_for_circle = []; // deze array bevat de duur van elke trip in seconden uitgedrukt.
     var km_for_circle = [];
     var data;
@@ -42,6 +41,9 @@ compareController = (function() {
                 var day = elements[1];
 
                 setTableToTrips(month_data[day-1]);
+
+                $("#select_trip").empty();
+                queryDataForDay(day);
             },
 
             onChangeMonthYear: function (newYear, newMonth, datepicker) {
@@ -573,7 +575,7 @@ compareController = (function() {
         create_circles_time : create_circles_time,
         compare_items: compare_items,
         create_circles_distance : create_circles_distance,
-        get_data_for_table: get_data_for_table,
+        //get_data_for_table: get_data_for_table,
         calculate_speed: calculate_speed,
 
         setTableToTrips: setTableToTrips
