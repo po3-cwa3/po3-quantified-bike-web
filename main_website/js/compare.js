@@ -598,7 +598,7 @@ compareController = (function() {
 
     function create_graph_days(array, sort){
 
-        
+
     }
 
 
