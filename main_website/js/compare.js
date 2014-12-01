@@ -6,12 +6,12 @@ compareController = (function() {
     var month = new Date().getMonth() + 1;
     var data_for_circle = []; // deze array bevat de duur van elke trip in seconden uitgedrukt.
     var km_for_circle = [];
-    var data;
-    var returnData;
     var temperature = [];
     var humidity = [];
+    var heartbeat = [];
     var coordinates = [];
     var speed_for_graph = [];
+    var days = [];
     var colors = ["rgba(255,174,27,1)","rgba(151,187,205,1)","rgba(126,116,133,1)","rgba(54,255,187,1)"];
 
 
@@ -28,8 +28,10 @@ compareController = (function() {
             console.log(month_data);
 
             $("#loading_popover").css("display", "none");
+            $("#loading_popover-2").css("display", "none");
 
             $("#calendar").datepicker("refresh");
+            $("#calendar-2").datepicker("refresh");
         });
 
         $("#calendar").datepicker({
@@ -42,8 +44,7 @@ compareController = (function() {
 
                 setTableToTrips(month_data[day-1]);
 
-                $("#select_trip").empty();
-                queryDataForDay(day);
+
             },
 
             onChangeMonthYear: function (newYear, newMonth, datepicker) {
@@ -53,6 +54,8 @@ compareController = (function() {
                 month_data_fetched = false;
 
                 month = newMonth;
+
+                $("#trip_lister ul").empty();
 
                 $("#loading_popover").css("display", "block");
 
@@ -87,6 +90,59 @@ compareController = (function() {
             }
         });
 
+        $("#calendar-2").datepicker({
+
+            onSelect: function (dateText, datepicker) {
+                console.log(dateText);
+                var elements = dateText.split("/");
+
+                var day = elements[1];
+
+                days.push(month_data[day-1]);
+
+            },
+
+            onChangeMonthYear: function (newYear, newMonth, datepicker) {
+
+                console.log("Datepicker changed month to " + newMonth);
+
+                month_data_fetched = false;
+
+                month = newMonth;
+
+                $("#loading_popover-2").css("display", "block");
+
+                dataController.queryDataForMonth(month, function(data) {
+
+                    month_data = data;
+                    month_data_fetched = true;
+
+                    console.log(month_data);
+
+                    $("#loading_popover-2").css("display", "none");
+                    $("#calendar-2").datepicker("refresh");
+                });
+            },
+
+            beforeShowDay: function (day) {
+
+                var day_month = day.getMonth() + 1;
+
+                if (month_data_fetched && day_month == month) {
+
+                    var day_number = day.getDate();
+
+                    var trips_present = month_data[day_number-1].average.nrOfTrips > 0;
+
+                    if (trips_present) console.log("Trips present on " + day);
+
+                    return [trips_present, ""];
+                }
+
+                return [false, ""];
+            }
+        });
+
         $("#trips").click(function(){
             $("#choose-compare-sort").slideUp("fast");
             $("#compare-trips").slideDown("fast");
@@ -97,44 +153,19 @@ compareController = (function() {
             $("#compare-days").slideDown("fast");
         });
 
-        $("#month").click(queryDataForMonth);
-
-        $("#show_month").click(function () {
-
-            month = $('.select_month option:selected').val();
-            $("#select_day").empty();
-            $("#select_trip").empty();
-            display_days(month);
-        });
-
-        $("#show_day").click(function () {
-            var day = $('.select_day option:selected').val();
-
-            $("#select_trip").empty();
-            queryDataForDay(day);
-        });
-
-        $("#show_trip").click(function () {
-            var day = $('.select_trip option:selected').val();
-            /*$("#title_1").css("display","inline");*/
-
-            items_to_compare.push(day);
-            if ( document.getElementById("table_compare").rows[0].cells.length == 0){
-                $("#elements_to_compare").append("<td width='140px' id='title_1'>id:</td>");
-            }
-            $("#elements_to_compare").append("<td width='200px' id='" + day + "'> trip: " +  document.getElementById("table_compare").rows[0].cells.length+ " </td>");
-        });
 
         $("#start_comparing").click(function () {
 
             compare_items();
 
-
             $("#select_day").empty();
             $("#select_trip").empty();
+        });
 
+        $("#start_comparing_days").click(function () {
 
-
+            console.log(days);
+            compare_days();
         });
     }
 
@@ -223,7 +254,12 @@ compareController = (function() {
                 data.labels = [];
                 var i ;
                 for (i=0; i < value.length; i++ ){
-                    data.labels.push(i.toString());
+                    if ( i % 15 ==0 ){
+                        var label = 2*i;
+                    } else {
+                        var label = "";
+                    }
+                    data.labels.push(label.toString());
                 }
             }
         });
@@ -235,6 +271,10 @@ compareController = (function() {
             annotateDisplay: true,
             legend: true,
             yAxisMinimumInterval : 1,
+            xAxisLabel: "Seconds",
+            xAxisBottom: true,
+            scaleXGridLinesStep: 15,
+            pointDot: false,
             scaleOverride: false,
             scaleStepWidth : 1,
             scaleStartValue: 10,
@@ -257,12 +297,19 @@ compareController = (function() {
             options.graphTitle = "speed during the trip";
             options.yAxisLabel = "speed";
             options.yAxisUnit = "m/s";
+        } else if (sort =="heart"){
+            options.graphTitle = "heartbeat during the trip";
+            options.yAxisLabel = "heartbeats";
+            options.yAxisUnit = "";
+            //options.xAxisBottom = false;
         }
         console.log(data.datasets);
         if (sort == "temp"){
             var ctx = $("#first_chart").get(0).getContext("2d");
         } else if (sort == "hum") {
             var ctx = $("#second_chart").get(0).getContext("2d");
+        } else if (sort == "heart") {
+            var ctx = $("#heartbeat_chart").get(0).getContext("2d");
         } else {
             var ctx = $("#speed_chart").get(0).getContext("2d");
         }
@@ -281,7 +328,7 @@ compareController = (function() {
         procent = Math.round(procent);
         var radius = 75;
         var angle = procent* 2*Math.PI/100;
-        var svg = "<svg id='circle_"+index+sort+"' class='pie'><circle cx='75' cy='75' r='74'></circle><circle class='inner' cx='75' cy='75' r='40'></circle></svg>"
+        var svg = "<svg id='circle_"+index+sort+"' class='pie'><circle cx='75' cy='75' r='74' fill='white' stroke="+colors[index]+"></circle><circle class='inner' cx='75' cy='75' r='40' fill="+colors[index]+"></circle></svg>"
         if (sort =="time") {
             $("#duration").append("<td>" + svg + "</td>");
         } else {
@@ -298,12 +345,14 @@ compareController = (function() {
             var path_1 = "M75,75 L75,0 A75,75 1 0,1 75,150 z";
             var newElement_1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
             newElement_1.setAttribute("d",path_1);
+            newElement_1.setAttributeNS(null,"fill",colors[index]);
             svg.appendChild(newElement_1);
             var x = radius + radius*Math.cos(angle);
             var y = radius + radius*Math.sin(angle);
             var path = "M75,75 L75,150 A75,75 1 0,1 "+Math.round(x)+","+Math.round(y)+" z";
 
             newElement.setAttribute("d",path);
+            newElement.setAttributeNS(null,"fill",colors[index]);
             svg.appendChild(newElement);
         }
 
@@ -313,6 +362,7 @@ compareController = (function() {
             var path = "M75,75 L75,0 A75,75 1 0,1 " + Math.round(x) + "," + Math.round(y) + " z";
 
             newElement.setAttribute("d", path);
+            newElement.setAttributeNS(null,"fill",colors[index]);
             svg.appendChild(newElement);
 
         }
@@ -369,70 +419,21 @@ compareController = (function() {
         });
     }
 
-
-    function queryDataForMonth() {
-
-        dataController.queryTripsForGroupID("cwa3", function (trips) {
-
-            console.log("We got " + trips.length + " elements for cwa3.");
-            data = display_months(trips);
-        });
-    }
-
-    function display_months(data){
-        var dates = find_date(data);
-        var month = [];
-        $.each(dates, function(index, value){
-            if ( $.inArray(value[0], month)==-1) {
-                month.push(value[0]);
-            };
-
-        });
-        $.each(month, function(index,value){
-            $("#select_month").append("<option id='"+ value +"'>"+ value +"</option>");
-        });
-    }
-
-    function find_date(data) {
-
-        returnData = [];
-
-        $.each(data, function(index, value) {
-            var date = new Date(value.startTime);
-            returnData.push([date.getMonth()+1,date.getDate()]);
-
-
-        });
-
-        return returnData;
-    }
-
-    function display_days(month){
-        var days = [];
-        $.each(returnData, function(index, value){
-            if (value[0] == month){
-                if ($.inArray(value[1], days)==-1) {
-                    console.log("is not in days yet");
-                    days.push(value[1]);
-                };
-           };
-        });
-        $.each(days, function(index, value){
-            $("#select_day").append("<option id='"+value +"'>"+ value +"</option>");
-        });
-    }
-
     function setTableToTrips(data) {
 
-        console.log(data);
+        console.log("Setting table to data: " + data);
 
-        $("#trip_lister ul").empty();
+        // Empty the lister ul
+        var tripLister = $("#trip_lister ul");
+        tripLister.empty();
 
+        // Function to pad zeros to integer, this function is used for date formatting
         function pad (str, max) {
             str = str.toString();
             return str.length < max ? pad("0" + str, max) : str;
         }
 
+        // Loop through trips and add to lister ul
         $.each(data.trips, function (index, trip) {
 
             var startTime = new Date(trip.startTime);
@@ -441,47 +442,45 @@ compareController = (function() {
             var begin = pad(startTime.getHours(), 2) + ":" + pad(startTime.getMinutes(), 2);
             var end = pad(endTime.getHours(), 2) + ":" + pad(endTime.getMinutes(), 2);
 
-            $("#trip_lister ul").append("<li>" + begin + "  tot  " + end + "</li>");
+            tripLister.append("<li trip_id='" + trip._id + "'>" + begin + "  tot  " + end + "</li>");
         });
 
+        // Once the new items have been added to the lister ul, set the click function for these items
         $("#trip_lister ul li").click(function() {
 
-            // Add trips to compare here
+            var tripID = $(this).attr("trip_id");
 
-            alert("This trip will be added to the comparison list, but it still needs to programmed...");
+            addTripToComparison(tripID);
         });
     }
 
-    function queryDataForDay(day){
+    function addTripToComparison(tripID) {
 
-        dataController.queryTripsForDay(new Date(2014, month-1, day), function (trips) {
-            console.log(trips);
-            console.log("We got " + trips.length + " elements for this day.");
-            $.each(trips, function(index, value){
-                var _id = value._id;
-                $("#select_trip").append("<option value='"+_id +"'>"+index +"</option>");
-            });
-        });
+        items_to_compare.push(tripID);
+
+        var elementsToCompare = $("#elements_to_compare");
+
+        if ( document.getElementById("table_compare").rows[0].cells.length == 0){
+            elementsToCompare.append("<td width='140px' id='title_1'>id:</td>");
+        }
+
+        elementsToCompare.append("<td width='200px' id='" + items_to_compare.length + "'> trip: " +  document.getElementById("table_compare").rows[0].cells.length+ " </td>");
     }
 
     function compare_items(){
-        setTimeout(create_circles_time,500);
+        //setTimeout(create_circles_time,500);
         setTimeout(create_circles_distance,1000);
         $.each(items_to_compare, function (index, value) {
             create_table(value);
         });
-        setTimeout(function(){
+       /* setTimeout(function(){
             make_chart(temperature,"temp");
-        },500);
+        },500);*/
         setTimeout(function(){
             make_chart(humidity,"hum");
-        },500);
-        setTimeout(function(){
-            make_chart(speed_for_graph,"speed");
-        },1000);
-
-        var data = [];
-        setTimeout(function () {
+            create_circles_time();
+            make_chart(temperature,"temp");
+            make_chart(heartbeat,"heart");
             $.each(coordinates, function(index,value){
                 calculate_speed(value[0],index);
             });
@@ -492,9 +491,28 @@ compareController = (function() {
             console.log(km_for_circle);
             console.log(speed_for_graph + "speed_for_graph");
             /*$.each(km_for_circle,function(){
-                $("#km").append("<td>"+ Math.round(this)  +" meter </td>");
-            });*/
+             $("#km").append("<td>"+ Math.round(this)  +" meter </td>");
+             });*/
         },500);
+        setTimeout(function(){
+            make_chart(speed_for_graph,"speed");
+        },1000);
+
+        var data = [];
+/*        setTimeout(function () {
+            $.each(coordinates, function(index,value){
+                calculate_speed(value[0],index);
+            });
+            console.log(coordinates);
+            console.log("above are the coordinates");
+            // coordinates geeft een array met daarin arrays die elk een waarde bevatten, namelijk nog een
+            // array met daarin de waarden --> de tweede waarde is altijd gelijk aan 0.
+            console.log(km_for_circle);
+            console.log(speed_for_graph + "speed_for_graph");
+            *//*$.each(km_for_circle,function(){
+                $("#km").append("<td>"+ Math.round(this)  +" meter </td>");
+            });*//*
+        },500);*/
 
     }
 
@@ -504,7 +522,8 @@ compareController = (function() {
 
         var i;
         for (i = 0; i < total_length; i++){
-            var value = new google.maps.LatLng(coordinates[i].lat,coordinates[i].lng);
+            var value = new google.maps.LatLng(coordinates[i].lat,coordinates[i].lng); // zet coordinaten om in door google maps
+            // bruikbaar formaat
             var value_2 = new google.maps.LatLng(coordinates[i+1].lat,coordinates[i+1].lng);
             var distance = google.maps.geometry.spherical.computeDistanceBetween (value, value_2); // returns the distance in meters
             //console.log(distance);
@@ -523,6 +542,7 @@ compareController = (function() {
         speed_for_graph.push(speed);
 
     }
+
     function create_table(id){
         $.ajax({
             url: "http://dali.cs.kuleuven.be:8080/qbike/trips/"+id,
@@ -544,7 +564,8 @@ compareController = (function() {
                     $("#duration").append("<td> not recorded </td>");
                 }
                 var monthNames = [ "January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December" ];
-                $("#table_day").append("<td> "+date.getDate() +" "+ monthNames[date.getMonth()] +"</td>");
+
+                $("#table_day").append("<td>" +date.getDate() +" "+ monthNames[date.getMonth()] +"</td>");
                 /*if (json[0].hasOwnProperty("meta.distance")) {
                     var distance = json[0].meta.distance/1000;
                     $("#km").append("<td>" + distance + " km "  + "</td>");
@@ -556,29 +577,133 @@ compareController = (function() {
                 temperature.push(readings.temparature);
                 humidity.push(readings.humidity);
                 coordinates.push(readings.routes);
+                heartbeat.push(readings.heart);
 
             }
         });
 
 
     }
+
+    function compare_days(){
+        var hum = [];
+        var temp = [];
+        var trips = [];
+        $.each(days, function(){
+            console.log(this);
+            temp.push([this.average.averageTemperature]);
+            hum.push([this.average.averageHumidity]);
+            trips.push([this.average.nrOfTrips]);
+        });
+        create_graph_days(hum, "hum");
+        create_graph_days(temp, "temp");
+        create_graph_days(trips, "trips");
+    }
+
+    function create_graph_days(array, sort){
+        console.log("creating averages chart");
+        console.log(array);
+        var data = {
+            labels: ["different trips"],
+            datasets: []
+        };
+
+        var trip_2 = {
+            label: "first trip",
+            title: "first trip",
+            fillColor: "rgba(151,187,205,1)",
+            strokeColor: "#47a3da",
+            data: []
+        }
+
+        var trip_1 = {
+            label: "second trip",
+            title: "second trip",
+            fillColor: "rgba(255,174,27,1)",
+            strokeColor: "rgba(255,174,27,1)",
+            data: []
+        }
+
+        var trip_3 = {
+            label: "Third trip",
+            title: "Third trip",
+            fillColor: "rgba(126,116,133,0.8)",
+            strokeColor: "rgba(126,116,133,1)",
+            data: []
+        }
+
+        var trip_4 = {
+            label: "Third trip",
+            title: "Third trip",
+            fillColor: "rgba(54,255,187,0.7)",
+            strokeColor: "rgba(54,255,187,1)",
+            data: []
+        }
+
+        $.each(array,function(index,value){
+            var lengte = data.datasets.length;
+            if (lengte == 0){
+                var trip = trip_1;
+            } else if (lengte == 1 ){
+                var trip = trip_2;
+            } else if(lengte == 2) {
+                var trip = trip_3;
+            } else {
+                var trip = trip_4;
+            }
+
+            trip.label = "trip "+(parseInt(index)+1).toString();
+            trip.title = "trip "+(parseInt(index)+1).toString();
+            console.log(value);
+            trip.data = [value];
+            data.datasets.push(trip);
+
+
+        });
+
+        var options = {
+            graphTitle: "Average Temperature",
+
+            yAxisLabel: "Temperature"
+
+        };
+        if( sort == "temp"){
+            var ctx = $("#average_temp").get(0).getContext("2d");
+        } else if ( sort == "hum"){
+            options.graphTitle = "Average Humidity"
+            var ctx = $("#average_hum").get(0).getContext("2d");
+        } else {
+            options.graphTitle = "Number of trips "
+            var ctx = $("#average_trips").get(0).getContext("2d");
+        }
+
+
+        ctx.canvas.width = 400;
+        ctx.canvas.height = 400;
+        var myNewChart = new Chart(ctx).Bar(data,options);
+
+
+
+    }
+
+
+
     return {
         init: init,
-        queryDataForMonth: queryDataForMonth,
-        find_months: find_date,
-        display_months: display_months,
-        display_days : display_days,
-        queryDataForDay : queryDataForDay,
+
+        setTableToTrips: setTableToTrips,
+        addTripToComparison: addTripToComparison,
+
         create_table: create_table,
         make_chart: make_chart,
+
         calculate_size_circle: calculate_size_circle,
+        create_circles_distance : create_circles_distance,
         create_circles_time : create_circles_time,
         compare_items: compare_items,
-        create_circles_distance : create_circles_distance,
-        //get_data_for_table: get_data_for_table,
+        compare_days: compare_days,
         calculate_speed: calculate_speed,
-
-        setTableToTrips: setTableToTrips
+        create_graph_days : create_graph_days
     }
 })();
 

@@ -154,6 +154,10 @@ body {
     font-size: 18pt;
 }
 
+#calendarTable .noTripsPresent {
+    color: lightgray;
+}
+
 #calendarTable .avSpeed {
     position: absolute;
     bottom: 0px;

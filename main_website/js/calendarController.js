@@ -3,7 +3,6 @@
 calendarController = (function() {
 
     // Class Variables
-
     var selectedCell;
 
     var month = new Date();
@@ -149,7 +148,9 @@ calendarController = (function() {
 
                     var average = data[day-1].average;
 
-                    var dayNumberHTML = '<h1 class="dayNumber">' + day + '</h1>';
+                    var tripsPresent = average.nrOfTrips > 0;
+
+                    var dayNumberHTML = '<h1 class="dayNumber ' + (tripsPresent ? '' : 'noTripsPresent' ) + '">' + day + '</h1>';
                     cellData += dayNumberHTML;
 
                     var avTempHTML = '<div class="avSpeed" style="top:' + (110 - average[barOption]) + '"></div>';
@@ -176,6 +177,9 @@ calendarController = (function() {
 
 
     function changeMonth(diff) {
+
+        // Slide the detail pane up
+        $('#detailSection').slideUp("fast");
 
         var calendarMonthTitle = "";
 
@@ -296,7 +300,11 @@ calendarController = (function() {
 
         console.log("Loading details for day with index: " + dayIndex);
 
-        $('#detailSection').slideDown("fast").ScrollTo();
+        var detailSection = $('#detailSection')
+
+        detailSection.slideDown("fast", function() {
+            detailSection.ScrollTo();
+        });
 
         $("#detailSection .loadingSpinner").css("display", "block");
 
