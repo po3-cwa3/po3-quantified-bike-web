@@ -420,7 +420,7 @@ path {
 }
 
 .ui-widget-content a {
-    color: #222222;
+    color: #ffffff;
 }
 
 .ui-widget-header {
@@ -457,7 +457,7 @@ path {
 }
 
 .ui-state-default {
-    color: lightgray;
+    color: #ffffff;
     background-color: #47a3da;
     border-radius: 2px;
 }
@@ -469,6 +469,7 @@ path {
 
 .ui-state-disabled .ui-state-default {
     background-color: #ffffff !important;
+    color: lightgray;
 }
 
 .ui-datepicker-calendar td a {
