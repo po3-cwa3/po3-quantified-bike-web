@@ -118,6 +118,7 @@ if (!isset($user)) {
         <canvas id="first_chart" width="400" height="400"></canvas>
         <canvas id="second_chart" width="400" height="400"></canvas>
         <canvas id="speed_chart" width="400" height="400"></canvas>
+        <canvas id="heartbeat_chart" width="400" height="400"></canvas>
 
 
 

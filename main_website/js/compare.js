@@ -8,6 +8,7 @@ compareController = (function() {
     var km_for_circle = [];
     var temperature = [];
     var humidity = [];
+    var heartbeat = [];
     var coordinates = [];
     var speed_for_graph = [];
     var colors = ["rgba(255,174,27,1)","rgba(151,187,205,1)","rgba(126,116,133,1)","rgba(54,255,187,1)"];
@@ -94,6 +95,7 @@ compareController = (function() {
             $("#choose-compare-sort").slideUp("fast");
             $("#compare-days").slideDown("fast");
         });
+
 
         $("#start_comparing").click(function () {
 
@@ -193,7 +195,12 @@ compareController = (function() {
                 data.labels = [];
                 var i ;
                 for (i=0; i < value.length; i++ ){
-                    data.labels.push(i.toString());
+                    if ( i % 15 ==0 ){
+                        var label = 2*i;
+                    } else {
+                        var label = "";
+                    }
+                    data.labels.push(label.toString());
                 }
             }
         });
@@ -205,6 +212,10 @@ compareController = (function() {
             annotateDisplay: true,
             legend: true,
             yAxisMinimumInterval : 1,
+            xAxisLabel: "Seconds",
+            xAxisBottom: true,
+            scaleXGridLinesStep: 15,
+            pointDot: false,
             scaleOverride: false,
             scaleStepWidth : 1,
             scaleStartValue: 10,
@@ -227,12 +238,19 @@ compareController = (function() {
             options.graphTitle = "speed during the trip";
             options.yAxisLabel = "speed";
             options.yAxisUnit = "m/s";
+        } else if (sort =="heart"){
+            options.graphTitle = "heartbeat during the trip";
+            options.yAxisLabel = "heartbeats";
+            options.yAxisUnit = "";
+            options.xAxisBottom = false;
         }
         console.log(data.datasets);
         if (sort == "temp"){
             var ctx = $("#first_chart").get(0).getContext("2d");
         } else if (sort == "hum") {
             var ctx = $("#second_chart").get(0).getContext("2d");
+        } else if (sort == "heart") {
+            var ctx = $("#heartbeat_chart").get(0).getContext("2d");
         } else {
             var ctx = $("#speed_chart").get(0).getContext("2d");
         }
@@ -251,7 +269,7 @@ compareController = (function() {
         procent = Math.round(procent);
         var radius = 75;
         var angle = procent* 2*Math.PI/100;
-        var svg = "<svg id='circle_"+index+sort+"' class='pie'><circle cx='75' cy='75' r='74'></circle><circle class='inner' cx='75' cy='75' r='40'></circle></svg>"
+        var svg = "<svg id='circle_"+index+sort+"' class='pie'><circle cx='75' cy='75' r='74' fill='white' stroke="+colors[index]+"></circle><circle class='inner' cx='75' cy='75' r='40' fill="+colors[index]+"></circle></svg>"
         if (sort =="time") {
             $("#duration").append("<td>" + svg + "</td>");
         } else {
@@ -268,12 +286,14 @@ compareController = (function() {
             var path_1 = "M75,75 L75,0 A75,75 1 0,1 75,150 z";
             var newElement_1 = document.createElementNS("http://www.w3.org/2000/svg", 'path');
             newElement_1.setAttribute("d",path_1);
+            newElement_1.setAttributeNS(null,"fill",colors[index]);
             svg.appendChild(newElement_1);
             var x = radius + radius*Math.cos(angle);
             var y = radius + radius*Math.sin(angle);
             var path = "M75,75 L75,150 A75,75 1 0,1 "+Math.round(x)+","+Math.round(y)+" z";
 
             newElement.setAttribute("d",path);
+            newElement.setAttributeNS(null,"fill",colors[index]);
             svg.appendChild(newElement);
         }
 
@@ -283,6 +303,7 @@ compareController = (function() {
             var path = "M75,75 L75,0 A75,75 1 0,1 " + Math.round(x) + "," + Math.round(y) + " z";
 
             newElement.setAttribute("d", path);
+            newElement.setAttributeNS(null,"fill",colors[index]);
             svg.appendChild(newElement);
 
         }
@@ -388,23 +409,19 @@ compareController = (function() {
     }
 
     function compare_items(){
-        setTimeout(create_circles_time,500);
+        //setTimeout(create_circles_time,500);
         setTimeout(create_circles_distance,1000);
         $.each(items_to_compare, function (index, value) {
             create_table(value);
         });
-        setTimeout(function(){
+       /* setTimeout(function(){
             make_chart(temperature,"temp");
-        },500);
+        },500);*/
         setTimeout(function(){
             make_chart(humidity,"hum");
-        },500);
-        setTimeout(function(){
-            make_chart(speed_for_graph,"speed");
-        },1000);
-
-        var data = [];
-        setTimeout(function () {
+            create_circles_time();
+            make_chart(temperature,"temp");
+            make_chart(heartbeat,"heart");
             $.each(coordinates, function(index,value){
                 calculate_speed(value[0],index);
             });
@@ -415,9 +432,28 @@ compareController = (function() {
             console.log(km_for_circle);
             console.log(speed_for_graph + "speed_for_graph");
             /*$.each(km_for_circle,function(){
-                $("#km").append("<td>"+ Math.round(this)  +" meter </td>");
-            });*/
+             $("#km").append("<td>"+ Math.round(this)  +" meter </td>");
+             });*/
         },500);
+        setTimeout(function(){
+            make_chart(speed_for_graph,"speed");
+        },1000);
+
+        var data = [];
+/*        setTimeout(function () {
+            $.each(coordinates, function(index,value){
+                calculate_speed(value[0],index);
+            });
+            console.log(coordinates);
+            console.log("above are the coordinates");
+            // coordinates geeft een array met daarin arrays die elk een waarde bevatten, namelijk nog een
+            // array met daarin de waarden --> de tweede waarde is altijd gelijk aan 0.
+            console.log(km_for_circle);
+            console.log(speed_for_graph + "speed_for_graph");
+            *//*$.each(km_for_circle,function(){
+                $("#km").append("<td>"+ Math.round(this)  +" meter </td>");
+            });*//*
+        },500);*/
 
     }
 
@@ -468,7 +504,8 @@ compareController = (function() {
                     $("#duration").append("<td> not recorded </td>");
                 }
                 var monthNames = [ "January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December" ];
-                $("#table_day").append("<td> "+date.getDate() +" "+ monthNames[date.getMonth()] +"</td>");
+
+                $("#table_day").append("<td>" +date.getDate() +" "+ monthNames[date.getMonth()] +"</td>");
                 /*if (json[0].hasOwnProperty("meta.distance")) {
                     var distance = json[0].meta.distance/1000;
                     $("#km").append("<td>" + distance + " km "  + "</td>");
@@ -480,6 +517,7 @@ compareController = (function() {
                 temperature.push(readings.temparature);
                 humidity.push(readings.humidity);
                 coordinates.push(readings.routes);
+                heartbeat.push(readings.heart);
 
             }
         });
