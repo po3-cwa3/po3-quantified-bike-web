@@ -520,7 +520,8 @@ compareController = (function() {
 
         var i;
         for (i = 0; i < total_length; i++){
-            var value = new google.maps.LatLng(coordinates[i].lat,coordinates[i].lng);
+            var value = new google.maps.LatLng(coordinates[i].lat,coordinates[i].lng); // zet coordinaten om in door google maps
+            // bruikbaar formaat
             var value_2 = new google.maps.LatLng(coordinates[i+1].lat,coordinates[i+1].lng);
             var distance = google.maps.geometry.spherical.computeDistanceBetween (value, value_2); // returns the distance in meters
             //console.log(distance);
@@ -587,9 +588,10 @@ compareController = (function() {
         var temp = [];
         var trips = [];
         $.each(days, function(){
-            temp.push([this.averageTemperature]);
-            hum.push([this.averageHumidity]);
-            trips.push([this.nrOfTrips]);
+            console.log(this);
+            temp.push([this.average.averageTemperature]);
+            hum.push([this.average.averageHumidity]);
+            trips.push([this.average.nrOfTrips]);
         });
         create_graph_days(hum, "hum");
         create_graph_days(temp, "temp");
@@ -597,6 +599,87 @@ compareController = (function() {
     }
 
     function create_graph_days(array, sort){
+        console.log("creating averages chart");
+        console.log(array);
+        var data = {
+            labels: ["different trips"],
+            datasets: []
+        };
+
+        var trip_2 = {
+            label: "first trip",
+            title: "first trip",
+            fillColor: "rgba(151,187,205,1)",
+            strokeColor: "#47a3da",
+            data: []
+        }
+
+        var trip_1 = {
+            label: "second trip",
+            title: "second trip",
+            fillColor: "rgba(255,174,27,1)",
+            strokeColor: "rgba(255,174,27,1)",
+            data: []
+        }
+
+        var trip_3 = {
+            label: "Third trip",
+            title: "Third trip",
+            fillColor: "rgba(126,116,133,0.8)",
+            strokeColor: "rgba(126,116,133,1)",
+            data: []
+        }
+
+        var trip_4 = {
+            label: "Third trip",
+            title: "Third trip",
+            fillColor: "rgba(54,255,187,0.7)",
+            strokeColor: "rgba(54,255,187,1)",
+            data: []
+        }
+
+        $.each(array,function(index,value){
+            var lengte = data.datasets.length;
+            if (lengte == 0){
+                var trip = trip_1;
+            } else if (lengte == 1 ){
+                var trip = trip_2;
+            } else if(lengte == 2) {
+                var trip = trip_3;
+            } else {
+                var trip = trip_4;
+            }
+
+            trip.label = "trip "+(parseInt(index)+1).toString();
+            trip.title = "trip "+(parseInt(index)+1).toString();
+            console.log(value);
+            trip.data = [value];
+            data.datasets.push(trip);
+
+
+        });
+
+        var options = {
+            graphTitle: "Average Temperature",
+
+            yAxisLabel: "Temperature"
+
+        };
+        if( sort == "temp"){
+            var ctx = $("#average_temp").get(0).getContext("2d");
+        } else if ( sort == "hum"){
+            options.graphTitle = "Average Humidity"
+            var ctx = $("#average_hum").get(0).getContext("2d");
+        } else {
+            options.graphTitle = "Number of trips "
+            var ctx = $("#average_trips").get(0).getContext("2d");
+        }
+
+
+        ctx.canvas.width = 400;
+        ctx.canvas.height = 400;
+        var myNewChart = new Chart(ctx).Bar(data,options);
+
 
 
     }

@@ -131,10 +131,14 @@ if (!isset($user)) {
 
         </table>
 
-        <canvas id="first_chart" width="400" height="400"></canvas>
-        <canvas id="second_chart" width="400" height="400"></canvas>
-        <canvas id="speed_chart" width="400" height="400"></canvas>
+        <canvas id="first_chart" ></canvas>
+        <canvas id="second_chart" ></canvas>
+        <canvas id="speed_chart" ></canvas>
         <canvas id="heartbeat_chart" ></canvas>
+
+        <canvas id="average_temp" ></canvas>
+        <canvas id="average_hum" ></canvas>
+        <canvas id="average_trips" ></canvas>
 
 
 
