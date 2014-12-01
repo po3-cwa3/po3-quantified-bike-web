@@ -172,15 +172,10 @@ dataController = (function() {
 
         var totalDist = 0;
         var speedReadings = [];
-
         var tempReadings = [];
-
         var humReadings = [];
-
         var tripsCoordinates = [];
-
         var heartReadings= [];
-
         var accReadings = [];
 
         $.each(trips, function(index, trip) {
