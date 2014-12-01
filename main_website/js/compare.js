@@ -11,6 +11,7 @@ compareController = (function() {
     var heartbeat = [];
     var coordinates = [];
     var speed_for_graph = [];
+    var days = [];
     var colors = ["rgba(255,174,27,1)","rgba(151,187,205,1)","rgba(126,116,133,1)","rgba(54,255,187,1)"];
 
 
@@ -27,8 +28,10 @@ compareController = (function() {
             console.log(month_data);
 
             $("#loading_popover").css("display", "none");
+            $("#loading_popover-2").css("display", "none");
 
             $("#calendar").datepicker("refresh");
+            $("#calendar-2").datepicker("refresh");
         });
 
         $("#calendar").datepicker({
@@ -41,8 +44,7 @@ compareController = (function() {
 
                 setTableToTrips(month_data[day-1]);
 
-                $("#select_trip").empty();
-                queryDataForDay(day);
+
             },
 
             onChangeMonthYear: function (newYear, newMonth, datepicker) {
@@ -86,6 +88,59 @@ compareController = (function() {
             }
         });
 
+        $("#calendar-2").datepicker({
+
+            onSelect: function (dateText, datepicker) {
+                console.log(dateText);
+                var elements = dateText.split("/");
+
+                var day = elements[1];
+
+                days.push(month_data[day-1]);
+
+            },
+
+            onChangeMonthYear: function (newYear, newMonth, datepicker) {
+
+                console.log("Datepicker changed month to " + newMonth);
+
+                month_data_fetched = false;
+
+                month = newMonth;
+
+                $("#loading_popover-2").css("display", "block");
+
+                dataController.queryDataForMonth(month, function(data) {
+
+                    month_data = data;
+                    month_data_fetched = true;
+
+                    console.log(month_data);
+
+                    $("#loading_popover-2").css("display", "none");
+                    $("#calendar-2").datepicker("refresh");
+                });
+            },
+
+            beforeShowDay: function (day) {
+
+                var day_month = day.getMonth() + 1;
+
+                if (month_data_fetched && day_month == month) {
+
+                    var day_number = day.getDate();
+
+                    var trips_present = month_data[day_number-1].average.nrOfTrips > 0;
+
+                    if (trips_present) console.log("Trips present on " + day);
+
+                    return [trips_present, ""];
+                }
+
+                return [false, ""];
+            }
+        });
+
         $("#trips").click(function(){
             $("#choose-compare-sort").slideUp("fast");
             $("#compare-trips").slideDown("fast");
@@ -101,12 +156,14 @@ compareController = (function() {
 
             compare_items();
 
-
             $("#select_day").empty();
             $("#select_trip").empty();
+        });
 
+        $("#start_comparing_days").click(function () {
 
-
+            console.log(days);
+            compare_days();
         });
     }
 
@@ -242,7 +299,7 @@ compareController = (function() {
             options.graphTitle = "heartbeat during the trip";
             options.yAxisLabel = "heartbeats";
             options.yAxisUnit = "";
-            options.xAxisBottom = false;
+            //options.xAxisBottom = false;
         }
         console.log(data.datasets);
         if (sort == "temp"){
@@ -525,6 +582,25 @@ compareController = (function() {
 
     }
 
+    function compare_days(){
+        var hum = [];
+        var temp = [];
+        var trips = [];
+        $.each(days, function(){
+            temp.push([this.averageTemperature]);
+            hum.push([this.averageHumidity]);
+            trips.push([this.nrOfTrips]);
+        });
+        create_graph_days(hum, "hum");
+        create_graph_days(temp, "temp");
+        create_graph_days(trips, "trips");
+    }
+
+    function create_graph_days(array, sort){
+
+        
+    }
+
 
 
     return {
@@ -540,8 +616,9 @@ compareController = (function() {
         create_circles_distance : create_circles_distance,
         create_circles_time : create_circles_time,
         compare_items: compare_items,
-
-        calculate_speed: calculate_speed
+        compare_days: compare_days,
+        calculate_speed: calculate_speed,
+        create_graph_days : create_graph_days
     }
 })();
 

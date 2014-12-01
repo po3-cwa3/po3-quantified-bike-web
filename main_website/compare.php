@@ -70,6 +70,7 @@ if (!isset($user)) {
             <a id="trips" class="bp-icon bp-icon-trip " data-info="compare trips"><span>compare trips</span></a>
             <a id="days"  class="bp-icon bp-icon-day " data-info="compare days"><span>compare days</span></a>
         </nav>
+
         <div id="compare-trips">
 
             <div>
@@ -103,6 +104,21 @@ if (!isset($user)) {
             <button id="start_comparing">compare</button>
 
         </div>
+
+        <div id="compare-days">
+            <h2>Choose the trips you want to compare, then press 'Compare'.</h2><br>
+            <div id="calendar-2"></div>
+            <div id="loading_popover-2">
+
+                <p class="loading_message">Loading, please wait...</p>
+
+                <div class="loadingSpinner"></div>
+
+            </div>
+
+            <button id="start_comparing_days">compare</button>
+        </div>
+
         <table id="table_compare" class="table_compare">
             <tr id="elements_to_compare"></tr>
 
@@ -118,7 +134,7 @@ if (!isset($user)) {
         <canvas id="first_chart" width="400" height="400"></canvas>
         <canvas id="second_chart" width="400" height="400"></canvas>
         <canvas id="speed_chart" width="400" height="400"></canvas>
-        <canvas id="heartbeat_chart" width="400" height="400"></canvas>
+        <canvas id="heartbeat_chart" ></canvas>
 
 
 
