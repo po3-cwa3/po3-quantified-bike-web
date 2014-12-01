@@ -178,6 +178,9 @@ calendarController = (function() {
 
     function changeMonth(diff) {
 
+        // Slide the detail pane up
+        $('#detailSection').slideUp("fast");
+
         var calendarMonthTitle = "";
 
         // if diff is a number, it represents a difference (-1 or +1).
