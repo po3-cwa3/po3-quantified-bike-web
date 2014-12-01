@@ -179,6 +179,8 @@ dataController = (function() {
 
         var tripsCoordinates = [];
 
+        var heartReadings= [];
+
         var accReadings = [];
 
         $.each(trips, function(index, trip) {
@@ -233,7 +235,15 @@ dataController = (function() {
                             var acceleration = Math.sqrt(Math.pow(x_acc,2) + Math.pow(y_acc,2));
                             // rekening houden met + of - teken --> versnelling of vertraging dus
 
+                        case 9:
+                            var heart = parseInt(sensorValue.data[0].value);
 
+                            if (!isNaN(heart)) {
+
+                                heartReadings.push(heart);
+                            }
+
+                            break;
 
                         default:
                     }
@@ -308,7 +318,8 @@ dataController = (function() {
             nrOfTrips: trips.length,
             routes: tripsCoordinates,
             temparature: tempReadings,
-            humidity: humReadings
+            humidity: humReadings,
+            heart: heartReadings
         };
 
         return average;
