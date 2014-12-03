@@ -211,14 +211,31 @@ dataController = (function() {
     function getAveragesFromTrips(trips) {
 
         var totalDist = 0;
-        var speedReadings = [];
         var tempReadings = [];
         var humReadings = [];
         var tripsCoordinates = [];
         var heartReadings= [];
         var accReadings = [];
+        var totalTime = 0;
 
         $.each(trips, function(index, trip) {
+
+            if (trip.hasOwnProperty("startTime") && trip.hasOwnProperty("endTime")) {
+
+                var startTime = new Date(trip.startTime);
+                var endTime = new Date(trip.endTime);
+
+                var difference = new Date(endTime - startTime);
+
+                if (totalTime == 0) {
+
+                    totalTime = difference;
+
+                } else {
+
+                    totalTime = new Date(totalTime + difference);
+                }
+            }
 
 
             if (trip.hasOwnProperty("sensorData")) {
@@ -290,14 +307,17 @@ dataController = (function() {
 
                     if (gpsData.data[0].type == "MultiPoint") {
 
-                        var latitude = gpsData.data[0].coordinates[0][0];
-                        var longitude = gpsData.data[0].coordinates[0][1];
-                        var coordinateArray = {lat: latitude, lng: longitude};
+                        $.each(gpsData.data[0].coordinates, function(i, point) {
 
-                        singleTripCoordinates.push(coordinateArray);
+                            var latitude = point[0];
+                            var longitude = point[1];
+                            var coordinateArray = {lat: latitude, lng: longitude};
 
-                    }
-                    else {
+                            singleTripCoordinates.push(coordinateArray);
+
+                        });
+
+                    } else {
                         var latitudeSingle = gpsData.data[0].coordinates[0];
                         var longitudeSingle = gpsData.data[0].coordinates[1];
                         var coordinateArraySingle = {lat: latitudeSingle, lng: longitudeSingle};
@@ -310,44 +330,45 @@ dataController = (function() {
 
                 tripsCoordinates.push(singleTripCoordinates);
 
-            }
+                for (var i = 1 ; i < singleTripCoordinates.length ; i++) {
 
-            if (trip.hasOwnProperty("meta") && trip.meta != null) {
+                    var point1 = singleTripCoordinates[i-1];
+                    var point2 = singleTripCoordinates[i];
 
-                $.each(trip.meta, function(key, metaValue) {
+                    point1 = new google.maps.LatLng(point1.lat,point1.lng);
+                    point2 = new google.maps.LatLng(point2.lat,point2.lng);
 
-                    switch(key) {
+                    var distance = google.maps.geometry.spherical.computeDistanceBetween(point1, point2);
 
-                        case "distance":
+                    totalDist += distance;
+                }
 
-                            if (metaValue != null) {
-
-                                totalDist += parseInt(metaValue)
-                            }
-
-                            break;
-
-                        case "averageSpeed":
-
-                            if (metaValue != null) {
-
-                                speedReadings.push(parseInt(metaValue));
-                            }
-
-                            break;
-                    }
-                });
             }
         });
 
 
-        var avSpeed = arrayAverage(speedReadings)
+
         var avTemp = arrayAverage(tempReadings);
         var avHum = arrayAverage(humReadings);
 
-        var average = {
+        var avSpeed = "No Readings";
+        if (totalTime != 0 && totalDist != 0) {
+            avSpeed = (totalDist / (totalTime.valueOf() / 1000.0)) * 3.6;
+        }
+
+        if (totalTime == 0) {
+
+            totalTime = "No Readings";
+
+        } else {
+
+            totalTime = (totalTime.getHours() - 1) + " hour(s), " + totalTime.getMinutes() + " minute(s), " + totalTime.getSeconds() + "second(s)";
+        }
+
+        return {
             totalDistance: totalDist,
             averageSpeed: avSpeed,
+            totalTime: totalTime,
             averageTemperature: avTemp,
             averageHumidity: avHum,
             nrOfTrips: trips.length,
@@ -356,8 +377,6 @@ dataController = (function() {
             humidity: humReadings,
             heart: heartReadings
         };
-
-        return average;
     }
 
     function divideAndSetAveragesForPeriod(trips, beginDate, endDate) {

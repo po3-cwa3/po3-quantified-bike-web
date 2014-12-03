@@ -4,7 +4,7 @@ require('login/session.php');
 
 if (!isset($user)) {
 
-    header('Location: login/loginForm.php?from=' . urlencode('../maps.php'));
+    header('Location: login/loginForm.php?from=' . urlencode('../photos.php'));
     exit();
 
 }

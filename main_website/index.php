@@ -66,7 +66,7 @@ if (!isset($user)) {
 						</a>
 					</li>
 					<li>
-						<a href="maps.php">
+						<a href="photos.php">
 							<span class="cbp-ig-icon cbp-ig-icon-maps"></span>
 							<h3 class="cbp-ig-title">photo viewer</h3>
 							<span class="cbp-ig-category">view your photos on a map</span>

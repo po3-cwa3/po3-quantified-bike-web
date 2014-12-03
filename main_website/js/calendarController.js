@@ -17,7 +17,8 @@ calendarController = (function() {
     var propertiesInDetailsView = [
         {prop: "nrOfTrips", title: "Nr. of trips", postfix: " trip(s)", accuracy: 0},
         {prop: "averageSpeed", title: "Average Speed", postfix: " km/h", accuracy: 2},
-        {prop: "totalDistance", title: "Total Distance", postfix: " km", accuracy: 2},
+        {prop: "totalDistance", title: "Total Distance", postfix: " m", accuracy: 2},
+        {prop: "totalTime", title: "Total Biking Time", postfix: "", type: "string"},
         {prop: "averageTemperature", title: "Average Temperature", postfix: " °C", accuracy: 0},
         {prop: "averageHumidity", title: "Average Humidity", postfix: " %", accuracy: 0}
     ];
@@ -108,6 +109,7 @@ calendarController = (function() {
 
         dataController.queryDataForMonth(date, function (data) {
 
+            console.log("Month data: ");
             console.log(data);
 
             monthData = data;
@@ -329,7 +331,17 @@ calendarController = (function() {
 
             divHTML += '<span class="averageDivValue">';
 
-            var roundedValue = round(average[property.prop], property.accuracy);
+            var roundedValue;
+
+            if (property.type != "string") {
+
+                roundedValue = round(average[property.prop], property.accuracy);
+
+            } else {
+
+                roundedValue = average[property.prop];
+            }
+
             divHTML += roundedValue;
 
             if (roundedValue != noReadingsMessage) {
