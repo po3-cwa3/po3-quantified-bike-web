@@ -6,7 +6,8 @@ calendarController = (function() {
     var selectedCell;
 
     var month = new Date();
-    var monthData = new Array();
+    var monthData = [];
+    var maxAverage = {};
 
     var barOption;
 
@@ -107,13 +108,46 @@ calendarController = (function() {
 
     function queryDataForMonth(date, callback) {
 
+        // We reset the maximum average
+        maxAverage = 0;
+
+        // We query the data for the given month using the dataController
         dataController.queryDataForMonth(date, function (data) {
 
+            // We log the data for debugging
             console.log("Month data: ");
             console.log(data);
 
+            // We set the new data as the current monthData
             monthData = data;
 
+            // We loop through the data to set the maxAverage for this month
+            $.each(monthData, function(index, dayData) {
+
+                if (maxAverage == 0) {
+
+                    // If the maxAverage is still an empty object, it's the first loop and we
+                    // can just set the maxAverage using the current average
+                    console.log("maxData is still empty, assigning first average");
+                    maxAverage = dayData.average;
+
+                } else {
+
+                    // Otherwise we loop through the properties to see whether they exceed the current maximum
+                    $.each(propertiesInDetailsView, function(index, property) {
+
+                        if (dayData.average[property.prop] > maxAverage[property.prop]) {
+
+                            maxAverage[property.prop] = dayData.average[property.prop];
+                        }
+                    });
+                }
+            });
+
+            console.log("maxAverage:");
+            console.log(maxAverage);
+
+            // Then we convert the monthData to HTML data for the table
             var tableData = convertDataToCalendarCells(monthData, date);
 
             callback(tableData);
@@ -126,36 +160,50 @@ calendarController = (function() {
 
     function convertDataToCalendarCells(data, date) {
 
+        // We get this months first and last date
         var firstDayDate = new Date(date.getFullYear(), date.getMonth(), 1);
         var lastDayDate = new Date(date.getFullYear(), date.getMonth()+1, 0);
 
+        // We calculate some values from these dates
         var beginDay = firstDayDate.getDay()-1;
         var nrOfDays = lastDayDate.getDate();
         var endDay = beginDay + nrOfDays - 1;
         var nrOfRows = Math.ceil(endDay/7.0);
 
-        var calendar = new Array();
+        // We create an empty array in which to put the table data
+        var calendar = [];
 
+        // For everery row ...
         for (row = 0; row < nrOfRows; row++) {
 
-            var rowData = new Array();
+            // ... we create a row array
+            var rowData = [];
 
+            /// For every column in this row ...
             for (col = 0; col < 7; col++) {
 
+                // ... we create the cells HTML
                 var cellData = "";
 
+                // We calculate the day to display in the cell
                 var day = row*7 + col - beginDay + 1;
 
+                // If the day is a day of the month, we can add HTML
                 if (day > 0 && day <= nrOfDays) {
 
+                    // We set the average object for this day
                     var average = data[day-1].average;
 
+                    // We see whether there are trips present on this day
                     var tripsPresent = average.nrOfTrips > 0;
 
+                    // We add the dayNumber HTML, if no trips are present we also add the noTripsPresent class
                     var dayNumberHTML = '<h1 class="dayNumber ' + (tripsPresent ? '' : 'noTripsPresent' ) + '">' + day + '</h1>';
                     cellData += dayNumberHTML;
 
-                    var avTempHTML = '<div class="avSpeed" style="top:' + (110 - average[barOption]) + '"></div>';
+                    // We add the average value HTML and set the distance from the top of the cell
+                    var topDistance = 110 - 70 * (average[barOption] / maxAverage[barOption]);
+                    var avTempHTML = '<div class="avSpeed" style="top:' + topDistance + '"></div>';
                     cellData += avTempHTML;
                 }
 
@@ -257,7 +305,9 @@ calendarController = (function() {
                     avValue = 0;
                 }
 
-                $(this).find(".avSpeed").css("top", 110 - avValue);
+                var topDistance = 110 - 70 * (avValue / maxAverage[barOption]);
+
+                $(this).find(".avSpeed").css("top", topDistance);
 
             }
         });
