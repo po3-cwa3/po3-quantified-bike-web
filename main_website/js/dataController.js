@@ -177,14 +177,21 @@ dataController = (function() {
 
     function divideTripsIntoDays(trips, beginDate, endDate) {
 
-        // we create an array with a space for all days.
+        // we create an array with space for all days.
         var nrOfDays = nrOfDaysBetweenDates(beginDate, endDate);
-        var returnData = new Array(nrOfDays);
+        var returnData = [];
+
+        console.log(returnData);
+        console.log(nrOfDays);
 
         for (var i = 0; i < nrOfDays; i++) {
 
-            returnData[i] = {trips: []};
+            console.log(returnData);
+            returnData.push({trips: []});
         }
+
+        console.log("beginning with array:");
+        console.log(returnData);
 
         $.each(trips, function (index, trip) {
 
@@ -198,6 +205,7 @@ dataController = (function() {
 
                     returnData[nrOfDaysFromBeginDate].trips.push(trip);
                 }
+
             }
         });
 
@@ -356,14 +364,16 @@ dataController = (function() {
             avSpeed = (totalDist / (totalTime.valueOf() / 1000.0)) * 3.6;
         }
 
-        if (totalTime == 0) {
+        //if (totalTime == 0) {
+        //
+        //    totalTime = "No Readings";
+        //
+        //} else {
+        //
+        //    totalTime = (totalTime.getHours() - 1) + " hour(s), " + totalTime.getMinutes() + " minute(s), " + totalTime.getSeconds() + "second(s)";
+        //}
 
-            totalTime = "No Readings";
-
-        } else {
-
-            totalTime = (totalTime.getHours() - 1) + " hour(s), " + totalTime.getMinutes() + " minute(s), " + totalTime.getSeconds() + "second(s)";
-        }
+        totalTime = totalTime.valueOf();
 
         return {
             totalDistance: totalDist,
@@ -381,7 +391,13 @@ dataController = (function() {
 
     function divideAndSetAveragesForPeriod(trips, beginDate, endDate) {
 
+        console.log("trips:");
+        console.log(trips);
+
         var dividedTrips = divideTripsIntoDays(trips, beginDate, endDate);
+
+        console.log("dividedTrips:");
+        console.log(dividedTrips);
 
         $.each(dividedTrips, function (index, day) {
 
