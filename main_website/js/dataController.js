@@ -303,10 +303,13 @@ dataController = (function() {
                     }
                 });
 
+                //GPS data is sorted in case it is not in the correct order
                 gpsDataArray.sort(compareTime);
 
                 $.each(gpsDataArray, function(index, gpsData){
 
+                    //GPS data is converted to LatLng objects and added to an array for use in google maps API.
+                    //This must be done seperately for the "MultiPoint" and "Point" type of coordinates.
                     if (gpsData.data[0].type == "MultiPoint") {
 
                         $.each(gpsData.data[0].coordinates, function(i, point) {
@@ -330,6 +333,7 @@ dataController = (function() {
 
                 });
 
+                //Each single trip (an array of objects) is added to the array of (multiple) trips
                 tripsCoordinates.push(singleTripCoordinates);
 
                 for (var i = 1 ; i < singleTripCoordinates.length ; i++) {

@@ -465,14 +465,18 @@ calendarController = (function() {
 
 
 
-        // Initialise the map
+        // Initialise the map: default center are the coordinates of the computer sciences building.
         var startCo = {lat: 50.864, lng: 4.679};
 
+        // Iterate over all routes.
         $.each(average.routes,function(index,route){
 
+            // If a route is not empty (it could be empty by a bug or the GPS not working), take the first coordinate and use that as the center of the map
             if(route.length != 0){
 
                 startCo = route[0];
+
+                // A new Center for the map has been found, so the loop can be exited.
                 return false;
             }
         });
@@ -494,7 +498,6 @@ calendarController = (function() {
     function initDetailsMap(startCo) {
 
         // Some options for the map
-        // the map is centered on the CW building
         var detailsMapOptions = {
             zoom: 17,
             center: startCo,

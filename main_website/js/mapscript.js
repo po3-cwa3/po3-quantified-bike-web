@@ -1,6 +1,6 @@
 
 
-//var myData = [["http://extranet.eco.ca/projects/crm/OccupationalProfiles/wopID208/Petroleum-Engineer.jpg",[50.864,4.679]],["http://rossengineers.com/wp-content/themes/rosseng/img/j0439299.jpg", [50.874,4.689]],["http://construction-engineers.regionaldirectory.us/construction-engineer-720.jpg", [50.874,4.679]]];
+
 var markers = [];
 var infoWindows = [];
 var markersOnMap = {};
@@ -18,7 +18,7 @@ mapController = ( function () {
 
     function init() {
 
-        dataController.queryPictureDataForMonth(month, function(data) {
+            dataController.queryPictureDataForMonth(month, function(data) {
 
             month_data = data;
             month_data_fetched = true;
@@ -28,7 +28,7 @@ mapController = ( function () {
 
                 if (day_data.trips.length != 0){
 
-                    myData.concat(day_data.trips)
+                    myData = myData.concat(day_data.trips)
                 }
 
             });
@@ -38,25 +38,12 @@ mapController = ( function () {
 
             console.log("Completed months:");
             console.log(completedMonths);
-            console.log(month_data);
-
 
             $("#spinnerContainer").css("display", "none");
 
             $("#calendar").datepicker("refresh");
         });
 
-/*        $("#calendar").datepicker({
-            onSelect: function (dateText, datepicker) {
-
-                var elements = dateText.split("/");
-
-                year = elements[2];
-                month = elements[0];
-                day = elements[1];
-
-            }
-        });*/
 
         $("#calendar").datepicker({
 
@@ -68,13 +55,7 @@ mapController = ( function () {
                 var month = elements[0];
                 var year = elements[2];
 
-//                setTableToTrips(month_data[day-1]);
-
-//                $("#select_trip").empty();
-//                queryDataForDay(day);
-//                console.log(markersOnMap);
                 addOrRemovePictures(day, month, year);
-//                removeMarkers(day);
             },
 
             onChangeMonthYear: function (newYear, newMonth, datepicker) {
@@ -90,8 +71,6 @@ mapController = ( function () {
                     month_data_fetched = false;
 
                     month = newMonth;
-
-//                markers = [];
 
 
                     dataController.queryPictureDataForMonth(month, function (data) {
@@ -113,7 +92,6 @@ mapController = ( function () {
 
                         console.log("Completed months:");
                         console.log(completedMonths);
-                        console.log(month_data);
 
                         setTimeout(function(){
                             $("#spinnerContainer").css("display", "none");
@@ -151,59 +129,12 @@ mapController = ( function () {
                         }
                     });
 
-/*
-                    var trips_present = month_data[day_number-1].average.nrOfTrips > 0;
-
-
-
-                    if (trips_present) {
-
-                        console.log("Trips present on " + day);
-//                        console.log(month_data[day_number-1].trips);
-                        var hasGPSData = false;
-                        $.each(month_data[day_number-1].trips, function(index, trip){
-
-                            $.each(trip.sensorData, function(index, sensor_data){
-
-                                if (sensor_data.sensorID == 1){
-
-                                    hasGPSData = true;
-                                    return false
-                                }
-
-                            });
-                            if (hasGPSData) {
-                                return false
-                            }
-                        });
-                        if (hasGPSData == false) {
-                            trips_present = false;
-                        }
-
-                    }
-
-                    return [trips_present, ""];
-*/
-
                     return [photos_present, ""];
                 }
 
                 return [false, ""];
             }
         });
-
- /*       $("#addDay").click(function(){
-
-            console.log("clicked");
-
-            dataController.queryTripsForDay(new Date(year, month-1, day), function(trips){
-
-                console.log(trips);
-                combinePicturesAndCo(trips)
-
-            })
-        });
-*/
 
         $("#clearAll").click(function (){
 
@@ -257,7 +188,6 @@ mapController = ( function () {
 
                         var link = "http://dali.cs.kuleuven.be:8080/qbike/images/";
                         link = link + sensorValue.data[0];
-//                        console.log("picture link is " + link);
                         var time = sensorValue.timestamp;
 
                         var pictureTimeArray = [link, [], time];
@@ -271,25 +201,16 @@ mapController = ( function () {
 
                 if (tripPictureDataArray != []) {
 
-//                    console.log("there are " + tripPictureDataArray.length + " pictures on the day of " + tripPictureDataArray[0][2] + "(trip ID: " + trip._id + " )");
-//                console.log(tripPictureDataArray);
                     var gpsCo = [];
 
                     if (gpsDataArray.length == 0) {
 
-//                        console.log("there is no gps data, so pictures from the day of "+ tripPictureDataArray[0][2] +"are removed (tripID: " + trip._id +" )");
                         tripPictureDataArray = [];
-/*                        $.each(tripPictureDataArray, function (index, pictureData) {
 
-                            console.log("no GPS data found. Standard values are used (there may be more than one picture, but only one coordinate set is used)");
-                            pictureData[1] = [50.864, 4.679];
-
-                        })*/
                     }
 
                     else if (gpsDataArray.length == 1) {
 
-//                        console.log("there is only one coordinate on trip of day " + tripPictureDataArray[0][2] + "(tripID: " + trip._id + " )");
 
                         if (gpsDataArray[0].data[0].type == "Multipoint") {
 
@@ -340,8 +261,6 @@ mapController = ( function () {
                         });
                     }
 
-//                    console.log("tripPictureDataArray");
-//                    console.log(tripPictureDataArray);
                     pictureDataArray = pictureDataArray.concat(tripPictureDataArray);
 
                 }
@@ -350,8 +269,6 @@ mapController = ( function () {
 
 
         });
-//        console.log("pictureDataArray");
-//        console.log(pictureDataArray);
         pictureDataArray = moveDuplicates(pictureDataArray);
         initMarkers(pictureDataArray);
 
@@ -387,23 +304,21 @@ mapController = ( function () {
 
     function addOrRemovePictures(day, month, year) {
 
-//        console.log(markersOnMap);
         var markerCheck = day.toString()+month.toString()+year.toString();
         if (markersOnMap.hasOwnProperty(markerCheck)) {
-//            console.log("has own property");
             if (markersOnMap[markerCheck]) {
-//                console.log("markerCheck is true");
+
                 removeMarkers(day);
                 markersOnMap[markerCheck] = false;
             }
             else {
-//                console.log("markerCheck is false");
+
                 addMarkers(day);
                 markersOnMap[markerCheck] = true;
             }
         }
         else {
-//            console.log("does not have own property");
+
             addMarkers(day);
             markersOnMap[markerCheck] = true;
         }
@@ -480,10 +395,6 @@ mapController = ( function () {
 
         console.log("markers:");
         console.log(markers);
-
-
-
-
 
     }
 
