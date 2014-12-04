@@ -72,9 +72,13 @@ if (!isset($user)) {
             <a id="days"  class="bp-icon bp-icon-day " data-info="compare days"><span>compare days</span></a>
         </nav>
 
+        <button id="compare-other-trips">choose other trips</button>
         <div id="compare-trips">
 
-            <div>
+            <h1 id="enough-entries">You have selected the maximum number of entries, please click on the compare button now</h1>
+
+            <div id ="calendar-1">
+
 
                 <h2>Choose the trips you want to compare, then press 'Compare'.</h2><br>
 
@@ -104,6 +108,7 @@ if (!isset($user)) {
 
             <button id="start_comparing">compare</button>
 
+
         </div>
 
         <div id="compare-days">
@@ -118,7 +123,9 @@ if (!isset($user)) {
             </div>
 
             <button id="start_comparing_days">compare</button>
+
         </div>
+
 
         <table id="table_compare" class="table_compare">
             <tr id="elements_to_compare"></tr>

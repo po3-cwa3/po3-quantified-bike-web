@@ -25,6 +25,7 @@ compareController = (function() {
             month_data = data;
             month_data_fetched = true;
 
+
             console.log(month_data);
 
             $("#loading_popover").css("display", "none");
@@ -146,15 +147,19 @@ compareController = (function() {
         $("#trips").click(function(){
             $("#choose-compare-sort").slideUp("fast");
             $("#compare-trips").slideDown("fast");
+            $("#compare-other-trips").slideDown("fast");
         });
 
         $("#days").click(function(){
             $("#choose-compare-sort").slideUp("fast");
             $("#compare-days").slideDown("fast");
+            $("#compare-other-trips").slideDown("fast");
         });
 
 
         $("#start_comparing").click(function () {
+
+            //$("#compare-trips").slideUp("fast");
 
             compare_items();
 
@@ -167,6 +172,47 @@ compareController = (function() {
             console.log(days);
             compare_days();
         });
+
+        // button is clicked when the user wants to choose other trips.
+        $("#compare-other-trips").click(function(){
+            $("#compare-trips").slideDown("fast");
+            $("#calendar-1").slideDown("fast");
+            $("#enough-entries").slideUp("fast");
+            delete_current_data();
+
+        });
+
+    }
+
+    function delete_current_data(){
+        var tripLister = $("#trip_lister ul");
+        tripLister.empty();
+
+        var arrays = [items_to_compare,data_for_circle, km_for_circle, temperature, humidity, heartbeat, coordinates, speed_for_graph];
+        $.each(arrays, function(){
+            while ( this.length > 0){
+                this.pop();
+            };
+        });
+
+        var rows_of_table = ["elements_to_compare","table_day","km","duration"];
+
+        $.each(rows_of_table,function(){
+            var element = document.getElementById("table_compare").rows;
+            $.each(element, function(){
+                while (this.cells.length > 0){
+                    console.log(this + " row");
+                    this.deleteCell(0);
+                };
+            });
+
+        });
+
+        $("#first_chart").slideUp("fast");
+        $("#second_chart").slideUp("fast");
+        $("#speed_chart").slideUp("fast");
+        $("#heartbeat_chart").slideUp("fast");
+
     }
 
     function make_chart(data_trip,sort){
@@ -306,12 +352,16 @@ compareController = (function() {
         console.log(data.datasets);
         if (sort == "temp"){
             var ctx = $("#first_chart").get(0).getContext("2d");
+            $("#first_chart").slideDown("fast");
         } else if (sort == "hum") {
             var ctx = $("#second_chart").get(0).getContext("2d");
+            $("#second_chart").slideDown("fast");
         } else if (sort == "heart") {
             var ctx = $("#heartbeat_chart").get(0).getContext("2d");
+            $("#heartbeat_chart").slideDown("fast");
         } else {
             var ctx = $("#speed_chart").get(0).getContext("2d");
+            $("#speed_chart").slideDown("fast");
         }
 
 
@@ -321,7 +371,6 @@ compareController = (function() {
 
 
     }
-
 
     function calculate_size_circle(procent,sort,index,value){
 
@@ -412,11 +461,17 @@ compareController = (function() {
         $.each(km_for_circle, function(){
             total += this;
         });
-
-        $.each(km_for_circle,function(index,value){
-            procent = value/total;
-            calculate_size_circle(procent*100,"distance",index,value);
-        });
+        console.log(total + "total");
+        if (total == 0){
+            $.each(km_for_circle,function(){
+                $("#km").append("<td>not recorded</td>");
+            });
+        } else {
+            $.each(km_for_circle, function (index, value) {
+                procent = value / total;
+                calculate_size_circle(procent * 100, "distance", index, value);
+            });
+        }
     }
 
     function setTableToTrips(data) {
@@ -442,21 +497,43 @@ compareController = (function() {
             var begin = pad(startTime.getHours(), 2) + ":" + pad(startTime.getMinutes(), 2);
             var end = pad(endTime.getHours(), 2) + ":" + pad(endTime.getMinutes(), 2);
 
-            tripLister.append("<li trip_id='" + trip._id + "'>" + begin + "  tot  " + end + "</li>");
+            tripLister.append("<li datum='"+startTime+"' index='" + index + "'  trip_id='" + trip._id + "'>" + begin + "  tot  " + end + "</li>");
         });
 
         // Once the new items have been added to the lister ul, set the click function for these items
         $("#trip_lister ul li").click(function() {
 
             var tripID = $(this).attr("trip_id");
+            var tripdatum = $(this).attr("datum");
+            var tripindex = $(this).attr("index");
+            console.log(tripdatum);
+            addTripToComparison(tripdatum,tripindex);
 
-            addTripToComparison(tripID);
+            // if the user has chosen 4 items to compare, the calendar and list dissapear
+            if (items_to_compare.length > 3 ){
+                $("#calendar-1").slideUp("fast");
+                $("#enough-entries").slideDown("fast");
+            }
         });
     }
-
-    function addTripToComparison(tripID) {
+   /* function addTripToComparison(tripID) {
 
         items_to_compare.push(tripID);
+
+        var elementsToCompare = $("#elements_to_compare");
+
+        if ( document.getElementById("table_compare").rows[0].cells.length == 0){
+            elementsToCompare.append("<td width='140px' id='title_1'>id:</td>");
+        }
+
+        elementsToCompare.append("<td width='200px' id='" + items_to_compare.length + "'> trip: " +  document.getElementById("table_compare").rows[0].cells.length+ " </td>");
+    }*/
+    function addTripToComparison(tripdatum, tripindex) {
+        tripdatum = new Date(tripdatum)
+        console.log(tripdatum.getDate()+ ":" + tripindex);
+        var element = month_data[tripdatum.getDate() -1 ].trips[tripindex];
+        console.log(element);
+        items_to_compare.push(element);
 
         var elementsToCompare = $("#elements_to_compare");
 
@@ -468,15 +545,19 @@ compareController = (function() {
     }
 
     function compare_items(){
-        //setTimeout(create_circles_time,500);
-        setTimeout(create_circles_distance,1000);
-        $.each(items_to_compare, function (index, value) {
-            create_table(value);
-        });
-       /* setTimeout(function(){
-            make_chart(temperature,"temp");
-        },500);*/
-        setTimeout(function(){
+        console.log(month_data);
+        if (items_to_compare.length ==0){
+            alert("please select at least one item!");
+
+        } else {
+            $("#compare-trips").slideUp("fast");
+
+
+            $.each(items_to_compare, function (index, value) {
+                create_table(value);
+            });
+
+
             make_chart(humidity,"hum");
             create_circles_time();
             make_chart(temperature,"temp");
@@ -490,13 +571,17 @@ compareController = (function() {
             // array met daarin de waarden --> de tweede waarde is altijd gelijk aan 0.
             console.log(km_for_circle);
             console.log(speed_for_graph + "speed_for_graph");
-            /*$.each(km_for_circle,function(){
-             $("#km").append("<td>"+ Math.round(this)  +" meter </td>");
-             });*/
-        },500);
-        setTimeout(function(){
-            make_chart(speed_for_graph,"speed");
-        },1000);
+
+            setTimeout(function(){
+                make_chart(speed_for_graph,"speed");
+                create_circles_distance();
+            },500);
+
+
+
+
+
+        }
 
         var data = [];
 /*        setTimeout(function () {
@@ -543,47 +628,83 @@ compareController = (function() {
 
     }
 
-    function create_table(id){
-        $.ajax({
-            url: "http://dali.cs.kuleuven.be:8080/qbike/trips/"+id,
-            jsonp: "callback",
-            dataType: "jsonp",
+    function create_table(value){
 
-            success: function (json) {
-                if (document.getElementById("table_compare").rows[1].cells.length == 0){
-                    $("#table_day").append("<td id='title_2' >start day:  </td>");
-                    $("#km").append("<td id='title_3' > total distance:   </td>");
-                    $("#duration").append("<td id='title_4' > duration:   </td>");
-                }
-                if (json[0].hasOwnProperty("startTime") && json[0].hasOwnProperty("endTime")) {
-                    date = new Date(json[0].startTime);
-                    end_date = new Date(json[0].endTime);
-                    var duration = (end_date.getTime() - date.getTime()) / 1000;
-                    data_for_circle.push(duration);
-                } else {
-                    $("#duration").append("<td> not recorded </td>");
-                }
-                var monthNames = [ "January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December" ];
-
-                $("#table_day").append("<td>" +date.getDate() +" "+ monthNames[date.getMonth()] +"</td>");
-                /*if (json[0].hasOwnProperty("meta.distance")) {
-                    var distance = json[0].meta.distance/1000;
-                    $("#km").append("<td>" + distance + " km "  + "</td>");
-                    km_for_circle.push(distance);
-                } else {
-                    $("#km").append("<td> not recorded  </td>");
-                }*/
-                var readings = dataController.getAveragesFromTrips(json);
-                temperature.push(readings.temparature);
-                humidity.push(readings.humidity);
-                coordinates.push(readings.routes);
-                heartbeat.push(readings.heart);
-
+            if (document.getElementById("table_compare").rows[1].cells.length == 0){
+                $("#table_day").append("<td id='title_2' >start day:  </td>");
+                $("#km").append("<td id='title_3' > total distance:   </td>");
+                $("#duration").append("<td id='title_4' > duration:   </td>");
             }
-        });
+            if (value.hasOwnProperty("startTime") && value.hasOwnProperty("endTime")) {
+                date = new Date(value.startTime);
+                end_date = new Date(value.endTime);
+                var duration = (end_date.getTime() - date.getTime()) / 1000;
+                data_for_circle.push(duration);
+            } else {
+                $("#duration").append("<td> not recorded </td>");
+            }
+            var monthNames = [ "January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December" ];
+
+            $("#table_day").append("<td>" +date.getDate() +" "+ monthNames[date.getMonth()] +"</td>");
+            /*if (json[0].hasOwnProperty("meta.distance")) {
+                var distance = json[0].meta.distance/1000;
+                $("#km").append("<td>" + distance + " km "  + "</td>");
+                km_for_circle.push(distance);
+            } else {
+                $("#km").append("<td> not recorded  </td>");
+            }*/
+            console.log(value)
+            var readings = dataController.getAveragesFromTrips([value]);
+            console.log(readings);
+            temperature.push(readings.temparature);
+            humidity.push(readings.humidity);
+            coordinates.push(readings.routes);
+            heartbeat.push(readings.heart);
+
+        }
+
+       /* function create_table(id){
+            $.ajax({
+                url: "http://dali.cs.kuleuven.be:8080/qbike/trips/"+id,
+                jsonp: "callback",
+                dataType: "jsonp",
+
+                success: function (json) {
+                    if (document.getElementById("table_compare").rows[1].cells.length == 0){
+                        $("#table_day").append("<td id='title_2' >start day:  </td>");
+                        $("#km").append("<td id='title_3' > total distance:   </td>");
+                        $("#duration").append("<td id='title_4' > duration:   </td>");
+                    }
+                    if (json[0].hasOwnProperty("startTime") && json[0].hasOwnProperty("endTime")) {
+                        date = new Date(json[0].startTime);
+                        end_date = new Date(json[0].endTime);
+                        var duration = (end_date.getTime() - date.getTime()) / 1000;
+                        data_for_circle.push(duration);
+                    } else {
+                        $("#duration").append("<td> not recorded </td>");
+                    }
+                    var monthNames = [ "January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December" ];
+
+                    $("#table_day").append("<td>" +date.getDate() +" "+ monthNames[date.getMonth()] +"</td>");
+                    *//*if (json[0].hasOwnProperty("meta.distance")) {
+                     var distance = json[0].meta.distance/1000;
+                     $("#km").append("<td>" + distance + " km "  + "</td>");
+                     km_for_circle.push(distance);
+                     } else {
+                     $("#km").append("<td> not recorded  </td>");
+                     }*//*
+                    var readings = dataController.getAveragesFromTrips(json);
+                    temperature.push(readings.temparature);
+                    humidity.push(readings.humidity);
+                    coordinates.push(readings.routes);
+                    heartbeat.push(readings.heart);
+
+                }
+            });*/
 
 
-    }
+
+
 
     function compare_days(){
         var hum = [];
@@ -703,7 +824,8 @@ compareController = (function() {
         compare_items: compare_items,
         compare_days: compare_days,
         calculate_speed: calculate_speed,
-        create_graph_days : create_graph_days
+        create_graph_days : create_graph_days,
+        delete_current_data: delete_current_data
     }
 })();
 
