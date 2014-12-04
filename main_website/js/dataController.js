@@ -177,21 +177,15 @@ dataController = (function() {
 
     function divideTripsIntoDays(trips, beginDate, endDate) {
 
-        // we create an array with space for all days.
+        // we calculate the nr of days to make the return array
         var nrOfDays = nrOfDaysBetweenDates(beginDate, endDate);
         var returnData = [];
 
-        console.log(returnData);
-        console.log(nrOfDays);
-
         for (var i = 0; i < nrOfDays; i++) {
 
-            console.log(returnData);
             returnData.push({trips: []});
         }
 
-        console.log("beginning with array:");
-        console.log(returnData);
 
         $.each(trips, function (index, trip) {
 
@@ -363,15 +357,6 @@ dataController = (function() {
         if (totalTime != 0 && totalDist != 0) {
             avSpeed = (totalDist / (totalTime.valueOf() / 1000.0)) * 3.6;
         }
-
-        //if (totalTime == 0) {
-        //
-        //    totalTime = "No Readings";
-        //
-        //} else {
-        //
-        //    totalTime = (totalTime.getHours() - 1) + " hour(s), " + totalTime.getMinutes() + " minute(s), " + totalTime.getSeconds() + "second(s)";
-        //}
 
         totalTime = totalTime.valueOf();
 

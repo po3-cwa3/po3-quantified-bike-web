@@ -36,12 +36,14 @@ if (!isset($user)) {
 
     <!-- jQuery UI (for datepicker) -->
     <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+
+    <!-- Google Maps API -->
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&v=3&libraries=geometry"></script>
 
     <!-- Google Maps -->
-    <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4SUA1W38uRk2aigX5gHDug9SNgndHnNw">
-    </script>
+<!--    <script type="text/javascript"-->
+<!--            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4SUA1W38uRk2aigX5gHDug9SNgndHnNw">-->
+<!--    </script>-->
 
     <!-- Bootstrap JS -->
     <script type="text/javascript" charset="utf8" src="Bootstrap/js/bootstrap.js"></script>
