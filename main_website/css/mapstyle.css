@@ -33,24 +33,35 @@ a.photoLink:visited{
     color: purple;
 }
 
+#loadingText {
+    position: absolute;
+    left: 41%;
+}
+
 #pleaseWait {
     position: absolute;
-    left: 46.5%;
+    left: 41%;
 }
 
 
 #spinnerContainer {
 
-    height: 25%;
-    border-top-style: solid;
-    border-bottom-style: solid;
+    height: 30%;
+    width: 30%;
+    border-style: solid;
     border-width: 2px;
     position: absolute;
     background: #ffffff;
-    right: 10px;
-    left: 350px;
-    top: 40%;
-    display: none;
+    left: 47%;
+    top: 35%;
+    display: inline;
+}
+
+#clearAll {
+
+    position: absolute;
+    left: 85px;
+    top: 260px;
 }
 
 #mapContainer {
@@ -80,11 +91,6 @@ a.photoLink:visited{
 }
 #MapOptions { float:left;
     margin: 5px;
-}
-
-p.loadingText {
-    position: absolute;
-    left: 45%;
 }
 
 #addDay {

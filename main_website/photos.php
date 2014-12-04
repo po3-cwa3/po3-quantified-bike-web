@@ -56,11 +56,12 @@ if (!isset($user)) {
     <div id="header-loader"></div>
     <div id="mapContainer">
         <div id="calendar"></div>
+        <button id="clearAll">Clear all pictures</button>
         <div id="MapCanvas">
         </div>
         <div id="spinnerContainer" >
             <br>
-            <p class="loadingText">Loading pictures...</p>
+            <p id="loadingText">Loading data...</p>
             <div class="loadingSpinner" style="display: block"></div>
             <p id="pleaseWait" class="loadingText">Please wait</p>
         </div>

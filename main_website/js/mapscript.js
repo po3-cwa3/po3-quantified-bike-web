@@ -4,6 +4,8 @@
 var markers = [];
 var infoWindows = [];
 var markersOnMap = {};
+var completedMonths = [];
+var openedInfoWindow = 0;
 
 mapController = ( function () {
 
@@ -32,10 +34,14 @@ mapController = ( function () {
             });
             combinePicturesAndCo(myData);
 
+            completedMonths.push(month*10000+year);
+
+            console.log("Completed months:");
+            console.log(completedMonths);
             console.log(month_data);
 
 
-//            $("#loading_popover").css("display", "none");
+            $("#spinnerContainer").css("display", "none");
 
             $("#calendar").datepicker("refresh");
         });
@@ -73,46 +79,79 @@ mapController = ( function () {
 
             onChangeMonthYear: function (newYear, newMonth, datepicker) {
 
-                console.log("Datepicker changed month to " + newMonth);
+                console.log("Datepicker changed month to " + newMonth + " and year " + newYear);
 
-                month_data_fetched = false;
+                var monthYearCheck = newMonth*10000+year;
 
-                month = newMonth;
+                if (completedMonths.indexOf(monthYearCheck) == -1) {
+
+                    $("#spinnerContainer").css("display", "inline");
+
+                    month_data_fetched = false;
+
+                    month = newMonth;
 
 //                markers = [];
 
-                $("#loading_popover").css("display", "block");
 
-                dataController.queryPictureDataForMonth(month, function(data) {
+                    dataController.queryPictureDataForMonth(month, function (data) {
 
-                    month_data = data;
-                    month_data_fetched = true;
-                    var myData = [];
-                    $.each(month_data, function(index, day_data){
+                        month_data = data;
+                        month_data_fetched = true;
+                        var myData = [];
+                        $.each(month_data, function (index, day_data) {
 
-                        if (day_data.trips.length != 0){
+                            if (day_data.trips.length != 0) {
 
-                            myData = myData.concat(day_data.trips);
-                        }
+                                myData = myData.concat(day_data.trips);
+                            }
 
+                        });
+                        combinePicturesAndCo(myData);
+
+                        completedMonths.push(monthYearCheck);
+
+                        console.log("Completed months:");
+                        console.log(completedMonths);
+                        console.log(month_data);
+
+                        setTimeout(function(){
+                            $("#spinnerContainer").css("display", "none");
+                        },50);
+                        $("#calendar").datepicker("refresh");
                     });
-                    combinePicturesAndCo(myData);
 
-                    console.log(month_data);
+                }
 
-//                    $("#loading_popover").css("display", "none");
+                else {
+
+                    console.log("This month and year has already been queried.");
+
+                    month = newMonth;
                     $("#calendar").datepicker("refresh");
-                });
+                }
             },
 
             beforeShowDay: function (day) {
 
                 var day_month = day.getMonth() + 1;
+                var day_year = day.getFullYear();
 
                 if (month_data_fetched && day_month == month) {
 
                     var day_number = day.getDate();
+                    var photos_present = false;
 
+                    $.each(markers,function(index, marker) {
+
+                        if (marker.date.getFullYear() == day_year && marker.date.getMonth() == day_month-1 && marker.date.getDate() == day_number) {
+
+                            photos_present = true;
+                            return false
+                        }
+                    });
+
+/*
                     var trips_present = month_data[day_number-1].average.nrOfTrips > 0;
 
 
@@ -144,6 +183,9 @@ mapController = ( function () {
                     }
 
                     return [trips_present, ""];
+*/
+
+                    return [photos_present, ""];
                 }
 
                 return [false, ""];
@@ -162,13 +204,31 @@ mapController = ( function () {
             })
         });
 */
+
+        $("#clearAll").click(function (){
+
+            $.each(markers,function(index,marker){
+
+                marker.setMap(null);
+                var day = marker.date.getDate();
+                var month = marker.date.getMonth()+1;
+                var year = marker.date.getFullYear();
+                var markerCheck = day.toString()+month.toString()+year.toString();
+                if (markersOnMap.hasOwnProperty(markerCheck)) {
+
+                    markersOnMap[markerCheck] = false
+                }
+
+            })
+        });
+
         initMap();
     }
 
     function initMap() {
 
         var MapOptions = {
-            zoom: 15,
+            zoom: 16,
             center: {lat: 50.864, lng: 4.679},
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             maxZoom: 20,
@@ -327,23 +387,23 @@ mapController = ( function () {
 
     function addOrRemovePictures(day, month, year) {
 
-        console.log(markersOnMap);
+//        console.log(markersOnMap);
         var markerCheck = day.toString()+month.toString()+year.toString();
         if (markersOnMap.hasOwnProperty(markerCheck)) {
-            console.log("has own property");
+//            console.log("has own property");
             if (markersOnMap[markerCheck]) {
-                console.log("markerCheck is true");
+//                console.log("markerCheck is true");
                 removeMarkers(day);
                 markersOnMap[markerCheck] = false;
             }
             else {
-                console.log("markerCheck is false");
+//                console.log("markerCheck is false");
                 addMarkers(day);
                 markersOnMap[markerCheck] = true;
             }
         }
         else {
-            console.log("does not have own property");
+//            console.log("does not have own property");
             addMarkers(day);
             markersOnMap[markerCheck] = true;
         }
@@ -353,9 +413,12 @@ mapController = ( function () {
 
         $.each(markers, function(index, marker){
 
+            var newCenter = {};
             if (day == marker.date.getDate()){
                 markers[index].setMap(Map);
+                newCenter = markers[index].position;
             }
+            Map.panTo(newCenter);
         })
     }
 
@@ -371,13 +434,15 @@ mapController = ( function () {
 
     function initMarkers(myData) {
 
-        for (index in myData) {
+        var markersLength = markers.length;
+
+        for (i = 0; i < myData.length; i++) {
             (function () {
 
-                var i = index;
+                var markersindex = i+markersLength;
                 var dateTaken = new Date(myData[i][2]).toLocaleString();
                 var myLatLng = {lat: myData[i][1][0], lng: myData[i][1][1]};
-                markers[i] = new google.maps.Marker({
+                markers[markersindex] = new google.maps.Marker({
                     position: myLatLng,
                     map: Map,
                     date: new Date(myData[i][2])
@@ -394,28 +459,29 @@ mapController = ( function () {
                     '</a>'+
                     '</div>';
 
-                infoWindows[i] = new google.maps.InfoWindow({
+                infoWindows[markersindex] = new google.maps.InfoWindow({
                     content: contentString,
                     position: myLatLng
                 });
 
 
-                google.maps.event.addListener(markers[i], "click", function () {
-                    infoWindows[i].open(Map, markers[i]);
+                google.maps.event.addListener(markers[markersindex], "click", function () {
+                    infoWindows[openedInfoWindow].close();
+                    infoWindows[markersindex].open(Map, markers[markersindex]);
+                    openedInfoWindow = markersindex;
                 });
 
-                markers[i].setMap(null)
+                markers[markersindex].setMap(null)
 
             }())
 
 
         }
 
+        console.log("markers:");
         console.log(markers);
 
-        setTimeout(function(){
-            $("#spinnerContainer").css("display", "none");
-        },2500)
+
 
 
 

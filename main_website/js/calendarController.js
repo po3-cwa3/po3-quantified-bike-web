@@ -466,7 +466,18 @@ calendarController = (function() {
 
 
         // Initialise the map
-        initDetailsMap();
+        var startCo = {lat: 50.864, lng: 4.679};
+
+        $.each(average.routes,function(index,route){
+
+            if(route.length != 0){
+
+                startCo = route[0];
+                return false;
+            }
+        });
+
+        initDetailsMap(startCo);
 
         // Loop through the routes and draw them on the map
         $.each(average.routes, function(index, route) {
@@ -480,13 +491,13 @@ calendarController = (function() {
 
 
     // This method is used to initialise the details map
-    function initDetailsMap() {
+    function initDetailsMap(startCo) {
 
         // Some options for the map
         // the map is centered on the CW building
         var detailsMapOptions = {
-            zoom: 18,
-            center: {lat: 50.864, lng: 4.679},
+            zoom: 17,
+            center: startCo,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
