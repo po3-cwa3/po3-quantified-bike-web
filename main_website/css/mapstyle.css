@@ -5,35 +5,64 @@ body { height: 100%;
     margin: 0;
     padding: 0;
     min-width: 800px;
-    font-family: 'Lato', Calibri, Arial, sans-serif;
-    color: #47a3da;
 }
+
 
 .container {height: 100%;
     width: 100%;
+
 }
 
 div.pictureContainer {
     width: 505px;
-    height: 284px;
+    height: 325px;
+
 }
 
 img.picture {
-    height: 90%;
-    width: 90%;
+    height: 75%;
+    width: 75%;
+    border: 2px solid #47a3da;
 }
 
 div.takenOn {
-    color: black;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+    color: #47a3da;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 10px;
+}
+.photoLink{
+    position: relative;
+    width: 250px;
+    left: 10px;
+    top: 10px;
+    border: 5px solid #47a3da;
+    border-radius: 5%;
+    padding: 20px;
+    font-size: 18pt;
+    font-weight: 300;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+    background-color: #47a3da;
+    color: #ffffff;
+
 }
 
+.photoLink:hover {
+    background-color: #ffffff;
+    color: #47a3da;
+    text-decoration: none;
+}
 a.photoLink:link {
-    color: blue;
+    /*color: blue;*/
+    font-weight: bold;
+    font-size: 15px;
+    padding: 5px;
 }
 
-a.photoLink:visited{
+/*a.photoLink:visited{
     color: purple;
-}
+}*/
 
 #loadingText {
     position: absolute;
@@ -108,6 +137,7 @@ button:hover {
     top: 10px;
     left: 350px;
 }
+
 #MapOptions { float:left;
     margin: 5px;
 }

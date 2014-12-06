@@ -67,7 +67,8 @@ if (!isset($user)) {
         </div>
     </div>
 
-    <!--laat alles hieronder staan-->
+
+
 
 </div>
 </body>
