@@ -5,6 +5,8 @@ body { height: 100%;
     margin: 0;
     padding: 0;
     min-width: 800px;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+    color: #47a3da;
 }
 
 .container {height: 100%;
@@ -58,10 +60,27 @@ a.photoLink:visited{
 }
 
 #clearAll {
-
     position: absolute;
-    left: 85px;
+    width: 300px;
+    left: 10px;
     top: 260px;
+    border: 5px solid #47a3da;
+    border-radius: 5%;
+    padding: 20px;
+    font-size: 18pt;
+    font-weight: 300;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+}
+
+button {
+    background-color: #47a3da;
+    -webkit-appearance: none;
+    color: #ffffff;
+}
+
+button:hover {
+    background-color: #ffffff;
+    color: #47a3da;
 }
 
 #mapContainer {

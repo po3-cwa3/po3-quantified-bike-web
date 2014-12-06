@@ -1,5 +1,4 @@
-body {
-}
+
 
 tr {
     height: 25px;
@@ -167,23 +166,23 @@ path {
 
 }
 
-#compare-trips {
-    display: none;
-}
+/*#compare-trips {*/
+    /*position: relative;*/
+/*}*/
 #compare-days {
     display : none;
 }
 
 #start_comparing {
     position: relative;
-    width: 130px;
-    left: 50%;
-    margin-left: -65px;
+    width: 300px;
+    left: 30%;
+    /*margin-left: -65px;*/
     border: 5px solid #47a3da;
     border-radius: 5%;
     padding: 20px;
-    margin-top: 30px;
-    margin-bottom: 50px;
+    /*margin-top: 0px;*/
+    margin-bottom: 30px;
     font-size: 18pt;
     font-weight: 300;
     font-family: 'Lato', Calibri, Arial, sans-serif;
@@ -199,7 +198,7 @@ path {
     border: none;
     padding: 20px;
     margin-top: 30px;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     font-size: 18pt;
     font-weight: 300;
     font-family: 'Lato', Calibri, Arial, sans-serif;
@@ -209,28 +208,31 @@ path {
 /* button to compare other trips */
 #compare-other-trips{
     position: relative;
-    margin-left: -65px;
+    /*margin-left: -65px;*/
     width: 300px;
     border-radius: 5%;
-    left: 8%;
+    left: 10%;
     padding: 20px;
-    margin-top: 0px;
-    margin-bottom: 40px;
+    /*margin-top: 0px;*/
+    margin-bottom: 30px;
     font-size: 18pt;
     font-weight: 300;
     font-family: 'Lato', Calibri, Arial, sans-serif;
-    display: none;
+    /*display: none;*/
     border: 5px solid #47a3da;
 
 
 }
+
+
 /* Trip Selector */
 
 #trip_selector {
     position: relative;
     display: block;
-    height: 234px;
+    height: 210px;
     min-width: 707px;
+    margin-bottom: 50px;
 }
 
 /* Calendar Day Selector */
@@ -268,7 +270,7 @@ path {
 #calendar_arrow {
     position: absolute;
     height: 80px;
-    top: 90px;
+    top: 65px;
     left: 310px;
 }
 
@@ -322,3 +324,4 @@ path {
 #enough-entries{
     display: none;
 }
+

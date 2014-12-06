@@ -67,13 +67,17 @@ if (!isset($user)) {
 <div class="container">
     <div id="header-loader"></div>
     <div class="content">
+        <!--
         <nav id ="choose-compare-sort">
             <a id="trips" class="bp-icon bp-icon-trip " data-info="compare trips"><span>compare trips</span></a>
             <a id="days"  class="bp-icon bp-icon-day " data-info="compare days"><span>compare days</span></a>
         </nav>
+        -->
 
-        <button id="compare-other-trips">choose other trips</button>
+        <button id="compare-other-trips" class="buttons">choose other trips</button>
+        <button id="start_comparing" class="buttons" >compare</button>
         <div id="compare-trips">
+
 
             <h1 id="enough-entries">You have selected the maximum number of entries, please click on the compare button now</h1>
 
@@ -106,7 +110,7 @@ if (!isset($user)) {
 
             </div>
 
-            <button id="start_comparing">compare</button>
+
 
 
         </div>
@@ -139,15 +143,15 @@ if (!isset($user)) {
 
         </table>
 
-        <canvas id="first_chart" ></canvas>
-        <canvas id="second_chart" ></canvas>
-        <canvas id="speed_chart" ></canvas>
-        <canvas id="heartbeat_chart" ></canvas>
-
+        <canvas id="first_chart" width="1000" height="500" ></canvas>
+        <canvas id="second_chart" width="1000" height="500" ></canvas>
+        <canvas id="speed_chart" width="1000" height="500" ></canvas>
+        <canvas id="heartbeat_chart" width="1000" height="500" ></canvas>
+        <!--
         <canvas id="average_temp" ></canvas>
         <canvas id="average_hum" ></canvas>
         <canvas id="average_trips" ></canvas>
-
+        -->
 
 
 

@@ -147,6 +147,7 @@ compareController = (function() {
         $("#trips").click(function(){
             $("#choose-compare-sort").slideUp("fast");
             $("#compare-trips").slideDown("fast");
+            $("#start_comparing").slideDown("fast");
             $("#compare-other-trips").slideDown("fast");
         });
 
@@ -176,6 +177,7 @@ compareController = (function() {
         // button is clicked when the user wants to choose other trips.
         $("#compare-other-trips").click(function(){
             $("#compare-trips").slideDown("fast");
+            $("#start_comparing").slideDown("fast");
             $("#calendar-1").slideDown("fast");
             $("#enough-entries").slideUp("fast");
             delete_current_data();
@@ -294,14 +296,37 @@ compareController = (function() {
             trip.label = "trip "+(parseInt(index)+1).toString();
             trip.title = "trip "+(parseInt(index)+1).toString();
             trip.data = value;
-            console.log(trip);
+
             data.datasets.push(trip);
+
             if (value.length > data.labels.length){
                 data.labels = [];
+
+                // the length of the trip with this data is stored in data_for_circle
+                var duration_trip = data_for_circle[index];
+                console.log(duration_trip);
+                var number_of_labels = Math.round(duration_trip/30)+1;
+                console.log(number_of_labels);
                 var i ;
-                for (i=0; i < value.length; i++ ){
-                    if ( i % 15 ==0 ){
-                        var label = 2*i;
+                var labels = [];
+                for (i=0; i < number_of_labels; i++){
+                    labels.push(30*i);
+                }
+                console.log(labels + "these are the labels");
+                var labels_interval = Math.round(value.length/number_of_labels);
+                var j ;
+                var number = 0;
+                for (j=0; j < value.length; j++ ){
+                    if ( j % labels_interval ==0 ){
+                        if (number > number_of_labels -1){
+                            var label = "";
+                        } else {
+                            var label = labels[number];
+                            number += 1;
+                        }
+
+
+
                     } else {
                         var label = "";
                     }
@@ -551,12 +576,16 @@ compareController = (function() {
 
         } else {
             $("#compare-trips").slideUp("fast");
+            $("#start_comparing").slideUp("fast");
 
 
             $.each(items_to_compare, function (index, value) {
                 create_table(value);
             });
 
+            console.log(data_for_circle);
+            var max_of_array = Math.max.apply(Math, data_for_circle);
+            console.log(max_of_array);
 
             make_chart(humidity,"hum");
             create_circles_time();
