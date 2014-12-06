@@ -49,6 +49,11 @@ mapController = ( function () {
 
             onSelect: function (dateText, datepicker) {
 
+                console.log("markers:");
+                console.log(markers);
+                console.log("markersOnMap:");
+                console.log(markersOnMap);
+
                 var elements = dateText.split("/");
 
                 var day = elements[1];
@@ -326,10 +331,11 @@ mapController = ( function () {
 
     function addMarkers(day) {
 
+        var newCenter = {lat: 50.864, lng: 4.679};
         $.each(markers, function(index, marker){
-
-            var newCenter = {};
+            
             if (day == marker.date.getDate()){
+
                 markers[index].setMap(Map);
                 newCenter = markers[index].position;
             }
