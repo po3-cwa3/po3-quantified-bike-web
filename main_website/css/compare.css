@@ -158,6 +158,12 @@ path {
     background-color: #47a3da;
     -webkit-appearance: none;
     color: #ffffff;
+    border: 5px solid #47a3da;
+    border-radius: 5%;
+    padding: 20px;
+    font-size: 18pt;
+    font-weight: 300;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
 }
 
 .content button:hover {
@@ -178,14 +184,9 @@ path {
     width: 300px;
     left: 30%;
     /*margin-left: -65px;*/
-    border: 5px solid #47a3da;
-    border-radius: 5%;
-    padding: 20px;
     /*margin-top: 0px;*/
     margin-bottom: 30px;
-    font-size: 18pt;
-    font-weight: 300;
-    font-family: 'Lato', Calibri, Arial, sans-serif;
+
 }
 #start_comparing_days {
     position: relative;
@@ -210,16 +211,12 @@ path {
     position: relative;
     /*margin-left: -65px;*/
     width: 300px;
-    border-radius: 5%;
+
     left: 10%;
-    padding: 20px;
+
     /*margin-top: 0px;*/
     margin-bottom: 30px;
-    font-size: 18pt;
-    font-weight: 300;
-    font-family: 'Lato', Calibri, Arial, sans-serif;
     /*display: none;*/
-    border: 5px solid #47a3da;
 
 
 }
@@ -325,3 +322,27 @@ path {
     display: none;
 }
 
+#buttons{
+    margin-top: 50px;
+    margin-bottom: 50px;
+    display: none;
+}
+.buttons_for_graph button {
+    margin-left: 10px;
+    width: 250px;
+}
+
+
+/* the charts have to be invisible until the user wants to see them */
+#first_chart{
+    display: none;
+}
+#second_chart{
+    display: none;
+}
+#speed_chart{
+    display: none;
+}
+#heartbeat_chart{
+    display: none;
+}

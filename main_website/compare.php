@@ -142,11 +142,17 @@ if (!isset($user)) {
 
 
         </table>
+        <div  id="buttons" class="buttons_for_graph">
+            <button id="view_temperature">Temperature</button>
+            <button id="view_humidity">Humidity</button>
+            <button id="view_speed">Speed  </button>
+            <button id="view_heartbeat">Heartbeat </button>
 
-        <canvas id="first_chart" width="1000" height="500" ></canvas>
-        <canvas id="second_chart" width="1000" height="500" ></canvas>
-        <canvas id="speed_chart" width="1000" height="500" ></canvas>
-        <canvas id="heartbeat_chart" width="1000" height="500" ></canvas>
+        </div>
+        <canvas id="first_chart" ></canvas>
+        <canvas id="second_chart" ></canvas>
+        <canvas id="speed_chart"  ></canvas>
+        <canvas id="heartbeat_chart"  ></canvas>
         <!--
         <canvas id="average_temp" ></canvas>
         <canvas id="average_hum" ></canvas>

@@ -180,8 +180,51 @@ compareController = (function() {
             $("#start_comparing").slideDown("fast");
             $("#calendar-1").slideDown("fast");
             $("#enough-entries").slideUp("fast");
+            $("#buttons").slideUp("fast");
             delete_current_data();
 
+        });
+
+        // when the user clicks on one of the following buttons, the corresponding graphs have to be displayed.
+        $("#view_temperature").click(function(){
+            $("#first_chart").slideDown("fast");
+            $("#second_chart").slideUp("fast");
+            $("#speed_chart").slideUp("fast");
+            $("#heartbeat_chart").slideUp("fast");
+            setTimeout(function(){
+                window.scrollTo(0,document.body.scrollHeight);
+            },200)
+
+        });
+
+        $("#view_humidity").click(function(){
+            $("#first_chart").slideUp("fast");
+            $("#second_chart").slideDown("fast");
+            $("#speed_chart").slideUp("fast");
+            $("#heartbeat_chart").slideUp("fast");
+            setTimeout(function(){
+                window.scrollTo(0,document.body.scrollHeight);
+            },200)
+        });
+
+        $("#view_speed").click(function(){
+            $("#first_chart").slideUp("fast");
+            $("#second_chart").slideUp("fast");
+            $("#speed_chart").slideDown("fast");
+            $("#heartbeat_chart").slideUp("fast");
+            setTimeout(function(){
+                window.scrollTo(0,document.body.scrollHeight);
+            },200)
+        });
+
+        $("#view_heartbeat").click(function(){
+            $("#first_chart").slideUp("fast");
+            $("#second_chart").slideUp("fast");
+            $("#speed_chart").slideUp("fast");
+            $("#heartbeat_chart").slideDown("fast");
+            setTimeout(function(){
+                window.scrollTo(0,document.body.scrollHeight);
+            },200)
         });
 
     }
@@ -377,20 +420,20 @@ compareController = (function() {
         console.log(data.datasets);
         if (sort == "temp"){
             var ctx = $("#first_chart").get(0).getContext("2d");
-            $("#first_chart").slideDown("fast");
+
         } else if (sort == "hum") {
             var ctx = $("#second_chart").get(0).getContext("2d");
-            $("#second_chart").slideDown("fast");
+
         } else if (sort == "heart") {
             var ctx = $("#heartbeat_chart").get(0).getContext("2d");
-            $("#heartbeat_chart").slideDown("fast");
+
         } else {
             var ctx = $("#speed_chart").get(0).getContext("2d");
-            $("#speed_chart").slideDown("fast");
+
         }
 
 
-        ctx.canvas.width = 1000;
+        ctx.canvas.width = 1100;
         ctx.canvas.height = 500;
         var myNewChart = new Chart(ctx).Line(data,options);
 
@@ -577,6 +620,7 @@ compareController = (function() {
         } else {
             $("#compare-trips").slideUp("fast");
             $("#start_comparing").slideUp("fast");
+            $("#buttons").slideDown("fast");
 
 
             $.each(items_to_compare, function (index, value) {
