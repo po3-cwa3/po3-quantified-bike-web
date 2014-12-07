@@ -193,7 +193,7 @@ dataController = (function() {
 
                 var date = new Date(trip.startTime);
 
-                var nrOfDaysFromBeginDate = nrOfDaysBetweenDates(beginDate, date) - 1;
+                var nrOfDaysFromBeginDate = nrOfDaysBetweenDates(beginDate, date);
 
                 if (nrOfDaysFromBeginDate >= 0 && nrOfDaysFromBeginDate < nrOfDays) {
 
@@ -430,7 +430,7 @@ dataController = (function() {
 
         var difference = Math.abs(date1.valueOf() - date2.valueOf());
 
-        var nrOfDays = Math.round(difference / (1000 * 60 * 60 * 24));
+        var nrOfDays = Math.floor(difference / (1000 * 60 * 60 * 24));
 
         return nrOfDays;
     }
