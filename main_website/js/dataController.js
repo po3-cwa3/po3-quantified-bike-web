@@ -255,7 +255,7 @@ dataController = (function() {
 
                         // GPS
                         case 1:
-
+                            console.log(JSON.stringify(sensorValue.data.coordinates));
                             gpsDataArray.push(sensorValue);
 
                         // Temperature
@@ -307,7 +307,9 @@ dataController = (function() {
 
                 //GPS data is sorted in case it is not in the correct order
                 gpsDataArray.sort(compareTime);
-
+                function validCoordinate(c){
+                    return Math.abs(c.lat) > .001 && Math.abs(c.lng) > .001;
+                }
                 $.each(gpsDataArray, function(index, gpsData){
 
                     //GPS data is converted to LatLng objects and added to an array for use in google maps API.
@@ -319,17 +321,19 @@ dataController = (function() {
                             var latitude = point[0];
                             var longitude = point[1];
                             var coordinateArray = {lat: latitude, lng: longitude};
-
-                            singleTripCoordinates.push(coordinateArray);
-
+                            if(validCoordinate(coordinateArray)) {
+                                singleTripCoordinates.push(coordinateArray);
+                            }
                         });
 
                     } else {
                         var latitudeSingle = gpsData.data[0].coordinates[0];
                         var longitudeSingle = gpsData.data[0].coordinates[1];
-                        var coordinateArraySingle = {lat: latitudeSingle, lng: longitudeSingle};
 
-                        singleTripCoordinates.push(coordinateArraySingle);
+                        var coordinateArraySingle = {lat: latitudeSingle, lng: longitudeSingle};
+                        if(validCoordinate(coordinateArraySingle)){
+                            singleTripCoordinates.push(coordinateArraySingle);
+                        }
 
                     }
 
