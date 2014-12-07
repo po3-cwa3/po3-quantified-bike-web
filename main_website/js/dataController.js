@@ -6,14 +6,23 @@ dataController = (function() {
     function init() {
 
     }
-
+    function getURL(){
+        return "http://dali.cs.kuleuven.be:8443";
+    }
+    function getImagesURL(){
+        return getURL()+"/qbike/images";
+    }
+    function getTripsURL(){
+        return getURL() + "/qbike/trips";
+    }
 
     // Query Methods
 
     function queryURL(url, callback) {
 
         $.ajax({
-            url: "http://dali.cs.kuleuven.be:8080/qbike/trips" + url,
+            //url: "http://dali.cs.kuleuven.be:8443/qbike/trips" + url,
+            url: getTripsURL() + url,
             jsonp: "callback",
             dataType: "jsonp",
             timeout: 70000
@@ -228,7 +237,6 @@ dataController = (function() {
                 var endTime = new Date(trip.endTime);
 
                 var difference = endTime.getTime() - startTime.getTime();
-                console.log("difference = " + difference);
                 totalTime = totalTime + difference;
 
             }
@@ -451,6 +459,10 @@ dataController = (function() {
 
     return {
         init: init,
+
+        getURL: getURL,
+        getImagesURL: getImagesURL,
+        getTripsURL: getTripsURL,
 
         queryURL: queryURL,
         queryTripWithID: queryTripWithID,

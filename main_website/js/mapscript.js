@@ -232,7 +232,8 @@ mapController = ( function () {
                     if (sensorValue.sensorID == 8) {
 
                         // create the link where the picture can be found
-                        var link = "http://dali.cs.kuleuven.be:8080/qbike/images/";
+                        //var link = "http://dali.cs.kuleuven.be:8443/qbike/images/";
+                        var link = dataController.getImagesURL();
                         link = link + sensorValue.data[0];
 
                         // retrieve the time the picture was taken
