@@ -19,7 +19,7 @@ calendarController = (function() {
         {prop: "nrOfTrips", title: "Nr. of trips", postfix: " trip(s)", accuracy: 0},
         {prop: "averageSpeed", title: "Average Speed", postfix: " km/h", accuracy: 2},
         {prop: "totalDistance", title: "Total Distance", postfix: " m", accuracy: 2},
-        {prop: "totalTime", title: "Total Biking Time", postfix: ""},
+        {prop: "totalTime", title: "Total Biking Time", postfix: " s", accuracy:0},
         {prop: "averageTemperature", title: "Average Temperature", postfix: " °C", accuracy: 0},
         {prop: "averageHumidity", title: "Average Humidity", postfix: " %", accuracy: 0}
     ];
@@ -433,14 +433,14 @@ calendarController = (function() {
 
             // If the property is numeric, round it using the accuracy from the properties array
             // If the property is a string, just use the string
-            if (property.prop != "totalTime") {
+            //if (property.prop != "totalTime") {
 
                 roundedValue = round(average[property.prop], property.accuracy);
 
-            } else {
+            //} else {
 
-                roundedValue = average[property.prop] / 1000.0;
-            }
+            //    roundedValue = average[property.prop] / 1000.0;
+            //}
 
             // Add the value
             divHTML += roundedValue;

@@ -227,16 +227,10 @@ dataController = (function() {
                 var startTime = new Date(trip.startTime);
                 var endTime = new Date(trip.endTime);
 
-                var difference = new Date(endTime - startTime);
+                var difference = endTime.getTime() - startTime.getTime();
+                console.log("difference = " + difference);
+                totalTime = totalTime + difference;
 
-                if (totalTime == 0) {
-
-                    totalTime = difference;
-
-                } else {
-
-                    totalTime = new Date(totalTime + difference);
-                }
             }
 
 
@@ -362,12 +356,12 @@ dataController = (function() {
             avSpeed = (totalDist / (totalTime.valueOf() / 1000.0)) * 3.6;
         }
 
-        totalTime = totalTime.valueOf();
+        //totalTime = totalTime.valueOf();
 
         return {
             totalDistance: totalDist,
             averageSpeed: avSpeed,
-            totalTime: totalTime,
+            totalTime: totalTime/1000.0,
             averageTemperature: avTemp,
             averageHumidity: avHum,
             nrOfTrips: trips.length,
