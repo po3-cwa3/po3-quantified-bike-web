@@ -105,29 +105,8 @@ if (!isset($user)) {
                         <div class="loadingSpinner"></div>
 
                     </div>
-
                 </div>
-
             </div>
-
-
-
-
-        </div>
-
-        <div id="compare-days">
-            <h2>Choose the trips you want to compare, then press 'Compare'.</h2><br>
-            <div id="calendar-2"></div>
-            <div id="loading_popover-2">
-
-                <p class="loading_message">Loading, please wait...</p>
-
-                <div class="loadingSpinner"></div>
-
-            </div>
-
-            <button id="start_comparing_days">compare</button>
-
         </div>
 
 
@@ -153,11 +132,7 @@ if (!isset($user)) {
         <canvas id="second_chart" ></canvas>
         <canvas id="speed_chart"  ></canvas>
         <canvas id="heartbeat_chart"  ></canvas>
-        <!--
-        <canvas id="average_temp" ></canvas>
-        <canvas id="average_hum" ></canvas>
-        <canvas id="average_trips" ></canvas>
-        -->
+
 
 
 
