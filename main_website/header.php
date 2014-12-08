@@ -18,8 +18,8 @@ if (isset($user)) {
     <nav>
         <a href="index.php" class="bp-icon bp-icon-home" data-info="home"><span>home</span></a>
         <a id="device"  class="bp-icon bp-icon-bicycle" data-info="about the device"><span>about the device</span></a>
-        <a id="about"   class="bp-icon bp-icon-about" data-info="about us"><span>about us</span></a>
-        <a id="settings"  class="bp-icon bp-icon-conf" data-info="settings"><span>settings</span></a>
+        <a id="about"   class="bp-icon bp-icon-about" data-info="help"><span>help</span></a>
+        <a id="settings"  class="bp-icon bp-icon-conf" data-info="log out"><span>log out</span></a>
         <h1 id="username"><?php echo $username ?></h1>
     </nav>
 </header>

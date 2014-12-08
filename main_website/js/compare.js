@@ -91,81 +91,11 @@ compareController = (function() {
             }
         });
 
-        $("#calendar-2").datepicker({
-
-            onSelect: function (dateText, datepicker) {
-                console.log(dateText);
-                var elements = dateText.split("/");
-
-                var day = elements[1];
-
-                days.push(month_data[day-1]);
-
-            },
-
-            onChangeMonthYear: function (newYear, newMonth, datepicker) {
-
-                console.log("Datepicker changed month to " + newMonth);
-
-                month_data_fetched = false;
-
-                month = newMonth;
-
-                $("#loading_popover-2").css("display", "block");
-
-                dataController.queryDataForMonth(month, function(data) {
-
-                    month_data = data;
-                    month_data_fetched = true;
-
-                    console.log(month_data);
-
-                    $("#loading_popover-2").css("display", "none");
-                    $("#calendar-2").datepicker("refresh");
-                });
-            },
-
-            beforeShowDay: function (day) {
-
-                var day_month = day.getMonth() + 1;
-
-                if (month_data_fetched && day_month == month) {
-
-                    var day_number = day.getDate();
-
-                    var trips_present = month_data[day_number-1].average.nrOfTrips > 0;
-
-                    if (trips_present) console.log("Trips present on " + day);
-
-                    return [trips_present, ""];
-                }
-
-                return [false, ""];
-            }
-        });
-
-        $("#trips").click(function(){
-            $("#choose-compare-sort").slideUp("fast");
-            $("#compare-trips").slideDown("fast");
-            $("#start_comparing").slideDown("fast");
-            $("#compare-other-trips").slideDown("fast");
-        });
-
-        $("#days").click(function(){
-            $("#choose-compare-sort").slideUp("fast");
-            $("#compare-days").slideDown("fast");
-            $("#compare-other-trips").slideDown("fast");
-        });
 
 
         $("#start_comparing").click(function () {
 
-            //$("#compare-trips").slideUp("fast");
-
             compare_items();
-
-            $("#select_day").empty();
-            $("#select_trip").empty();
         });
 
         $("#start_comparing_days").click(function () {
@@ -176,11 +106,16 @@ compareController = (function() {
 
         // button is clicked when the user wants to choose other trips.
         $("#compare-other-trips").click(function(){
+            // the calendar to pick trips has to be visible again for the user.
             $("#compare-trips").slideDown("fast");
             $("#start_comparing").slideDown("fast");
             $("#calendar-1").slideDown("fast");
+
+            // the message that enough entries have been chosen has to dissapear. the buttons to view graphs don't have to be visible anymore
             $("#enough-entries").slideUp("fast");
             $("#buttons").slideUp("fast");
+
+            // all the current comparisons are deleted.
             delete_current_data();
 
         });
@@ -191,6 +126,8 @@ compareController = (function() {
             $("#second_chart").slideUp("fast");
             $("#speed_chart").slideUp("fast");
             $("#heartbeat_chart").slideUp("fast");
+
+            // after the graph has been drawn, the page scrolls to the bottom of the page, so that the user can easily see the graph.
             setTimeout(function(){
                 window.scrollTo(0,document.body.scrollHeight);
             },200)
@@ -230,9 +167,12 @@ compareController = (function() {
     }
 
     function delete_current_data(){
+
+        // the list of trips on a certain day is emptied
         var tripLister = $("#trip_lister ul");
         tripLister.empty();
 
+        // all the array containing data for comparisons are emptied
         var arrays = [items_to_compare,data_for_circle, km_for_circle, temperature, humidity, heartbeat, coordinates, speed_for_graph];
         $.each(arrays, function(){
             while ( this.length > 0){
@@ -240,19 +180,23 @@ compareController = (function() {
             };
         });
 
-        var rows_of_table = ["elements_to_compare","table_day","km","duration"];
 
-        $.each(rows_of_table,function(){
-            var element = document.getElementById("table_compare").rows;
-            $.each(element, function(){
-                while (this.cells.length > 0){
-                    console.log(this + " row");
-                    this.deleteCell(0);
-                };
-            });
+        // all the info in the table is deleted.
 
+        // all the rows in the compare table
+        var element = document.getElementById("table_compare").rows;
+        console.log(element);
+        $.each(element, function(){
+            // every row is deleted cell by cell
+            while (this.cells.length > 0){
+                console.log(this + " row");
+                this.deleteCell(0);
+            };
         });
 
+
+        // the charts are temporarily made invisible again. once the user chooses new trips,
+        // the canvases containing these graps will be overwritten
         $("#first_chart").slideUp("fast");
         $("#second_chart").slideUp("fast");
         $("#speed_chart").slideUp("fast");
@@ -263,14 +207,20 @@ compareController = (function() {
     function make_chart(data_trip,sort){
         console.log(data_trip + sort);
         var fill_choiche = data_trip.length;
+
+        // the humidity graph looks better if there is no filling under the lines.
         if (sort == "hum"){
             var fill = 0;
         } else if (fill_choiche < 4){
             var fill = 0.2;
+        // if there are 4 trips to be compared, we make the fill more transparent so that
+        // the graphs are still visible
         } else {
             var fill =  0.1;
         }
         console.log("making chart");
+
+        // the different trips get different colours in the graph
         var trip_2 = {
             label: "first trip",
             title: "first trip",
@@ -281,6 +231,7 @@ compareController = (function() {
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(151,187,205,1)",
+            // the datapoints will be added later
             data: []
         }
 
@@ -320,56 +271,78 @@ compareController = (function() {
             data: []
         }
 
-
+        // data contains the labels that will be placed on the x-axis and the data of the different trips
         var data = {
             labels: [],
             datasets: []
         };
+
+
+        // a dataset is made for each trip
         $.each(data_trip,function(index,value){
             var lengte = data.datasets.length;
+            // the first trip gets trip_1 as starting dataset and the colour defined in trip_1
             if (lengte == 0){
                 var trip = trip_1;
+            // the second trip gets trip_2 as starting dataset and the colour defined in trip_2
             } else if (lengte == 1 ){
                 var trip = trip_2;
+             // the third trip gets trip_3 as starting dataset and the colour defined in trip_3
             } else if(lengte == 2) {
                 var trip = trip_3;
+            // the fourth trip gets trip_4 as starting dataset and the colour defined in trip_4
+            // the user can't select more than 4 trips to compare
             } else {
                 var trip = trip_4;
             }
+            // the trip gets a title
             trip.label = "trip "+(parseInt(index)+1).toString();
             trip.title = "trip "+(parseInt(index)+1).toString();
+            // the data corresponding to this trip is added to the dataset
             trip.data = value;
 
+            // the dataset is added to the variable 'data'
             data.datasets.push(trip);
 
+            // assuming that during all trips the sensors have gathered data at the same frequency,
+            // the trip with the most readings has the longest duration
             if (value.length > data.labels.length){
+
+                // the trip with the longest duration provides the labels on the x-axis
                 data.labels = [];
 
                 // the length of the trip with this data is stored in data_for_circle
                 var duration_trip = data_for_circle[index];
                 console.log(duration_trip);
+
+                // we want to display a label every thirty seconds.
+                // we add one because the first label is displayed at 0 seconds.
                 var number_of_labels = Math.round(duration_trip/30)+1;
                 console.log(number_of_labels);
                 var i ;
+
+                // labels is an array containing all the labels that have to be displayed.
                 var labels = [];
                 for (i=0; i < number_of_labels; i++){
                     labels.push(30*i);
                 }
                 console.log(labels + "these are the labels");
+
+                // the interval of readings at which a label has to be displayed.
                 var labels_interval = Math.round(value.length/number_of_labels);
                 var j ;
                 var number = 0;
                 for (j=0; j < value.length; j++ ){
+                    // if the j-th reading is a multiple of the interval, a label is added
                     if ( j % labels_interval ==0 ){
                         if (number > number_of_labels -1){
+                            // if all the labels have already been added, no label can be added anymore so nothing is displayed instead
                             var label = "";
                         } else {
                             var label = labels[number];
                             number += 1;
                         }
-
-
-
+                    // if this is not the case, nothing is displayed on the x-axis
                     } else {
                         var label = "";
                     }
@@ -380,21 +353,50 @@ compareController = (function() {
 
 
         var options = {
+            // the title of the graph
             graphTitle: "Temperature during the trip",
+
+            // if you go over the line, you will see each point with its corresponding value in a box
             showTooltips: true,
             annotateDisplay: true,
+
+            // a legend is displayed
             legend: true,
+
+            // the minimum interval of the y-axis
             yAxisMinimumInterval : 1,
+
+            // the label on the x-axis
             xAxisLabel: "Seconds",
+
+            // the x-axis at the bottom is displayed
             xAxisBottom: true,
+
+            // every 15 readings, a vertical grid line is displayed.
             scaleXGridLinesStep: 15,
+
+            // there are no dots on the lines to indicate a reading
             pointDot: false,
+
+            // the y-axis is automatically computed
             scaleOverride: false,
+
+            // the width of the steps on the y-axis. This value is only effective when scaleOverride is set to 'true'
             scaleStepWidth : 1,
+
+            // the start value of the y-axis. This value is only effective when scaleOverride is set to 'true'
             scaleStartValue: 10,
+
+            // The number of steps on the y-axis. This value is only effective when scaleOverride is set to 'true'
             scaleSteps: 20,
+
+            // the unit of the values on the y-axis
             yAxisUnit : "°C",
+
+            // the size of the above unit
             yAxisUnitFontSize: 16,
+
+            // the label displayed on the y-axis
             yAxisLabel: "Temperature"
 
         };
@@ -415,9 +417,11 @@ compareController = (function() {
             options.graphTitle = "heartbeat during the trip";
             options.yAxisLabel = "heartbeats";
             options.yAxisUnit = "";
-            //options.xAxisBottom = false;
+
         }
         console.log(data.datasets);
+
+        //depending on the sort of graph, the graph gets added to a certain canvas
         if (sort == "temp"){
             var ctx = $("#first_chart").get(0).getContext("2d");
 
@@ -432,9 +436,11 @@ compareController = (function() {
 
         }
 
-
+        // the height and width of the canvas
         ctx.canvas.width = 1100;
         ctx.canvas.height = 500;
+
+        // the graph is made and added to the canvas 'ctx'
         var myNewChart = new Chart(ctx).Line(data,options);
 
 
@@ -499,7 +505,7 @@ compareController = (function() {
         if (sort == "time"){
             var display_text = ~~(value/3600)+"h"+ Math.round((value%3600)/60)+"m";
         } else {
-            var display_text = Math.round(value) + "m";
+            var display_text = Math.round(value/10)/100 + "km";
         }
         var textNode2 = document.createTextNode(display_text);
 

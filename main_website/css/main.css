@@ -240,7 +240,7 @@ a:hover {
 }
 
 .bp-icon-conf:after {
-	content: "\f013";
+	content: "\f011";
 }
 
 .bp-icon-about:after {
@@ -371,6 +371,14 @@ a:hover {
     line-height: 1.2em;
 }
 
+/* messages about us and help */
+#about-us{
+    margin-bottom: 30px;
+}
+
+#about-device{
+    margin-bottom: 30px;
+}
 
 
 /* Screen Adaption */
