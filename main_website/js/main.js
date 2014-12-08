@@ -26,13 +26,13 @@ $(document).ready(function() {
             $('#settings-user').slideUp("fast");
         });
 
-        $("#settings").popover({
+        /*$("#settings").popover({
             title: "Settings",
             content: "<p id='settings-logout'>Log out</p>" +
                         "<p id='settings-preferences'>Preferences</p>",
             placement: "bottom",
             html: true
-        });
+        });*/
 
 
 
@@ -42,7 +42,8 @@ $(document).ready(function() {
             //$('#about-device').slideUp("fast");
             //$('#about-us').slideUp("fast");
 
-            if ($(this).attr("popover-visible") == "true") {
+            window.location.href = "login/logout.php";
+            /*if ($(this).attr("popover-visible") == "true") {
 
                 $(this).popover('hide');
                 $(this).attr("popover-visible", "false");
@@ -61,7 +62,7 @@ $(document).ready(function() {
 
                     alert("Preferences are in development");
                 });
-            }
+            }*/
         });
 
     });

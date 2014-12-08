@@ -15,13 +15,63 @@ calendarController = (function() {
 
     var monthArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+    var AccuracyFormatter = function(postfix, accuracy){
+        this.accuracy = accuracy;
+        this.postfix = postfix;
+    };
+    AccuracyFormatter.prototype.format = function(data){
+        return round(data, this.accuracy) + this.postfix;
+    };
+    var TimeFormatter = function(accuracy){
+        this.accuracy = accuracy;
+    };
+    TimeFormatter.prototype.format = function(seconds){
+        var minutes = Math.floor(seconds/60);
+        var s = Math.round(seconds - 60*minutes, this.accuracy);
+        var hours = Math.floor(minutes / 60);
+        minutes -= hours*60;
+        var str = "";
+        if(minutes > 0){
+            if(hours > 0){
+                str += hours + " h ";
+            }
+            str += minutes + " min ";
+        }
+        str += s + " s";
+        return str;
+    };
+    var DistanceFormatter = function(accuracy){
+        this.accuracy = accuracy;
+    };
+    DistanceFormatter.prototype.format = function(meters){
+        var km = Math.floor(meters/1000);
+        var m = Math.round(meters - 1000*km, this.accuracy);
+        var str = "";
+        if(km > 0){
+            str += km + " km ";
+        }
+        str += m + " m";
+        return str;
+    };
+    var UnitFormatter = function(single_postfix, multiple_postfix){
+        this.single_postfix = single_postfix;
+        this.multiple_postfix = multiple_postfix;
+    };
+    UnitFormatter.prototype.format = function(amount){
+        if(amount == 1){
+            return amount + this.single_postfix;
+        }else{
+            return amount + this.multiple_postfix;
+        }
+    }
+
     var propertiesInDetailsView = [
-        {prop: "nrOfTrips", title: "Nr. of trips", postfix: " trip(s)", accuracy: 0},
-        {prop: "averageSpeed", title: "Average Speed", postfix: " km/h", accuracy: 2},
-        {prop: "totalDistance", title: "Total Distance", postfix: " m", accuracy: 2},
-        {prop: "totalTime", title: "Total Biking Time", postfix: " s", accuracy:0},
-        {prop: "averageTemperature", title: "Average Temperature", postfix: " °C", accuracy: 0},
-        {prop: "averageHumidity", title: "Average Humidity", postfix: " %", accuracy: 0}
+        {prop: "nrOfTrips", title: "Nr. of trips", formatter:new UnitFormatter(" trip", " trips")},
+        {prop: "averageSpeed", title: "Average Speed", formatter: new AccuracyFormatter(" km/h", 2)},
+        {prop: "totalDistance", title: "Total Distance", formatter: new DistanceFormatter(2)},
+        {prop: "totalTime", title: "Total Biking Time", formatter: new TimeFormatter(2)},
+        {prop: "averageTemperature", title: "Average Temperature", formatter: new AccuracyFormatter(" °C", 0)},
+        {prop: "averageHumidity", title: "Average Humidity", formatter: new AccuracyFormatter(" %", 0)}
     ];
 
     var noReadingsMessage = "No Readings";
@@ -435,7 +485,8 @@ calendarController = (function() {
             // If the property is a string, just use the string
             //if (property.prop != "totalTime") {
 
-                roundedValue = round(average[property.prop], property.accuracy);
+                //roundedValue = round(average[property.prop], property.accuracy);
+            roundedValue = property.formatter.format(average[property.prop]);
 
             //} else {
 
@@ -446,9 +497,9 @@ calendarController = (function() {
             divHTML += roundedValue;
 
             // If there is a reading present, add the postfix from the properties array
-            if (roundedValue != noReadingsMessage) {
+            /*if (roundedValue != noReadingsMessage) {
                 divHTML += property.postfix;
-            }
+            }*/
 
             // Close the value span
             divHTML += '</span>';
