@@ -7,6 +7,7 @@ dataController = (function() {
 
     }
     function getURL(){
+        //return "http://dali.cs.kuleuven.be:8080";
         return "http://dali.cs.kuleuven.be:8443";
     }
     function getImagesURL(){
