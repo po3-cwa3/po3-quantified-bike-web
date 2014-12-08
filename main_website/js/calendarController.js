@@ -485,7 +485,11 @@ calendarController = (function() {
 
         // Loop through the routes and draw them on the map
         $.each(average.routes, function(index, route) {
-            drawTrip(route,index).setMap(detailsMap);
+
+            var tripsInfo = drawTrip(route,index);
+            $.each(tripsInfo, function(index,tripInfo){
+                tripInfo.setMap(detailsMap)
+            });
 
         });
 
@@ -556,7 +560,7 @@ calendarController = (function() {
     function drawTrip(tripCoordinates,color) {
 
         // Get the last digit to determine the color of the line
-        var digit = color - Math.floor(color/10)*10
+        var digit = color - Math.floor(color/10)*10;
 
         // Create a Google Maps line
         var tripPath = new google.maps.Polyline({
@@ -580,9 +584,21 @@ calendarController = (function() {
             tripPath.strokeColor = '#0000FF'
         }
 
+        // Add begin and end point markers
+        var startMarker = new google.maps.Marker({
+
+            position: tripCoordinates[0],
+            title: "Start"
+        });
+
+        var endMarker = new google.maps.Marker({
+
+            position: tripCoordinates[tripCoordinates.length - 1],
+            title: "End"
+        });
 
 
-        return tripPath;
+        return [tripPath,startMarker,endMarker];
     }
 
 
