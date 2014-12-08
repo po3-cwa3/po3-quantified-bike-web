@@ -311,6 +311,33 @@ dataController = (function() {
                 function validCoordinate(c){
                     return Math.abs(c.lat) > .001 && Math.abs(c.lng) > .001;
                 }
+                function toRadians(num){
+                    return num/180.0*Math.PI;
+                }
+
+                function havDist(lat1, lon1, lat2, lon2){
+                    var R = 6371; // km
+                    var φ1 = toRadians(lat1);
+                    var φ2 = toRadians(lat2);
+                    var Δφ = toRadians(lat2-lat1);
+                    var Δλ = toRadians(lon2-lon1);
+
+                    var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                        Math.cos(φ1) * Math.cos(φ2) *
+                        Math.sin(Δλ/2) * Math.sin(Δλ/2);
+                    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+                    var d = R * c;
+                    return d;
+                }
+                var threshold = 20;
+                function possibleCoordinate(prev, curr, next){
+                    if(prev != null && havDist(prev.lat, prev.lng, curr.lat, curr.lng) > threshold)
+                        return false;
+                    if(next != null && havDist(curr.lat, curr.lng, next.lat, next.lng) > threshold)
+                        return false;
+                    return true;
+                }
                 $.each(gpsDataArray, function(index, gpsData){
 
                     //GPS data is converted to LatLng objects and added to an array for use in google maps API.
@@ -332,7 +359,17 @@ dataController = (function() {
                         var longitudeSingle = gpsData.data[0].coordinates[1];
 
                         var coordinateArraySingle = {lat: latitudeSingle, lng: longitudeSingle};
-                        if(validCoordinate(coordinateArraySingle)){
+                        var prevCoordinate = null;
+                        var nextCoordinate = null;
+                        if(index > 0){
+                            prevCoordinate = gpsDataArray[index-1].data[0].coordinates;
+                            prevCoordinate = {lat:prevCoordinate[0], lng: prevCoordinate[1]};
+                        }
+                        if(index < gpsDataArray.length-1){
+                            nextCoordinate = gpsDataArray[index+1].data[0].coordinates;
+                            nextCoordinate = {lat:nextCoordinate[0], lng:nextCoordinate[1]};
+                        }
+                        if(possibleCoordinate(prevCoordinate, coordinateArraySingle, nextCoordinate)){
                             singleTripCoordinates.push(coordinateArraySingle);
                         }
 

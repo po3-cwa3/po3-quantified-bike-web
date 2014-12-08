@@ -67,12 +67,7 @@ if (!isset($user)) {
 <div class="container">
     <div id="header-loader"></div>
     <div class="content">
-        <!--
-        <nav id ="choose-compare-sort">
-            <a id="trips" class="bp-icon bp-icon-trip " data-info="compare trips"><span>compare trips</span></a>
-            <a id="days"  class="bp-icon bp-icon-day " data-info="compare days"><span>compare days</span></a>
-        </nav>
-        -->
+
 
         <button id="compare-other-trips" class="buttons">choose other trips</button>
         <button id="start_comparing" class="buttons" >compare</button>
