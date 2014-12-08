@@ -14,14 +14,14 @@ body { height: 100%;
 }
 
 div.pictureContainer {
-    width: 505px;
-    height: 325px;
+    width: 500px;
+    height: 384px;
 
 }
 
 img.picture {
-    height: 75%;
-    width: 75%;
+    height: 80%;
+    width: 80%;
     border: 2px solid #47a3da;
 }
 
