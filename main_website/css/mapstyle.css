@@ -4,29 +4,152 @@ html { height: 100% }
 body { height: 100%;
     margin: 0;
     padding: 0;
+    min-width: 800px;
 }
+
 
 .container {height: 100%;
     width: 100%;
+
 }
 
 div.pictureContainer {
-    height: 200px;
-    width: 200px;
+    width: 505px;
+    height: 325px;
+
 }
 
 img.picture {
-    height: 95%;
-    width: 95%;
+    height: 75%;
+    width: 75%;
+    border: 2px solid #47a3da;
 }
 
-#MapCanvas { height: 60% ;
-    width: 70%;
-    border: 1px solid #000000;
-    float:left;
+div.takenOn {
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+    color: #47a3da;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 10px;
+}
+.photoLink{
+    position: relative;
+    width: 250px;
+    left: 10px;
+    top: 10px;
+    border: 5px solid #47a3da;
+    border-radius: 5%;
+    padding: 20px;
+    font-size: 18pt;
+    font-weight: 300;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+    background-color: #47a3da;
+    color: #ffffff;
+
+}
+
+.photoLink:hover {
+    background-color: #ffffff;
+    color: #47a3da;
+    text-decoration: none;
+}
+a.photoLink:link {
+    /*color: blue;*/
+    font-weight: bold;
+    font-size: 15px;
+    padding: 5px;
+}
+
+/*a.photoLink:visited{
+    color: purple;
+}*/
+
+#loadingText {
+    position: absolute;
+    left: 41%;
+}
+
+#pleaseWait {
+    position: absolute;
+    left: 41%;
+}
+
+
+#spinnerContainer {
+
+    height: 160px;
+    width: 380px;
+    border-style: solid;
+    border-width: 2px;
+    position: absolute;
+    background: #ffffff;
+    left: 47%;
+    top: 35%;
+    display: inline;
+}
+
+#clearAll {
+    position: absolute;
+    width: 300px;
+    left: 10px;
+    top: 260px;
+    border: 5px solid #47a3da;
+    border-radius: 5%;
+    padding: 20px;
+    font-size: 18pt;
+    font-weight: 300;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+}
+
+button {
+    background-color: #47a3da;
+    -webkit-appearance: none;
+    color: #ffffff;
+}
+
+button:hover {
+    background-color: #ffffff;
+    color: #47a3da;
+}
+
+#mapContainer {
+    height: 75%;
+    width: 100%;
+    position: relative;
+    left: 0;
+
+}
+
+#calendar {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+#MapCanvas {
+    height: 95% ;
     margin: 0;
     text-align: center;
+    display: inline;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    left: 350px;
 }
+
 #MapOptions { float:left;
     margin: 5px;
+}
+
+#addDay {
+    position: absolute;
+    top: 270px;
+    left: 10px;
+}
+
+#removeDay {
+    position: absolute;
+    top: 295px;
+    left: 10px;
 }

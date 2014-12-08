@@ -38,6 +38,10 @@ if (!isset($user)) {
     <!-- jQuery -->
     <script type="text/javascript" charset="utf8" src="js/jQuery.js"></script>
 
+    <!-- jQuery UI (for datepicker) -->
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<!--    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">-->
+
     <!-- Main Theme JS -->
     <script src="js/main.js"></script>
 
@@ -47,35 +51,60 @@ if (!isset($user)) {
     <!-- Bootstrap JS -->
     <script type="text/javascript" charset="utf8" src="Bootstrap/js/bootstrap.js"></script>
 
+    <!-- Google Maps API -->
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&v=3&libraries=geometry"></script>
+
     <!-- Data Controller JS -->
     <script src="js/dataController.js"></script>
 
     <!-- Compare Controller JS -->
     <script src="js/compare.js"></script>
 
+
+
 </head>
 <body>
 <div class="container">
     <div id="header-loader"></div>
     <div class="content">
-        <div>
-            <h2>choose trips to compare</h2><br>
-            <a id="month">month:</a><br>
-            <select id="select_month" class="select_month"></select>
-            <button id="show_month">select month</button>
-            <br>
-            <p id="day">day:</p>
-            <select id="select_day" class="select_day"></select>
-            <button id="show_day">select day</button>
-            <br>
-            <p id="trip">trip:</p>
-            <select id="select_trip" class="select_trip"></select>
-            <button id="show_trip">select trip</button>
 
-        </div><br><br>
 
-        <button id="start_comparing">compare</button><br>
-        <button id="example">example graph</button>
+        <button id="compare-other-trips" class="buttons">choose other trips</button>
+        <button id="start_comparing" class="buttons" >compare</button>
+        <div id="compare-trips">
+
+
+            <h1 id="enough-entries">You have selected the maximum number of entries, please click on the compare button now</h1>
+
+            <div id ="calendar-1">
+
+
+                <h2>Choose the trips you want to compare, then press 'Compare'.</h2><br>
+
+                <div id="trip_selector">
+
+                    <div id="calendar"></div>
+
+                    <img id="calendar_arrow" src="Images/arrow-alt-right.png"></img>
+
+                    <div id="trip_lister">
+
+                        <ul></ul>
+
+                    </div>
+
+                    <div id="loading_popover">
+
+                        <p class="loading_message">Loading, please wait...</p>
+
+                        <div class="loadingSpinner"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <table id="table_compare" class="table_compare">
             <tr id="elements_to_compare"></tr>
 
@@ -85,10 +114,24 @@ if (!isset($user)) {
 
             <tr id="duration"></tr>
 
-        </table>
 
-        <canvas id="first_chart" width="400" height="400"></canvas>
-        <div id="legend"></div>
+        </table>
+        <div  id="buttons" class="buttons_for_graph">
+            <button id="view_temperature">Temperature</button>
+            <button id="view_humidity">Humidity</button>
+            <button id="view_speed">Speed  </button>
+            <button id="view_heartbeat">Heartbeat </button>
+
+        </div>
+        <canvas id="first_chart" ></canvas>
+        <canvas id="second_chart" ></canvas>
+        <canvas id="speed_chart"  ></canvas>
+        <canvas id="heartbeat_chart"  ></canvas>
+
+
+
+
+
     </div>
 
 </div>

@@ -6,18 +6,36 @@ dataController = (function() {
     function init() {
 
     }
-
+    function getURL(){
+        return "http://dali.cs.kuleuven.be:8443";
+    }
+    function getImagesURL(){
+        return getURL()+"/qbike/images";
+    }
+    function getTripsURL(){
+        return getURL() + "/qbike/trips";
+    }
 
     // Query Methods
 
     function queryURL(url, callback) {
 
         $.ajax({
-            url: "http://dali.cs.kuleuven.be:8080/qbike/trips" + url,
+            //url: "http://dali.cs.kuleuven.be:8443/qbike/trips" + url,
+            url: getTripsURL() + url,
             jsonp: "callback",
             dataType: "jsonp",
+            timeout: 70000
 
-            success: callback
+        }).done(function(data, textStatus, jqXHR) {
+
+            console.log("Query returned successfully with status: " + textStatus);
+            callback(data);
+
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+
+            console.log("Query returned with errors and status: " + textStatus);
+            alert("The server appears to be offline or is currently overloaded. We are sorry for the inconvenience.");
         });
     }
 
@@ -72,13 +90,6 @@ dataController = (function() {
 
         console.log("Querying trips for " + day + "/" + month + "/" + year + ".");
 
-        //queryURL("?groupID=cwa3&fromDate=" + year + "-" + month + "-" + day + "&toDate=" + year + "-" + month + "-" + day, function (json) {
-        //
-        //    console.log("We got " + json.length + " elements for group cwa3 for date " + day + "/" + month + "/" + year + ".");
-        //
-        //    callback(json);
-        //});
-
         queryTripsForPeriod(date, new Date(year, month-1, day+1), function (trips) {
 
             callback(trips);
@@ -120,20 +131,70 @@ dataController = (function() {
         });
     }
 
+    function queryPictureDataForMonth(date, callback) {
+
+        var month = 0;
+        var year = 0;
+
+        // if the date is a number, it just specifies the month
+        if (typeof date == "number") {
+
+            month = date;
+            year = new Date().getFullYear();
+
+            // if the date is a date object it represents a day in the month
+        } else if (typeof date == "object") {
+
+            month = date.getMonth() + 1;
+            year = date.getFullYear();
+        }
+
+        var beginDate = new Date(year, month - 1, 1);
+        var endDate = new Date(year, month, 1);
+
+        queryPictureTripsForPeriod(beginDate, endDate, function (trips) {
+
+            callback(divideAndSetAveragesForPeriod(trips, beginDate, endDate));
+        });
+    }
+
+    function queryPictureTripsForPeriod(beginDate, endDate, callback) {
+
+        var fromDate = "fromDate=" + beginDate.getFullYear() + "-" + (beginDate.getMonth()+1) + "-" + beginDate.getDate();
+        var toDate = "toDate=" + endDate.getFullYear() + "-" + (endDate.getMonth()+1) + "-" + endDate.getDate();
+
+        queryURL("?groupID=cwa3&" + fromDate + "&" + toDate + "&sensorID=8", function (json) {
+
+            console.log("We got " + json.length + " elements for group cwa3 for period beginning " + beginDate + " and ending " + endDate);
+
+            callback(json);
+        });
+    }
+
+    function queryPictureTrips(callback) {
+
+        queryURL("?sensorID=8&groupID=cwa3", function (json) {
+
+            console.log("We got " + json.length + " elements with pictures.");
+            callback(json);
+        })
+    }
+
 
 
     // Division Methods
 
     function divideTripsIntoDays(trips, beginDate, endDate) {
 
-        // we create an array with a space for all days.
+        // we calculate the nr of days to make the return array
         var nrOfDays = nrOfDaysBetweenDates(beginDate, endDate);
-        var returnData = new Array(nrOfDays);
+        var returnData = [];
 
         for (var i = 0; i < nrOfDays; i++) {
 
-            returnData[i] = {trips: []};
+            returnData.push({trips: []});
         }
+
 
         $.each(trips, function (index, trip) {
 
@@ -141,12 +202,13 @@ dataController = (function() {
 
                 var date = new Date(trip.startTime);
 
-                var nrOfDaysFromBeginDate = nrOfDaysBetweenDates(beginDate, date) - 1;
+                var nrOfDaysFromBeginDate = nrOfDaysBetweenDates(beginDate, date);
 
                 if (nrOfDaysFromBeginDate >= 0 && nrOfDaysFromBeginDate < nrOfDays) {
 
                     returnData[nrOfDaysFromBeginDate].trips.push(trip);
                 }
+
             }
         });
 
@@ -160,31 +222,41 @@ dataController = (function() {
     function getAveragesFromTrips(trips) {
 
         var totalDist = 0;
-        var speedReadings = [];
-
         var tempReadings = [];
-
         var humReadings = [];
-
         var tripsCoordinates = [];
+        var heartReadings= [];
+        var accReadings = [];
+        var totalTime = 0;
 
         $.each(trips, function(index, trip) {
 
+            if (trip.hasOwnProperty("startTime") && trip.hasOwnProperty("endTime")) {
+
+                var startTime = new Date(trip.startTime);
+                var endTime = new Date(trip.endTime);
+
+                var difference = endTime.getTime() - startTime.getTime();
+                totalTime = totalTime + difference;
+
+            }
+
+
             if (trip.hasOwnProperty("sensorData")) {
+
+                var gpsDataArray = [];
+                var singleTripCoordinates = [];
+
 
                 $.each(trip.sensorData, function(index, sensorValue) {
 
+
                     switch(sensorValue.sensorID) {
 
-                        // GPS coordinates
-
+                        // GPS
                         case 1:
-
-                            var coordinateArray = convertTripCoToMapCo(sensorValue.data[0].coordinates);
-
-                            tripsCoordinates.push(coordinateArray);
-
-                            break;
+                            console.log(JSON.stringify(sensorValue.data.coordinates));
+                            gpsDataArray.push(sensorValue);
 
                         // Temperature
                         case 3:
@@ -211,59 +283,153 @@ dataController = (function() {
 
                             break;
 
+                        // Acceleration
+                        case 5:
+
+                            var x_acc = sensorValue.data[0].acceleration[0].x;
+                            var y_acc = sensorValue.data[0].acceleration[0].y;
+                            var acceleration = Math.sqrt(Math.pow(x_acc,2) + Math.pow(y_acc,2));
+                            // rekening houden met + of - teken --> versnelling of vertraging dus
+
+                        case 9:
+                            var heart = parseInt(sensorValue.data[0].value);
+
+                            if (!isNaN(heart)) {
+
+                                heartReadings.push(heart);
+                            }
+
+                            break;
+
                         default:
                     }
                 });
-            }
 
-            if (trip.hasOwnProperty("meta") && trip.meta != null) {
+                //GPS data is sorted in case it is not in the correct order
+                gpsDataArray.sort(compareTime);
+                function validCoordinate(c){
+                    return Math.abs(c.lat) > .001 && Math.abs(c.lng) > .001;
+                }
+                function toRadians(num){
+                    return num/180.0*Math.PI;
+                }
 
-                $.each(trip.meta, function(key, metaValue) {
+                function havDist(lat1, lon1, lat2, lon2){
+                    var R = 6371; // km
+                    var φ1 = toRadians(lat1);
+                    var φ2 = toRadians(lat2);
+                    var Δφ = toRadians(lat2-lat1);
+                    var Δλ = toRadians(lon2-lon1);
 
-                    switch(key) {
+                    var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                        Math.cos(φ1) * Math.cos(φ2) *
+                        Math.sin(Δλ/2) * Math.sin(Δλ/2);
+                    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-                        case "distance":
+                    var d = R * c;
+                    return d;
+                }
+                var threshold = 20;
+                function possibleCoordinate(prev, curr, next){
+                    if(prev != null && havDist(prev.lat, prev.lng, curr.lat, curr.lng) > threshold)
+                        return false;
+                    if(next != null && havDist(curr.lat, curr.lng, next.lat, next.lng) > threshold)
+                        return false;
+                    return true;
+                }
+                $.each(gpsDataArray, function(index, gpsData){
 
-                            if (metaValue != null) {
+                    //GPS data is converted to LatLng objects and added to an array for use in google maps API.
+                    //This must be done seperately for the "MultiPoint" and "Point" type of coordinates.
+                    if (gpsData.data[0].type == "MultiPoint") {
 
-                                totalDist += parseInt(metaValue)
+                        $.each(gpsData.data[0].coordinates, function(i, point) {
+
+                            var latitude = point[0];
+                            var longitude = point[1];
+                            var coordinateArray = {lat: latitude, lng: longitude};
+                            if(validCoordinate(coordinateArray)) {
+                                singleTripCoordinates.push(coordinateArray);
                             }
+                        });
 
-                            break;
+                    } else {
+                        var latitudeSingle = gpsData.data[0].coordinates[0];
+                        var longitudeSingle = gpsData.data[0].coordinates[1];
 
-                        case "averageSpeed":
+                        var coordinateArraySingle = {lat: latitudeSingle, lng: longitudeSingle};
+                        var prevCoordinate = null;
+                        var nextCoordinate = null;
+                        if(index > 0){
+                            prevCoordinate = gpsDataArray[index-1].data[0].coordinates;
+                            prevCoordinate = {lat:prevCoordinate[0], lng: prevCoordinate[1]};
+                        }
+                        if(index < gpsDataArray.length-1){
+                            nextCoordinate = gpsDataArray[index+1].data[0].coordinates;
+                            nextCoordinate = {lat:nextCoordinate[0], lng:nextCoordinate[1]};
+                        }
+                        if(possibleCoordinate(prevCoordinate, coordinateArraySingle, nextCoordinate)){
+                            singleTripCoordinates.push(coordinateArraySingle);
+                        }
 
-                            if (metaValue != null) {
-
-                                speedReadings.push(parseInt(metaValue));
-                            }
-
-                            break;
                     }
+
                 });
+
+                //Each single trip (an array of objects) is added to the array of (multiple) trips
+                tripsCoordinates.push(singleTripCoordinates);
+
+                for (var i = 1 ; i < singleTripCoordinates.length ; i++) {
+
+                    var point1 = singleTripCoordinates[i-1];
+                    var point2 = singleTripCoordinates[i];
+
+                    point1 = new google.maps.LatLng(point1.lat,point1.lng);
+                    point2 = new google.maps.LatLng(point2.lat,point2.lng);
+
+                    var distance = google.maps.geometry.spherical.computeDistanceBetween(point1, point2);
+
+                    totalDist += distance;
+                }
+
             }
         });
 
 
-        var avSpeed = arrayAverage(speedReadings)
+
         var avTemp = arrayAverage(tempReadings);
         var avHum = arrayAverage(humReadings);
 
-        var average = {
+        var avSpeed = "No Readings";
+        if (totalTime != 0 && totalDist != 0) {
+            avSpeed = (totalDist / (totalTime.valueOf() / 1000.0)) * 3.6;
+        }
+
+        //totalTime = totalTime.valueOf();
+
+        return {
             totalDistance: totalDist,
             averageSpeed: avSpeed,
+            totalTime: totalTime/1000.0,
             averageTemperature: avTemp,
             averageHumidity: avHum,
             nrOfTrips: trips.length,
-            routes: tripsCoordinates
+            routes: tripsCoordinates,
+            temparature: tempReadings,
+            humidity: humReadings,
+            heart: heartReadings
         };
-
-        return average;
     }
 
     function divideAndSetAveragesForPeriod(trips, beginDate, endDate) {
 
+        console.log("trips:");
+        console.log(trips);
+
         var dividedTrips = divideTripsIntoDays(trips, beginDate, endDate);
+
+        console.log("dividedTrips:");
+        console.log(dividedTrips);
 
         $.each(dividedTrips, function (index, day) {
 
@@ -307,36 +473,37 @@ dataController = (function() {
 
         var difference = Math.abs(date1.valueOf() - date2.valueOf());
 
-        var nrOfDays = Math.round(difference / (1000 * 60 * 60 * 24));
+        var nrOfDays = Math.floor(difference / (1000 * 60 * 60 * 24));
 
         return nrOfDays;
     }
 
+
     // Map Methods
 
-    function convertTripCoToMapCo(coordinates) {
+    function compareTime(data1, data2) {
 
-        var coordinateArray = [];
+        var time1 = new Date(data1.timestamp);
+        var time2 = new Date(data2.timestamp);
 
-        $.each(coordinates, function(index, position){
-
-            var lattitude = position[0];
-            var longitude = position[1];
-            var coordinatesObject = {lat: lattitude, lng: longitude};
-
-            coordinateArray.push(coordinatesObject)
-        });
-
-        coordinateArray.push({lat: 50.864, lng: 4.679})
-        return coordinateArray;
+        if (time1 < time2){
+            return -1;
+        }
+        if (time1 > time2){
+            return 1;
+        }
+        return 0;
     }
-
 
 
 
 
     return {
         init: init,
+
+        getURL: getURL,
+        getImagesURL: getImagesURL,
+        getTripsURL: getTripsURL,
 
         queryURL: queryURL,
         queryTripWithID: queryTripWithID,
@@ -348,6 +515,10 @@ dataController = (function() {
         queryDataForDay: queryDataForDay,
         queryDataForMonth: queryDataForMonth,
 
+        queryPictureTripsForPeriod: queryPictureTripsForPeriod,
+        queryPictureDataForMonth: queryPictureDataForMonth,
+        queryPictureTrips: queryPictureTrips,
+
         divideTripsIntoDays: divideTripsIntoDays,
 
         getAveragesFromTrips: getAveragesFromTrips,
@@ -357,7 +528,7 @@ dataController = (function() {
         round: round,
         nrOfDaysBetweenDates: nrOfDaysBetweenDates,
 
-        convertTripCoToMapCo: convertTripCoToMapCo
+        compareTime: compareTime
     };
 
 })();

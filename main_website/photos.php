@@ -4,7 +4,7 @@ require('login/session.php');
 
 if (!isset($user)) {
 
-    header('Location: login/loginForm.php?from=' . urlencode('../maps.php'));
+    header('Location: login/loginForm.php?from=' . urlencode('../photos.php'));
     exit();
 
 }
@@ -33,10 +33,17 @@ if (!isset($user)) {
     <script type="text/javascript" charset="utf8" src="js/jQuery.js"></script>
     <script src="js/main.js"></script>
     <script src="js/mapscript.js"></script>
+
+    <!-- jQuery UI (for datepicker) -->
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+
+    <!-- Google Maps API -->
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&v=3&libraries=geometry"></script>
+
     <!-- Google Maps -->
-    <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4SUA1W38uRk2aigX5gHDug9SNgndHnNw">
-    </script>
+<!--    <script type="text/javascript"-->
+<!--            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4SUA1W38uRk2aigX5gHDug9SNgndHnNw">-->
+<!--    </script>-->
 
     <!-- Bootstrap JS -->
     <script type="text/javascript" charset="utf8" src="Bootstrap/js/bootstrap.js"></script>
@@ -47,12 +54,21 @@ if (!isset($user)) {
 <body>
 <div class="container">
     <div id="header-loader"></div>
-    <div>
-        this is the maps view.
+    <div id="mapContainer">
+        <div id="calendar"></div>
+        <button id="clearAll">Clear all pictures</button>
+        <div id="MapCanvas">
+        </div>
+        <div id="spinnerContainer" >
+            <br>
+            <p id="loadingText">Loading data...</p>
+            <div class="loadingSpinner" style="display: block"></div>
+            <p id="pleaseWait" class="loadingText">Please wait</p>
+        </div>
     </div>
-    <div id="MapCanvas">
-    </div>
-    <!--laat alles hieronder staan-->
+
+
+
 
 </div>
 </body>

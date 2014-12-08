@@ -1,9 +1,10 @@
 <?php
 
 require('userClass.php');
+require('AccountsDB.php');
 
 // This is how long the session will live
-$sessionTime = 100; // seconds
+$sessionTime = 60*60*4; // seconds
 
 // Set the session name
 session_name('qbLogin');

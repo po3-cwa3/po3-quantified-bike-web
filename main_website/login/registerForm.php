@@ -32,23 +32,23 @@ if (isset($_GET['from'])) {
 </head>
 <body>
 
-    <div id="login">
+<div id="login">
 
-        <p id="errorMessage"><?php echo $message ?></p>
+    <p id="errorMessage"><?php echo $message ?></p>
 
-        <h1>Please fill in your login info:</h1>
+    <h1>Please choose a username and password.</h1>
 
-        <form id="loginForm" action="login.php<?php echo $from ?>" method="post">
+    <form id="registerForm" action="register.php<?php echo $from ?>" method="post">
 
-            <input type="text" name="username" placeholder="Username">
-            <input type="password" name="password" placeholder="Password">
-            <input type="submit" value="Login">
+        <input type="text" name="username" placeholder="Username">
+        <input type="password" name="password" placeholder="Password">
+        <input type="submit" value="Register">
 
-        </form>
+    </form>
 
-        <a href="registerForm.php">Don't have an account yet?</a>
+    <a href="loginForm.php">Already have an account?</a>
 
-    </div>
+</div>
 
 </body>
 </html>

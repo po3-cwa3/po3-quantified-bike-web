@@ -45,7 +45,7 @@ body {
 #content {
     min-width: 850px;
     width: 100%;
-    padding-top: 10px;
+    padding-top: 0;
     overflow: scroll;
 }
 
@@ -142,12 +142,20 @@ body {
     background-color: #ededed;
 }
 
+#calendarTable td.activeCell {
+    background-color: #d9d9d9;
+}
+
 #calendarTable .dayNumber {
     position: relative;
     top: 0px;
     right: 0px;
     text-align: right;
     font-size: 18pt;
+}
+
+#calendarTable .noTripsPresent {
+    color: lightgray;
 }
 
 #calendarTable .avSpeed {
