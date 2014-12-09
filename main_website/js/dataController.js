@@ -82,6 +82,21 @@ dataController = (function() {
         });
     }
 
+    function fixTrip(trip){
+
+        if(trip.endTime == trip.startTime){
+            if(trip.hasOwnProperty("sensorData")){
+                console.log("has own property!");
+                $.each(trip.sensorData, function(index, sensorValue){
+                    if(new Date(sensorValue.timestamp) > new Date(trip.endTime)){
+                        //endTime = new Date(sensorValue.timestamp);
+                        trip.endTime = sensorValue.timestamp;
+                    }
+                });
+            }
+        }
+    }
+
     function queryTripsForDay(date, callback) {
 
         var year = date.getFullYear();
@@ -230,7 +245,7 @@ dataController = (function() {
         var totalTime = 0;
 
         $.each(trips, function(index, trip) {
-
+            fixTrip(trip);
             if (trip.hasOwnProperty("startTime") && trip.hasOwnProperty("endTime")) {
 
                 var startTime = new Date(trip.startTime);
