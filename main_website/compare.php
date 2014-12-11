@@ -61,7 +61,7 @@ if (!isset($user)) {
     <script src="js/dataController.js"></script>
 
     <!-- Compare Controller JS -->
-    <script src="js/compare.js"></script>
+    <script src="js/compareController.js"></script>
 
 
 

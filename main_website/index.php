@@ -42,7 +42,7 @@ if (!isset($user)) {
         <script src="js/main.js"></script>
 
         <!-- Index JS -->
-        <script src="js/index.js"></script>
+        <script src="js/indexController.js"></script>
 
 	</head>
 	<body>
