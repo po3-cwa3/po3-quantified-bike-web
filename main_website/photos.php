@@ -32,7 +32,7 @@ if (!isset($user)) {
     <link rel="stylesheet" type="text/xss" href="css/mapstyle.css" />
     <script type="text/javascript" charset="utf8" src="js/jQuery.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/mapscript.js"></script>
+    <script src="js/photosController.js"></script>
 
     <!-- jQuery UI (for datepicker) -->
     <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
