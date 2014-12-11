@@ -49,7 +49,7 @@ if (!isset($user)) {
     <script src="js/ChartNew.js"></script>
 
     <!-- Bootstrap JS -->
-    <script type="text/javascript" charset="utf8" src="Bootstrap/js/bootstrap.js"></script>
+    <!-- <script type="text/javascript" charset="utf8" src="Bootstrap/js/bootstrap.js"></script> -->
 
     <!-- Google Maps API -->
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&v=3&libraries=geometry"></script>

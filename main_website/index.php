@@ -36,7 +36,7 @@ if (!isset($user)) {
         <script type="text/javascript" charset="utf8" src="js/jQuery.js"></script>
 
         <!-- Bootstrap JS -->
-        <script type="text/javascript" charset="utf8" src="Bootstrap/js/bootstrap.js"></script>
+        <!-- <script type="text/javascript" charset="utf8" src="Bootstrap/js/bootstrap.js"></script> -->
 
         <!-- Main JS -->
         <script src="js/main.js"></script>

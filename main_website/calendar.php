@@ -53,7 +53,7 @@ if (!isset($user)) {
         </script>
 
         <!-- Bootstrap JS -->
-        <script type="text/javascript" charset="utf8" src="Bootstrap/js/bootstrap.js"></script>
+        <!-- <script type="text/javascript" charset="utf8" src="Bootstrap/js/bootstrap.js"></script> -->
 
         <!-- Data Controller JS -->
         <script src="js/dataController.js"></script>

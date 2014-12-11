@@ -128,6 +128,7 @@ compareController = (function() {
             $("#heartbeat_chart").slideUp("fast");
 
             // after the graph has been drawn, the page scrolls to the bottom of the page, so that the user can easily see the graph.
+
             setTimeout(function(){
                 window.scrollTo(0,document.body.scrollHeight);
             },200)
@@ -571,7 +572,7 @@ compareController = (function() {
             var begin = pad(startTime.getHours(), 2) + ":" + pad(startTime.getMinutes(), 2);
             var end = pad(endTime.getHours(), 2) + ":" + pad(endTime.getMinutes(), 2);
 
-            tripLister.append("<li datum='"+startTime+"' index='" + index + "'  trip_id='" + trip._id + "'>" + begin + "  tot  " + end + "</li>");
+            tripLister.append("<li datum='"+startTime+"' index='" + index + "'  trip_id='" + trip._id + "'>" + begin + "  until  " + end + "</li>");
         });
 
         // Once the new items have been added to the lister ul, set the click function for these items
