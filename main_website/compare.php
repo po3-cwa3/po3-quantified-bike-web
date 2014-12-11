@@ -48,6 +48,9 @@ if (!isset($user)) {
     <!-- chart JS -->
     <script src="js/ChartNew.js"></script>
 
+    <!-- jQuery ScrollTo JS -->
+    <script src="ScrollTo plugin/jquery-scrollto.js"></script>
+
     <!-- Bootstrap JS -->
     <!-- <script type="text/javascript" charset="utf8" src="Bootstrap/js/bootstrap.js"></script> -->
 
