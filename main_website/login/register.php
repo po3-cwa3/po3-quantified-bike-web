@@ -1,10 +1,10 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set( 'display_errors','1');
-
+// Setup the session
 require('session.php');
 
+// If the user object is still set, destroy the session and unset the user
+// Then redirect to the register form with an appropriate error
 if (isset($user)) {
 
     session_destroy();
@@ -23,16 +23,21 @@ if (!isset($_POST['username']) || !isset($_POST['password'])) {
 $username = $_POST['username'];
 $password = $_POST['password'];
 
+// Prepare the SQL query
 $sql = <<<EOF
 SELECT username FROM accounts WHERE username = "$username";
 EOF;
 
+// Execute the query
 $ret = $db->query($sql);
 
+// Fetch the database user if there is one
 $databaseUser = $ret->fetchArray(SQLITE3_ASSOC);
 
+// Initialise a variable that says whether the username is still free
 $free = false;
 
+// If there is no database user, the username is still free
 if (!$databaseUser) {
     $free = true;
 }
@@ -43,12 +48,15 @@ if (!$free) {
     notAuthorised("The given username is no longer available.");
 }
 
+// Perpare the register SQL query
 $sql = <<<EOF
 INSERT INTO accounts (username, password) VALUES ("$username", "$password");
 EOF;
 
+// Execute the query
 $ret = $db->exec($sql);
 
+// If the the query failed, redirect to the register form with an appropriate error
 if (!$ret) {
 
     notAuthorised('We are very sorry. An error occurred during data entry. Please try again.');
@@ -64,12 +72,13 @@ $user->password = $password;
 // set the session User object to the one we just created
 $_SESSION['user'] = $user;
 
+// Check whether there is a specific page given to redirect to
 $to = "../index.php";
 if (isset($_GET['to'])) {
     $to = $_GET['to'];
 }
 
-// redirect to index.php
+// redirect
 header('Location: ' . $to);
 
 

@@ -1,10 +1,11 @@
 <?php
 
+// Import the user class and the accounts database
 require('userClass.php');
 require('AccountsDB.php');
 
 // This is how long the session will live
-$sessionTime = 60*60*4; // seconds
+$sessionTime = 60*60*4; // seconds -> 4 hours
 
 // Set the session name
 session_name('qbLogin');

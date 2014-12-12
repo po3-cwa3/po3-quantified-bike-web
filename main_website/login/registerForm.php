@@ -1,11 +1,13 @@
 <?php
 
+// See whether ther is a message set to display
 $message = "";
 
 if (isset($_GET['msg'])) {
     $message = $_GET['msg'];
 }
 
+// See whether there is a specific page set to which the register should redirect
 $from = "";
 
 if (isset($_GET['from'])) {

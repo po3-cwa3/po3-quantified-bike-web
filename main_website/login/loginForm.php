@@ -1,11 +1,13 @@
 <?php
 
+// See whether there is a message set to display
 $message = "";
 
 if (isset($_GET['msg'])) {
     $message = $_GET['msg'];
 }
 
+// See whether there is a specific page set where the login should redirect to
 $from = "";
 
 if (isset($_GET['from'])) {

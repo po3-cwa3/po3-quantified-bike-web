@@ -3,18 +3,32 @@
 calendarController = (function() {
 
     // Class Variables
+
+    // Stores the currently selected cell
     var selectedCell;
 
+    // Stores the current month
     var month = new Date();
+
+    // Stores the current month data
     var monthData = [];
+
+    // Stores the current maxAverage, to calculate the height of the bars in the calendar
     var maxAverage = {};
 
+    // Stores the currently selected option of the calendar, this option determines what average value should be used for the bars
     var barOption;
 
+    // Stores the Google Maps instance for the details view
     var detailsMap;
 
+    // Used to convert numbers 0-11 to months January-December
     var monthArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+
+    // Formatters
+
+    // A formatter to format a number with a certain accuracy
     var AccuracyFormatter = function(postfix, accuracy){
         this.accuracy = accuracy;
         this.postfix = postfix;
@@ -22,6 +36,8 @@ calendarController = (function() {
     AccuracyFormatter.prototype.format = function(data){
         return round(data, this.accuracy) + this.postfix;
     };
+
+    // A formatter to format time in hours, minutes and seconds
     var TimeFormatter = function(accuracy){
         this.accuracy = accuracy;
     };
@@ -40,6 +56,8 @@ calendarController = (function() {
         str += s + " s";
         return str;
     };
+
+    // A formatter to format distance in kilometers and meters
     var DistanceFormatter = function(accuracy){
         this.accuracy = accuracy;
     };
@@ -53,6 +71,9 @@ calendarController = (function() {
         str += m + " m";
         return str;
     };
+
+    // A formatter to format units with different postfixes for 1 item or multiple items
+    // -> 1 "trip", multiple "trips"
     var UnitFormatter = function(single_postfix, multiple_postfix){
         this.single_postfix = single_postfix;
         this.multiple_postfix = multiple_postfix;
@@ -63,8 +84,12 @@ calendarController = (function() {
         }else{
             return amount + this.multiple_postfix;
         }
-    }
+    };
 
+    // Stores the different properties used in the calendar
+    // -> prop: defines the properties name in the average object, ex: average.nrOfTrips
+    // -> title: defines the title to be used in the bar option selector and the details view
+    // -> formatter: defines the formatter to be used for the property
     var propertiesInDetailsView = [
         {prop: "nrOfTrips", title: "Nr. of trips", formatter:new UnitFormatter(" trip", " trips")},
         {prop: "averageSpeed", title: "Average Speed", formatter: new AccuracyFormatter(" km/h", 2)},
@@ -74,6 +99,7 @@ calendarController = (function() {
         {prop: "averageHumidity", title: "Average Humidity", formatter: new AccuracyFormatter(" %", 0)}
     ];
 
+    // Stores the message to be displayed when a property has no readings
     var noReadingsMessage = "No Readings";
 
 
@@ -326,7 +352,7 @@ calendarController = (function() {
             month = diff;
         }
 
-        // if this is the current month, disable the next month button (otherwise you could look into the future)
+        // if this is the current month, disable the next month button (otherwise the user could look into the future :))
         if (month.getMonth() == new Date().getMonth()) {
 
             $('#next_month').css({
@@ -479,27 +505,11 @@ calendarController = (function() {
             // Add the div that holds the value
             divHTML += '<span class="averageDivValue">';
 
-            var roundedValue;
-
-            // If the property is numeric, round it using the accuracy from the properties array
-            // If the property is a string, just use the string
-            //if (property.prop != "totalTime") {
-
-                //roundedValue = round(average[property.prop], property.accuracy);
-            roundedValue = property.formatter.format(average[property.prop]);
-
-            //} else {
-
-            //    roundedValue = average[property.prop] / 1000.0;
-            //}
+            // Format the value
+            var formattedValue = property.formatter.format(average[property.prop]);
 
             // Add the value
-            divHTML += roundedValue;
-
-            // If there is a reading present, add the postfix from the properties array
-            /*if (roundedValue != noReadingsMessage) {
-                divHTML += property.postfix;
-            }*/
+            divHTML += formattedValue;
 
             // Close the value span
             divHTML += '</span>';
@@ -562,39 +572,23 @@ calendarController = (function() {
         // Initialise the map on the detailsMapCanvas and assign it to the detailsMap variable
         detailsMap = new google.maps.Map(document.getElementById("detailsMapCanvas"),
             detailsMapOptions);
-    }
-
-
-    // This method is used to calculate the average value from an array of values
-    // When there are no values present null is returned
-    function arrayAverage(array) {
-
-        if (array.length == 0) {
-            return null;
-        }
-
-        var total = 0.0;
-
-        $.each(array, function(index, element) {
-
-            total += element;
-        });
-
-        return total/array.length;
-    }
 
 
     // This method is used to round a number to a given accuracy
     // If the given number is not a number, the noReadingsMessage is returned
     function round(number, accuracy) {
 
+        // The number has to be of type number
         if (typeof number == "number") {
 
+            // Define a helper variable rounder
             var rounder = Math.pow(10, accuracy);
 
+            // Round the actual value using rounder
             return Math.round(number * rounder) / rounder;
         }
 
+        // If the number is not a number, return the noReadingsMessage
         return noReadingsMessage;
     }
 

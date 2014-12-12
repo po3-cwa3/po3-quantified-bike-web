@@ -1,7 +1,10 @@
 <?php
 
+// Setup the session
 require('session.php');
 
+// If the user is still set, destroy the session and unset the user
+// Then go back to the login page with a given error
 if (isset($user)) {
 
     session_destroy();
@@ -20,18 +23,23 @@ if (!isset($_POST['username']) || !isset($_POST['password'])) {
 $username = $_POST['username'];
 $password = $_POST['password'];
 
+// Prepare the SQL query
 $sql = <<<EOF
 SELECT id, username, password FROM accounts WHERE username = "$username";
 EOF;
 
+// Execute the query
 $ret = $db->query($sql);
 
+// Get the database user
 $databaseUser = $ret->fetchArray(SQLITE3_ASSOC);
 
+// If there is no database user, there is no account with the given username
 if (!$databaseUser) {
 
     notAuthorised("There is no account with the given username.");
 
+    // If there is a user with the given username, check whether the password is correct
 } else if ($databaseUser['password'] != $password) {
 
     notAuthorised("The given password was incorrect.");
@@ -47,12 +55,13 @@ $user->id = $databaseUser['id'];
 // set the session User object to the one we just created
 $_SESSION['user'] = $user;
 
+// See whether there is a specific page set to redirect to
 $to = "../index.php";
 if (isset($_GET['to'])) {
     $to = $_GET['to'];
 }
 
-// redirect to index.php
+// redirect
 header('Location: ' . $to);
 
 
