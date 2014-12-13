@@ -572,6 +572,7 @@ calendarController = (function() {
         // Initialise the map on the detailsMapCanvas and assign it to the detailsMap variable
         detailsMap = new google.maps.Map(document.getElementById("detailsMapCanvas"),
             detailsMapOptions);
+    }
 
 
     // This method is used to round a number to a given accuracy
@@ -664,7 +665,6 @@ calendarController = (function() {
         queryDetailsForDay: queryDetailsForDay,
         initDetailsMap: initDetailsMap,
 
-        arrayAverage: arrayAverage,
         round: round,
 
         drawTrip: drawTrip
