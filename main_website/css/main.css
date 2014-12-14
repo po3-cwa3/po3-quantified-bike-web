@@ -42,6 +42,11 @@ h3 {
 	text-transform: uppercase;
 }
 
+h2{
+    text-transform: uppercase;
+    font-size: 17px;
+}
+
 a {
 	color: #f0f0f0;
 	text-decoration: none;
@@ -51,6 +56,9 @@ a:hover {
 	color: #000;
 }
 
+i {
+    font-style: italic;
+}
 
 /* General Technologies */
 
@@ -249,6 +257,7 @@ a:hover {
 .bp-icon-about:after {
 	content: "\f002";
 }
+
 
 .bp-icon-bicycle:after {
 	content: "\f206";
@@ -638,4 +647,63 @@ a:hover {
 
 .ui-datepicker-calendar td a {
     text-align: center;
+}
+
+.HelpFrontPage{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width:300px;
+    height: auto;
+}
+
+.HelpQuestion{
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    width: 250px;
+    height: auto;
+
+}
+
+.HelpQuestion1{
+    float: right;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    width: 250px;
+    height: auto;
+}
+
+.Questionmark{
+    float: left;
+}
+
+#about-us p {
+
+    display: inline-block;
+}
+
+/* buttons */
+
+
+button {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 300px;
+    background-color: #47a3da;
+    -webkit-appearance: none;
+    color: #ffffff;
+    border: 5px solid #47a3da;
+    border-radius: 5%;
+    padding: 20px;
+    font-size: 18pt;
+    font-weight: 300;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+
+}
+
+button:hover {
+    background-color: #ffffff;
+    color: #47a3da;
 }
