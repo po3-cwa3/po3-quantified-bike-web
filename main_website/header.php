@@ -111,7 +111,7 @@ if (isset($user)) {
          to keep the photo, you can click on 'view full size' and then save the picture in a folder containing all the nice pictures you have taken during
          your biking adventures. </p>
 
-         <button id="CloseAboutUs">close</button>
+         <button class="helpbutton" id="CloseAboutUs">close</button>
 
     </section>
 
@@ -134,7 +134,7 @@ if (isset($user)) {
         <p> LED "Connection": Green if an internet connection is available (needed for batch uploads and live trips). Off if no internet connection is available. </p>
         <p> LED "Live/Batch": Red if new trips will be started in live mode. Off if new trips will be started in batch mode (all data will be collected on the device and sent to the remote server using the batch upload button). </p>
 
-        <button id="CloseAboutDevice">close</button>
+        <button class='helpbutton" id="CloseAboutDevice">close</button>
 
     </section>
 

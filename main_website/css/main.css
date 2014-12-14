@@ -686,7 +686,7 @@ i {
 /* buttons */
 
 
-button {
+.helpbutton {
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -703,7 +703,7 @@ button {
 
 }
 
-button:hover {
+.helpbutton:hover {
     background-color: #ffffff;
     color: #47a3da;
 }
