@@ -453,7 +453,7 @@ mapController = ( function () {
                     dateTaken +
                     '</div>'+
                     '<a class="photoLink" id="photo" target="_blank" href=' + myData[i][0] + '>'+
-                    'view full size.'+
+                    'View full size'+
                     '</a>'+
                     '</div>';
 
