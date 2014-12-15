@@ -120,10 +120,12 @@ if (isset($user)) {
         <h3>about the device</h3>
         <p>The Boss device is a user-friendly, nice looking device. We believe everyone must be able to use this device,
         that's why we created a device that's easily put on your bike. We made use of the innovative Arduino and Raspberry Pi
-        software, to make sure you get the best experience possible while riding your bike.</p><br>
+        software, to make sure you get the best experience possible while riding your bike.</p>
+
         <p> The device is easy to use. When looking at it, you will see a wooden plate containing a lot of buttons.
         each of these buttons has its own use. Below you can find a more detailed explanation. </p>
         <p> when you start the device, it will take a few seconds for the device to start up. </p>
+        <img id="helpdevice" src="Images/bossdevice.png"></img>
         <p> Button "Take Picture": When pressed during an active trip, a picture is taken (Picture LED should be blue). When finished, the Picture LED should be green for some time.</p>
         <p> Button "Live/Batch": Toggle wether the data should be sent directly to the remote server or stored in the local database. When you're making a trip, this button should be switched to 'batch upload', since you won't have an internet connection during your trip. </p>
         <p>Button "Batch upload": When pressed (if an active internet connection is available), all the data you stored during your trip will be sent to the server, meaning you are now able to look at your trips on this site. </p>
