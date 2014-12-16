@@ -84,7 +84,9 @@ dataController = (function() {
         var fromDate = "fromDate=" + beginDate.getFullYear() + "-" + (beginDate.getMonth()+1) + "-" + beginDate.getDate();
         var toDate = "toDate=" + endDate.getFullYear() + "-" + (endDate.getMonth()+1) + "-" + endDate.getDate();
 
-        queryURL("?groupID=cwa3&" + fromDate + "&" + toDate, function (json) {
+        var groupID = encodeURIComponent(global_user.user_id);
+
+        queryURL("?groupID=" + groupID + "&" + fromDate + "&" + toDate, function (json) {
 
             console.log("We got " + json.length + " elements for group cwa3 for period beginning " + beginDate + " and ending " + endDate);
 
@@ -222,8 +224,10 @@ dataController = (function() {
         var fromDate = "fromDate=" + beginDate.getFullYear() + "-" + (beginDate.getMonth()+1) + "-" + beginDate.getDate();
         var toDate = "toDate=" + endDate.getFullYear() + "-" + (endDate.getMonth()+1) + "-" + endDate.getDate();
 
+        var groupID = encodeURIComponent(global_user.user_id);
+
         // Query the url with the sesorID=8 specification
-        queryURL("?groupID=cwa3&" + fromDate + "&" + toDate + "&sensorID=8", function (json) {
+        queryURL("?groupID=" + groupID + "&" + fromDate + "&" + toDate + "&sensorID=8", function (json) {
 
             console.log("We got " + json.length + " elements for group cwa3 for period beginning " + beginDate + " and ending " + endDate);
 
@@ -234,7 +238,9 @@ dataController = (function() {
     // This function is meant to get all trips with pictures
     function queryPictureTrips(callback) {
 
-        queryURL("?sensorID=8&groupID=cwa3", function (json) {
+        var groupID = encodeURIComponent(global_user.user_id);
+
+        queryURL("?sensorID=8&groupID=" + groupID, function (json) {
 
             console.log("We got " + json.length + " elements with pictures.");
             callback(json);

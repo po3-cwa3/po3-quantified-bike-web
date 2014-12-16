@@ -27,11 +27,20 @@ if (!isset($user)) {
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="Bootstrap/css/bootstrap.css">
 
+    <!-- Main CSS -->
     <link rel="stylesheet" type="text/css" href="css/main.css" />
     <link rel="stylesheet" type="text/css" href="css/component.css" />
+
+    <!-- Map CSS -->
     <link rel="stylesheet" type="text/xss" href="css/mapstyle.css" />
+
+    <!-- jQuery -->
     <script type="text/javascript" charset="utf8" src="js/jQuery.js"></script>
+
+    <!-- Main JS -->
     <script src="js/main.js"></script>
+
+    <!-- PhotosController JS -->
     <script src="js/photosController.js"></script>
 
     <!-- jQuery UI (for datepicker) -->
@@ -40,15 +49,16 @@ if (!isset($user)) {
     <!-- Google Maps API -->
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&v=3&libraries=geometry"></script>
 
-    <!-- Google Maps -->
-<!--    <script type="text/javascript"-->
-<!--            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4SUA1W38uRk2aigX5gHDug9SNgndHnNw">-->
-<!--    </script>-->
-
-    <!-- Bootstrap JS -->
-    <!-- <script type="text/javascript" charset="utf8" src="Bootstrap/js/bootstrap.js"></script> -->
-
+    <!-- DataController JS -->
     <script src="js/dataController.js"></script>
+
+    <!-- JS for setting user variables -->
+    <script>
+        var global_user = {};
+        global_user.user_id = "<?php echo $user->user_id ?>";
+        global_user.username = "<?php echo $user->username ?>";
+        global_user.id = "<?php echo $user->id ?>";
+    </script>
 
 </head>
 <body>

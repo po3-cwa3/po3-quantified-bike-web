@@ -25,7 +25,7 @@ $password = $_POST['password'];
 
 // Prepare the SQL query
 $sql = <<<EOF
-SELECT id, username, password FROM accounts WHERE username = "$username";
+SELECT id, username, password, user_id FROM accounts WHERE username = "$username";
 EOF;
 
 // Execute the query
@@ -51,6 +51,7 @@ $user = new User();
 $user->username = $username;
 $user->password = $password;
 $user->id = $databaseUser['id'];
+$user->user_id = $databaseUser['user_id'];
 
 // set the session User object to the one we just created
 $_SESSION['user'] = $user;

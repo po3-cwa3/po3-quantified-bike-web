@@ -1,7 +1,9 @@
 <?php
 
+// Setup the session
 require('login/session.php');
 
+// If there is no user logged in, redirect to the login page
 if (!isset($user)) {
 
     header('Location: login/loginForm.php?from=' . urlencode('../calendar.php'));
@@ -54,6 +56,14 @@ if (!isset($user)) {
 
         <!-- Data Controller JS -->
         <script src="js/dataController.js"></script>
+
+        <!-- JS for setting user variables -->
+        <script>
+            var global_user = {};
+            global_user.user_id = "<?php echo $user->user_id ?>";
+            global_user.username = "<?php echo $user->username ?>";
+            global_user.id = "<?php echo $user->id ?>";
+        </script>
 
         <!-- Calendar Controller JS -->
         <script src="js/calendarController.js"></script>

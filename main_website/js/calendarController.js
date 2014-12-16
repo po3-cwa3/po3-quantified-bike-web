@@ -2,6 +2,8 @@
 
 calendarController = (function() {
 
+    console.log(global_user);
+
     // Class Variables
 
     // Stores the currently selected cell

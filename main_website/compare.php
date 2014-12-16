@@ -60,6 +60,14 @@ if (!isset($user)) {
     <!-- Data Controller JS -->
     <script src="js/dataController.js"></script>
 
+    <!-- JS for setting user variables -->
+    <script>
+        var global_user = {};
+        global_user.user_id = "<?php echo $user->user_id ?>";
+        global_user.username = "<?php echo $user->username ?>";
+        global_user.id = "<?php echo $user->id ?>";
+    </script>
+
     <!-- Compare Controller JS -->
     <script src="js/compareController.js"></script>
 

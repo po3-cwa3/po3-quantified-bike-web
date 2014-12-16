@@ -1,7 +1,9 @@
 <?php
 
+// Setup the session
 require('login/session.php');
 
+// Check whether there is a user logged in, otherwise redirect to the login page
 if (!isset($user)) {
 
     header('Location: login/loginForm.php?from=' . urlencode('../index.php'));

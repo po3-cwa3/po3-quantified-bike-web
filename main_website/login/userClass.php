@@ -6,6 +6,7 @@ class User {
     public $username = "";
     public $password = "";
     public $id = 0;
+    public $user_id = "cwa3";
 }
 
 ?>
