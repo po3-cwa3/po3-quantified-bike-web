@@ -1,3 +1,3 @@
 po3-quantified-bike-web
 =======================
-<a href='http://www.jorestha.be/peno/'>Demo website</a>
+<a href='http://quantibike.000space.com'>Demo website</a>
