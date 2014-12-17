@@ -394,7 +394,7 @@ compareController = (function() {
         } else if ( sort == "speed"){
             options.graphTitle = "speed during the trip";
             options.yAxisLabel = "speed";
-            options.yAxisUnit = "m/s";
+            options.yAxisUnit = "kmph";
         } else if (sort =="heart"){
             options.graphTitle = "heartbeat during the trip";
             options.yAxisLabel = "heartbeats";
@@ -672,7 +672,7 @@ compareController = (function() {
             var total_distance = distances.reduce(function(a, b) { return a + b });
             // calculate interval between trips
             var interval = duration_of_trips[index]/total_length;
-            var speed = distances.map(function(x) {return x/ interval;});
+            var speed = distances.map(function(x) {return x/ interval*3.6;});
         } else {
             var speed = [];
             var total_distance = 0;
