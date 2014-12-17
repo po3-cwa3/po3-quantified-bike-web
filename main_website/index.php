@@ -43,9 +43,6 @@ if (!isset($user)) {
         <!-- Main JS -->
         <script src="js/main.js"></script>
 
-        <!-- Index JS -->
-        <script src="js/indexController.js"></script>
-
 	</head>
 	<body>
 		<div class="container">
