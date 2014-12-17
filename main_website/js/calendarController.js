@@ -36,6 +36,10 @@ calendarController = (function() {
         this.postfix = postfix;
     };
     AccuracyFormatter.prototype.format = function(data){
+
+        if(!$.isNumeric(data)){
+            return "No readings";
+        }
         return round(data, this.accuracy) + this.postfix;
     };
 
