@@ -6,7 +6,7 @@ class AccountsDB extends SQLite3 {
     // Change the constructor to open the accounts database
     function __construct() {
 
-        $this->open("accounts.db");
+        $this->open(dirname(__FILE__)."/accounts.db");
     }
 }
 
