@@ -18,7 +18,9 @@ if (!isset($user)) {
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bike of StatS</title>
+
+    <title>Bike of StatS - Photos</title>
+
     <meta name="description" content="BOSS: Bike Of StatS" />
     <meta name="keywords" content="BOSS, bike, data, dashboard, home" />
     <meta name="author" content="BOSS" />

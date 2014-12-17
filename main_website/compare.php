@@ -22,7 +22,7 @@ if (!isset($user)) {
     <meta name="keywords" content="BOSS, bike, data, dashboard, home" />
     <meta name="author" content="BOSS" />
 
-    <title>Bike of StatS</title>
+    <title>Bike of StatS - Compare</title>
 
     <link rel="shortcut icon" href="../favicon.ico">
 
