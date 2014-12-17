@@ -442,8 +442,8 @@ dataController = (function() {
 
                         $.each(gpsData.data[0].coordinates, function(i, point) {
 
-                            var latitude = point[0];
-                            var longitude = point[1];
+                            var latitude = parseFloat(point[0]);
+                            var longitude = parseFloat(point[1]);
                             var coordinateArray = {lat: latitude, lng: longitude};
                             if(validCoordinate(coordinateArray)) {
                                 singleTripCoordinates.push(coordinateArray);
@@ -451,8 +451,8 @@ dataController = (function() {
                         });
 
                     } else {
-                        var latitudeSingle = gpsData.data[0].coordinates[0];
-                        var longitudeSingle = gpsData.data[0].coordinates[1];
+                        var latitudeSingle = parseFloat(gpsData.data[0].coordinates[0]);
+                        var longitudeSingle = parseFloat(gpsData.data[0].coordinates[1]);
 
                         var coordinateArraySingle = {lat: latitudeSingle, lng: longitudeSingle};
                         var prevCoordinate = null;

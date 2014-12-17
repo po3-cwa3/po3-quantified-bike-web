@@ -282,7 +282,7 @@ mapController = ( function () {
 
                         $.each(tripPictureDataArray, function (index, pictureData) {
 
-                            pictureData[1] = gpsCo;
+                            pictureData[1] = gpsCo.map(parseFloat);
 
                         })
                     }
