@@ -394,7 +394,7 @@ compareController = (function() {
         } else if ( sort == "speed"){
             options.graphTitle = "speed during the trip";
             options.yAxisLabel = "speed";
-            options.yAxisUnit = "kmph";
+            options.yAxisUnit = "km/u";
         } else if (sort =="heart"){
             options.graphTitle = "heartbeat during the trip";
             options.yAxisLabel = "heartbeats";
